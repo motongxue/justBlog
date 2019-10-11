@@ -30,7 +30,7 @@ public class UUIDUtil {
     }
     public static void main(String[] args) {
         System.out.println(getUniqueIdByUUId());
-        System.out.println(uuid());
+        System.out.println(generateShortUuid());
     }
 
 

@@ -51,23 +51,10 @@ public interface UserMapper extends MyMapper<User> {
     int updateByUserId(User user);
 
     /**
-     * 根据参数批量修改用户状态
-     * @param params
-     * @return int
-     */
-    int updateStatusBatch(Map<String, Object> params);
-
-    /**
      * 根据角色id查询用户list
      * @param roleId
      * @return list
      */
     List<User> findByRoleId(String roleId);
 
-    /**
-     * 根据角色id查询用户list
-     * @param roleIds
-     * @return list
-     */
-    List<User> findByRoleIds(List<String> roleIds);
 }

@@ -11,9 +11,14 @@
         <result column="email" property="email" jdbcType="VARCHAR" />
         <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="sex" property="sex" jdbcType="INTEGER" />
-        <result column="age" property="age" jdbcType="INTEGER" />
-        <result column="img" property="img" jdbcType="VARCHAR" />
+        <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+        <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+        <result column="wx_code" property="wxCode" jdbcType="VARCHAR" />
+        <result column="wx_pay_code" property="wxPayCode" jdbcType="VARCHAR" />
+        <result column="ali_pay_code" property="aliPayCode" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="create_id" property="createId" jdbcType="INTEGER" />
+        <result column="update_id" property="updateId" jdbcType="INTEGER" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
         <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" />
@@ -24,8 +29,8 @@
         </collection>
     </resultMap>
     <sql id="Base_Column_List" >
-        id, user_id, username, password, salt, nickname, email, phone, sex, age, img, status,
-        create_time, update_time, last_login_time
+        id, user_id, username, password, salt, nickname, email, phone, sex, avatar, status,
+        create_id, update_id, create_time, update_time, last_login_time
     </sql>
 
     <select id="selectUsers" resultMap="BaseResultMap" parameterType="com.nbclass.model.User">
@@ -61,31 +66,9 @@
         update sys_user SET email=#{email},nickname=#{nickname},img=#{img},phone=#{phone},sex=#{sex},age=#{age},update_time = now() where user_id = #{userId,jdbcType=BIGINT}
     </update>
 
-    <update id="updateStatusBatch" parameterType="map">
-        UPDATE
-        sys_user
-        SET
-        status=#{status}, update_time=now()
-        where
-        user_id in
-        <foreach collection="userIds" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-    </update>
     <select id="findByRoleId" resultMap="BaseResultMap">
         SELECT a.id, a.user_id, a.username, a.password, a.salt, a.email, a.phone, a.sex, a.age, a.status,
         a.create_time, a.update_time, a.last_login_time FROM sys_user a INNER JOIN sys_user_role b ON a.user_id = b.user_id WHERE b.role_id = #{roleId,jdbcType=VARCHAR}
-    </select>
-
-    <select id="findByRoleIds" resultMap="BaseResultMap">
-        SELECT a.id, a.user_id, a.username, a.password, a.salt, a.email, a.phone, a.sex, a.age, a.status,
-        a.create_time, a.update_time, a.last_login_time
-        FROM sys_user a
-        INNER JOIN sys_user_role b ON a.user_id = b.user_id
-        WHERE b.role_id IN
-        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-            #{item}
-        </foreach>
     </select>
 
 </mapper>

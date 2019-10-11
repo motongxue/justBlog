@@ -1,5 +1,8 @@
 package com.nbclass.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,11 +17,11 @@ import java.io.Serializable;
  * @author nbclass
  */
 @Table(name = "sys_user_role")
-public class UserRole{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class UserRole extends BaseEntity{
 
+    private static final long serialVersionUID = 3195980821961960887L;
     /**
      * 用户id
      */
@@ -29,53 +32,4 @@ public class UserRole{
      */
     private String roleId;
 
-    /**
-     * @return id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * 获取用户id
-     *
-     * @return user_id - 用户id
-     */
-    public String getUserId() {
-        return userId;
-    }
-
-    /**
-     * 设置用户id
-     *
-     * @param userId 用户id
-     */
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
-    }
-
-    /**
-     * 获取角色id
-     *
-     * @return role_id - 角色id
-     */
-    public String getRoleId() {
-        return roleId;
-    }
-
-    /**
-     * 设置角色id
-     *
-     * @param roleId 角色id
-     */
-    public void setRoleId(String roleId) {
-        this.roleId = roleId == null ? null : roleId.trim();
-    }
 }
