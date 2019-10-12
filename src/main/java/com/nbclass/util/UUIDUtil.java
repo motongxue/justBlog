@@ -12,8 +12,7 @@ public class UUIDUtil {
 
     public static String uuid() {
         String str = UUID.randomUUID().toString();
-        String temp = str.replace("-","");
-        return temp;
+        return str.replace("-","");
     }
 
     public static String getUniqueIdByUUId() {

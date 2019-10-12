@@ -179,7 +179,7 @@ var Core = (function () {
                 }
             }
         });
-    }
+    };
 
     function queryInitParams(params) {
         var temp = { //这里的键的名字和控制器的变量名必须一致，这边改动，控制器也需要改成一样的
@@ -203,17 +203,17 @@ var Core = (function () {
         } else {
             $(id).bootstrapTable("refresh", {"pageNumber": 1});
         }
-    }
+    };
 
     /*根据data选中数据*/
     core.checkTableBy=function (id,data) {
         $(id).bootstrapTable("checkBy", data)
-    }
+    };
 
     /*根据uniqueId获取所选列*/
     core.getRowByUniqueId = function (id, val) {
         return $(id).bootstrapTable("getRowByUniqueId", val);
-    }
+    };
     core.selectSingleData = function (id){
         var selectContent = $(id).bootstrapTable('getSelections');
         if(typeof(selectContent) == 'undefined' || selectContent == "") {
@@ -226,7 +226,7 @@ var Core = (function () {
             var selectData = selectContent[0];
             return selectData;
         }
-    }
+    };
 
     core.selectMutiData = function (id){
         var checkedRows= $(id).bootstrapTable('getSelections');
@@ -236,7 +236,7 @@ var Core = (function () {
         }else{
             return checkedRows;
         }
-    }
+    };
 
 
     /*更新某一列的值 index-行索引，field-字段名，value-值*/
@@ -245,9 +245,9 @@ var Core = (function () {
             index: index,
             field: field,
             value: value
-        }
+        };
         return $(id).bootstrapTable("updateCell", updateCellOptions);
-    }
+    };
 
     /*禁用button*/
     core.mask = function (e) {
@@ -256,7 +256,7 @@ var Core = (function () {
     /*启用button*/
     core.unmask = function (e) {
         $(e).removeAttr('disabled');//添加disabled属性
-    }
+    };
 
     /*询问框*/
     core.confirm = function(content,d){
@@ -269,7 +269,7 @@ var Core = (function () {
             layer.close(index);
             d(true);
         });
-    }
+    };
 
     //date类型到字符串
     core.formatterDateTime = function (date) {
@@ -290,14 +290,14 @@ var Core = (function () {
             + (date.getSeconds() < 10 ? "0" + date.getSeconds()
                 : date.getSeconds());
         return datetime;
-    }
+    };
 
     //long类型转时间字符串
     core.longMsTimeConvertToDateTime = function (time) {
         if(time==null) return "-";
         var myDate = new Date(time);
         return this.formatterDateTime(myDate);
-    }
+    };
 
     /*日期+*/
     core.addDate = function (date, days) {
@@ -309,7 +309,7 @@ var Core = (function () {
         var month = date.getMonth() + 1;
         var day = date.getDate();
         return date.getFullYear() + '-' + getFormatDate(month) + '-' + getFormatDate(day);
-    }
+    };
     function getFormatDate(arg) {
         if (arg == undefined || arg == '') {
             return '';
@@ -324,7 +324,7 @@ var Core = (function () {
     /*是否是数组*/
     core.isArray = function (s) {
         return s instanceof Array;
-    }
+    };
 
     core.clearForm = function (id) {
 
@@ -357,7 +357,7 @@ var Core = (function () {
                 objId.elements[i].value = "";
             }
         }
-    }
+    };
 
     /*清除表单错误提示*/
     core.clearError = function (id) {
@@ -365,7 +365,7 @@ var Core = (function () {
         $(id).find(".error").removeClass("error");
         $(id).find(".prombtn").removeClass("prombtn");
         $(id).find(".prominput").removeClass("prominput");
-    }
+    };
     /*保留两位小数*/
     core.numberTwo = function (num) {
         if (isNaN(num) || num == "") {
@@ -377,7 +377,7 @@ var Core = (function () {
                 return parseFloat(num).toFixed(2);
             }
         }
-    }
+    };
     /*数字千分话并保留两位小数*/
     core.numToTwo = function (num) {
         try {
@@ -385,21 +385,27 @@ var Core = (function () {
         } finally {
             return num;
         }
-    }
+    };
 
 
     // 判断是否为json对象
     core.isJsonObject = function (obj) {
         var isjson = typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length;
         return isjson;
-    }
+    };
 
-    core.setCookie =  function (cname,cvalue,exdays){
+    core.setCookie = function (cname,cvalue,exdays){
         var d = new Date();
         d.setTime(d.getTime()+(exdays*24*60*60*1000));
         var expires = "expires="+d.toGMTString();
         document.cookie = cname+"="+cvalue+"; "+expires+";path=/";
-    }
+    };
+    core.setCookieLong = function (cname,cvalue,longtime){
+        var d = new Date();
+        d.setTime(longtime);
+        var expires = "expires="+d.toGMTString();
+        document.cookie = cname+"="+cvalue+"; "+expires+";path=/";
+    };
     core.getCookie =  function (cname){
         var name = cname + "=";
         var ca = document.cookie.split(';');
@@ -408,7 +414,15 @@ var Core = (function () {
             if (c.indexOf(name)==0) { return c.substring(name.length,c.length); }
         }
         return "";
-    }
+    };
+    core.getCurrentUser =  function (){
+       var access_token = this.getCookie("access_token");
+       if (access_token===""){
+           return null;
+       }else{
+           return JSON.parse(window.atob(access_token.split(".")[1]));
+       }
+    };
 
     return core;
 })(Core, window);

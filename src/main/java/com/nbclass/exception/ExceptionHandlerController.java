@@ -39,4 +39,9 @@ public class ExceptionHandlerController {
         return "forward:/error";
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public String handleAuthentication(Exception e, HttpServletRequest request) {
+        request.setAttribute("javax.servlet.error.status_code", ResponseStatus.TOKEN_INVALID.getCode());
+        return "forward:/error";
+    }
 }

@@ -1,10 +1,10 @@
 package com.nbclass.service;
 
 import com.nbclass.model.User;
-
-import java.util.List;
+import com.nbclass.vo.ResponseVo;
 
 public interface UserService {
 
-    List<User> selectAll();
+    ResponseVo register(User user);
+
 }

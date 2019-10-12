@@ -57,3 +57,7 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+jwt:
+  secret: 8ba38824023f4e8a854a866bcb9e7c6d
+  issuer: sys_user
+  expire: 30

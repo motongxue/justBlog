@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>登录</title>
+		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/adminlte/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/font-icon/css/icon.css?version=1.0"/>
+		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/swiper4/css/swiper.min.css"/>
+		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/simplemde/github-markdown.min.css">
+		<link rel="stylesheet" th:href="@{/theme/zblog/css/web-common.css}"/>
+		<script src="https://cdn.nbclass.com/statics/adminlte/libs/jquery.min.js"></script>
+		<script src="https://cdn.nbclass.com/statics/adminlte/libs/bootstrap.min.js"></script>
+		<script src="https://cdn.nbclass.com/statics/layer/layer.js"></script>
+		<script th:src="@{/js/core.js}" ></script>
+		<!--<script src="https://cdn.nbclass.com/statics/blog/js/zb-blog.js?version=1.6"></script>-->
+		<script th:src="@{/theme/zblog/js/zb-blog.js}"></script>
+	</head>
+	<body>
+	<header id="header">
+		<div th:replace="blog/zblog/fragments/navbar :: navbar"></div>
+	</header>
+	<div class="zb-container zb-content">
+		<div class="zb-main">
+			<!--<div class="swiper-container mb-20" th:if="${not #lists.isEmpty(sliderList)}">
+				<div class="swiper-wrapper">
+					<div th:each="item:${sliderList}" class="swiper-slide">
+						<a zjax="" th:href="@{${'/baby/article/'+item.id}}">
+							<img th:src="${item.sliderImg}">
+							<p class="slider-title" th:text="${item.title}"></p>
+						</a>
+					</div>
+				</div>
+				&lt;!&ndash; Add Pagination &ndash;&gt;
+				<div class="swiper-pagination"></div>
+				&lt;!&ndash; Add Arrows &ndash;&gt;
+				<div class="swiper-button-prev"><i class="fa fa-chevron-circle-left"></i></div>
+				<div class="swiper-button-next"><i class="fa fa-chevron-circle-right"></i></div>
+			</div>-->
+			<!--<div  class="banner"><div id="banner" class="fader">
+              <li th:each="item:${sliderList}"  class="slide">
+                  <a th:href="@{${'/blog/baby/article/'+item.id}}"><img th:src="${item.coverImage}"><span th:text="${item.title}" class="imginfo"></span></a>
+              </li>
+              <div class="fader_controls">
+                <div class="page prev" data-target="prev">‹</div>
+                <div class="page next" data-target="next">›</div>
+                <ul class="pager_list"></ul>
+              </div>
+            </div></div>-->
+
+			<div class="no-article-content" th:if="${#lists.isEmpty(articleList)}">
+				Sorry, 暂未发现任何文章~
+			</div>
+			<!--<div th:each="item,temp : ${articleList}" class="blogs">
+				<span th:if="${item.top==1}" class="fa fa-superscript-top superscript superscript-top"></span>
+				<span class="blogpic"><a><img class="lazy" th:data-original="${item.coverImage}"></a><span class="blog-type"><a zjax="" th:href="@{${'/category/'+item.categoryId}}" th:text="${item.bizCategory.name}"></a></span></span>
+				<h3 class="blogtitle"><a zjax="" th:href="@{${'/baby/article/'+item.id}}" th:text="${item.title}" ></a></h3>
+				<p  th:text="${item.description}" class="blogtext"></p>
+				<div class="bloginfo">
+					<ul>
+						<li><span class="fa fa-clock-o"></span><span th:text="${#dates.format(item.createTime,'yyyy-MM-dd')}"></span></li>
+						<li><span class="fa fa-eye"></span><span th:text="${item.lookCount}? ${item.lookCount} : 0"></span></li>
+						<li><a zjax="" class="comment-link-a" th:href="@{${'/baby/article/'+item.id+'#comment'}}"><span class="fa fa-comments-o"></span><span th:text="${item.commentCount}? ${item.commentCount} : 0"></span></a></li>
+					</ul>
+					<a zjax="" class="read-more" th:href="@{${'/baby/article/'+item.id}}">阅读全文</a>
+				</div>
+			</div>
+			<div th:replace="home/fragments/pagebar :: pageBar"></div>-->
+
+		</div>
+		<div th:replace="blog/zblog/fragments/sidebar :: sidebar"></div>
+	</div>
+	<div class="return_top"><a class=" fa fa-arrow-up"></a></div>
+	</body>
+
+</html>

@@ -1,18 +1,15 @@
-/*
 package com.nbclass.util;
 
-import com.nbclass.vo.base.PageResultVo;
-import com.nbclass.vo.base.ResponseVo;
+import com.nbclass.vo.ResponseVo;
 
-import java.util.List;
-*/
 /**
+ * ResponseUtil
+ *
  * @version V1.0
- * @date 2018年7月11日
- * @author superzheng
- *//*
-
-public class ResultUtil{
+ * @date 2019/10/11
+ * @author nbclass
+ */
+public class ResponseUtil {
 
 	public static ResponseVo success(){
 		return vo(CoreConst.SUCCESS_CODE,null,null);
@@ -38,10 +35,6 @@ public class ResultUtil{
 		return vo(CoreConst.FAIL_CODE, msg,data);
 	}
 
-	public static PageResultVo table( List<?> list, Long total){
-		return new PageResultVo(list, total);
-	}
-
 	public static ResponseVo vo(Integer status, String message, Object data) {
 		return new ResponseVo<>(status, message, data);
 	}
@@ -49,4 +42,3 @@ public class ResultUtil{
 
 
 }
-*/

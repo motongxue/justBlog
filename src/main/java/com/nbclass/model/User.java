@@ -1,10 +1,8 @@
 package com.nbclass.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -16,11 +14,14 @@ import java.util.List;
  * @author nbclass
  */
 @Table(name = "sys_user")
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class User extends BaseEntity{
+public class User {
 
     private static final long serialVersionUID = -460531621106843096L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     /**
      * 用户id
@@ -92,12 +93,69 @@ public class User extends BaseEntity{
      */
     private Date lastLoginTime;
 
+    /**
+     * 状态：1有效; 0无效
+     */
+    public Integer status;
 
     /**
-     * 角色
+     * 创建者id
      */
-    @Transient
-    private List<Role> roles;
+    public Integer createId;
+
+    /**
+     * 更新者id
+     */
+    public Integer updateId;
+
+    /**
+     * 创建时间
+     */
+    public Date createTime;
+
+    /**
+     * 更新时间
+     */
+    public Date updateTime;
+
+    public User withUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+
+    public User withNickname(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
+
+    public User withSalt(String salt) {
+        this.salt = salt;
+        return this;
+    }
+    public User withStatus(Integer status) {
+        this.status = status;
+        return this;
+    }
+
+    public User withCreateId(Integer createId) {
+        this.createId = createId;
+        return this;
+    }
+
+    public User withUpdateId(Integer updateId) {
+        this.updateId = updateId;
+        return this;
+    }
+
+    public User withCreateTime(Date createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public User withUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
 
 
 }

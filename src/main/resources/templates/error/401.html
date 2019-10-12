@@ -10,13 +10,8 @@
 </head>
 <body>
 <div class="main-content error-content">
-    <div class="error-img-content mt-160 mb-70 text-center"><img th:src="@{/img/500.png}"></div>
-    <p class="error-text">[[${error}]]</p>
-    <div class="error-btn-content">
-        <button class="btn btn-danger" type="button">
-            <a href="/">返回主页</a>
-        </button>
-    </div>
+    <div class="error-img-content mt-160 mb-70 text-center"><img src="http://cdn.nbclass.com/img/error/500.png"></div>
+    <p class="error-text">您未登录，<a href="/login">请先登录</a></p>
 </div>
 </body>
 </html>

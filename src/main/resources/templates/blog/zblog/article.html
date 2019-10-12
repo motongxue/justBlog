@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="keywords" th:content="${article.keywords}">
+		<meta name="description" th:content="${article.description}">
+		<title th:text="${article.title}"></title>
+        <link rel="stylesheet" href="https://cdn.nbclass.com/statics/adminlte/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdn.nbclass.com/statics/font-icon/css/icon.css?version=1.0"/>
+        <link rel="stylesheet" href="https://cdn.nbclass.com/statics/swiper4/css/swiper.min.css"/>
+        <link rel="stylesheet" href="https://cdn.nbclass.com/statics/simplemde/github-markdown.min.css">
+        <link rel="stylesheet" href="https://cdn.nbclass.com/statics/live2d/css/live2d.css" />
+        <link rel="stylesheet" href="https://cdn.nbclass.com/statics/base/zplayer/css/zplayer.min.css?version=1.4" />
+        <link rel="stylesheet" href="https://cdn.nbclass.com/statics/blog/css/web.min.css?version=1.4" />
+        <script src="https://cdn.nbclass.com/statics/adminlte/libs/jquery.min.js"></script>
+        <script src="https://cdn.nbclass.com/statics/adminlte/libs/bootstrap.min.js"></script>
+        <script src="https://cdn.nbclass.com/statics/blog/js/hc-sticky.js" ></script>
+        <script src="https://cdn.nbclass.com/statics/swiper4/js/swiper.min.js" ></script>
+        <script src="https://cdn.nbclass.com/statics/js/jquery.pjax.js"></script>
+        <script src="https://cdn.nbclass.com/statics/js/jquery.lazyload.js"></script>
+        <script src="https://cdn.nbclass.com/statics/layer/layer.js"></script>
+        <script src="https://cdn.nbclass.com/statics/js/nprogress.js"></script>
+        <script src="https://cdn.nbclass.com/statics/base/zplayer/js/zplayer.min.js?version=1.4"></script>
+        <script src="https://cdn.nbclass.com/statics/js/core.js?version=1.3" ></script>
+        <!--<script src="https://cdn.nbclass.com/statics/blog/js/zb-blog.js?version=1.6"></script>-->
+		<script th:src="@{/libs/theme/zblog/js/zb-blog-old.js}"></script>
+	</head>
+	<body>
+		<header id="header">
+			<div th:replace="home/fragments/navbar :: navbar"></div>
+		</header>
+		<div class="zb-container zb-content">
+			<div class="zb-main">
+				<div class="article-main">
+					<h3 th:text="${article.title}" class="article-title"></h3>
+					<span th:text="${article.original==1 ? '原创' : '转载'}" class="article-original"></span>
+					<div class="article-meta">发布于 <span th:text="${#dates.format(article.createTime,'yyyy-MM-dd')}"></span> &nbsp;|&nbsp; <span th:text="${article.bizCategory.name}"></span> &nbsp;|&nbsp; 浏览（<span th:text="${article.lookCount}? ${article.lookCount} : 0"></span>） &nbsp;|&nbsp; 评论（<span th:text="${article.commentCount}? ${article.commentCount} : 0"></span>）</div>
+					<hr class="hr0" />
+					<div th:utext="${article.content}" class="article-body markdown-body editor-preview-active-side">
+					</div>
+					<!--<div class="article-zan-shang">
+						<span class="article-zan"><i class="fa fa-thumbs-o-up"></i>点赞</span> <span>打赏</span>
+					</div>-->
+					<div class="thumbs-content">
+						<span class="thumbs-button fa fa-thumbs-up"> 点赞 <span id="loveCount" th:text="${article.loveCount}"></span></span>
+						<span class="reward-button fa fa-money"> 打赏
+						<p class="reward-content">
+							<span class="reward-img"><img src="https://cdn.nbclass.com/statics/img/weixin.jpg"><br>微信赞赏</span>
+							<span class="reward-img"><img src="https://cdn.nbclass.com/statics/img/zhifubao.jpg"><br>支付宝赞赏</span></p>
+						<span class="reward-bottom"></span>
+						<span class="reward-bottom-top"></span>
+						</span>
+					</div>
+				</div>
+				<div th:if="${article.comment==1}" id="comment" class="comment comment-main">
+					<div class="comment-title">发表评论</div>
+					<form id="comment-form" class="form-horizontal mt-10">
+						<input id="articleId" name="sid" type="hidden" th:value="${article.id}">
+						<div id="user-name-content" class="user-name-content">欢迎您：<b id="user-name"></b><span class="save-user btn btn-sm btn-pri">保存</span></div>
+						<div class="form-group" id="user-info" style="display: none">
+							<div class="col-sm-4">
+								<input id="nickname" type="text"  class="form-control"  name="nickname" placeholder="昵称(必填)" require="">
+							</div>
+							<div class="col-sm-4">
+								<input id="qq" type="text" class="form-control"  name="qq" placeholder="QQ（可获取头像和昵称）">
+							</div>
+							<div class="col-sm-4">
+								<input id="email" type="text" class="form-control"  name="email" placeholder="邮箱">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-xs-12">
+                                <input id="comment-textarea-input" name="content" type="hidden">
+								<textarea  id="comment-textarea"  class="form-control"  rows="4"  require="" placeholder="说点什么吧~"></textarea>
+							</div>
+						</div>
+						<div><button id="submitCommentBtn" type="button" class="btn btn-pri">发表评论</button></div>
+					</form>
+					<hr class="hr0 mt-15"/>
+					<ul id="comment-ul" class="comment">
+					</ul>
+				</div>
+			</div>
+			<div th:replace="home/fragments/sidebar :: sidebar"></div>
+			<script>
+                var sid=[[${article.id}]];
+                $(function () {
+                    Core.postAjax("/baby/api/article/look",{"articleId":sid})
+                    $(".thumbs-button").click(function () {
+                        Core.postAjax("/baby/api/love",{"bizId":sid,"bizType":1},function (data) {
+                            if(data.status==200){
+                                $("#loveCount").text(parseInt($("#loveCount").text())+1);
+                            }
+                        });
+                    })
+                })
+			</script>
+			<script  th:if="${article.comment==1}">
+                $(function () {
+                    var zblogNickName=Core.getCookie("zblog-username");
+                    var zblogQQ=Core.getCookie("zblog-qq");
+                    var zblogEmail=Core.getCookie("zblog-email");
+                    if(zblogNickName!=""){
+                        $("#user-name-content").show();
+                        $("#user-name").text(zblogNickName);
+                        $("#nickname").val(zblogNickName);
+                        $("#qq").val(zblogQQ);
+                        $("#email").val(zblogEmail);
+                    }else{
+                        $("#user-info").show();
+                    }
+                    function init(pageNumber) {
+                        Core.postAjax("/baby/api/comments",{"sid":sid,"pageNumber": (pageNumber==null? 1 : pageNumber),"status":1},function (data) {
+                            var commentOne="";
+                            if(data.list.length==0){
+                                commentOne+='<div class="no-comment">暂无评论，快来占领宝座</div>';
+                                $("#comment-ul").append(commentOne);
+                            }else{
+                                $.each(data.list,function (index,value) {
+                                    commentOne +=
+                                        '<li>'+
+                                        '	<div class="comment-body" id="comment-'+value.id+'">'+
+                                        '		<div class="comment-user-img">'+
+                                        '			<img src="'+(value.avatar||"/img/user-default.png")+'" onerror="this.src=\'/img/user-default.png\'" />'+
+                                        '		</div>'+
+                                        '		<div class="comment-info">'+
+                                        '			<div class="comment-top">'+
+                                        '				<span class="comment-nickname">'+
+                                        '					<a href="javascript:void(0)">'+value.nickname+'</a>'+
+                                        '				</span>'+
+                                        '				<span class="comment-time">'+value.createTime+
+                                        '				</span>'+
+                                        '			</div>'+
+                                        '           <div class="comment-content">';
+                                    if(value.parent!=null){
+                                        commentOne +=
+                                            '<div class="comment-parent">'+
+                                            '				<div class="comment-parent-user"><a class="comment-link" data-link="comment-'+value.parent.id+'">@'+value.parent.nickname+'</a></div>'+
+                                            '				<div class="comment-parent-content">'+value.parent.content+'</div>'+
+                                            '			</div> ';
+                                    }
+                                    commentOne +='<div class="comment-content-text">'+value.content+'</div>'+
+                                        '			</div>'+
+                                        '			<div class="comment-footer">'+
+                                        '				<span class="reply mr-5" reply-id="'+value.id+'">回复</span>'+
+                                        '				<span class="cancel-reply mr-5" style="display: none;">取消回复</span>'+
+                                        '				<span class="comment-support pointer fa fa-thumbs-o-up" biz-id="'+value.id+'">'+value.loveCount+'</span>'+
+                                        '			</div>'+
+                                        '		</div>'+
+                                        '	</div> '+
+                                        '</li>';
+                                })
+                                $("#comment-more").remove();
+                                if(data.hasNextPage){
+                                    commentOne+='<div id="comment-more" data-page="'+data.nextPage+'" class="comment-more">加载更多</div>'
+                                }
+                                $("#comment-ul").append(commentOne);
+								/*加载更多*/
+                                $("#comment-more").click(function () {
+                                    init($(this).attr("data-page"));
+                                })
+								/*link至评论*/
+                                $("#comment-ul").on("click",".comment-link",function () {
+                                    var commentLinkId = $(this).attr("data-link");
+                                    $("html,body").animate({
+                                        scrollTop:$("#"+commentLinkId).offset().top},{duration: 300,easing: "swing"})
+                                })
+
+                                $(".reply").click(function () {
+                                    var replyId=$(this).attr("reply-id");
+                                    if($("#reply-comment-form").length>0){
+                                        $replyForm=$("#reply-comment-form");
+                                        $("#reply-comment-form").remove();
+                                        $replyForm.css("display","none");
+                                        $(this).parent().after($replyForm);
+                                        $("#reply-comment-form").slideDown(250);
+                                        $(".reply[style='display: none;']").next().hide();
+                                        $(".reply[style='display: none;']").show();
+                                        $("#replyId").val(replyId);
+                                    }else{
+                                        var replyForm =
+                                            '<form id="reply-comment-form" style="display: none;" class="form-horizontal mt-10">'+
+                                            '   <input name="sid" type="hidden" value="'+sid+'"  />'+
+                                            '   <input id="replyId" name="pid" type="hidden" value="'+replyId+'"  />'+
+                                            '   <div class="form-group" style="display: '+(zblogNickName==""?"block":"none")+'">'+
+                                            '       <div class="col-sm-4">'+
+                                            '           <input id="reply-nickname" value="'+zblogNickName+'"  type="text" class="form-control" name="nickname" placeholder="昵称(必填)" />'+
+                                            '       </div>'+
+                                            '       <div class="col-sm-4">'+
+                                            '           <input id="reply-qq" value="'+zblogQQ+'" type="text" class="form-control" name="qq" placeholder="QQ（可获取头像和昵称）" />'+
+                                            '       </div>'+
+                                            '       <div class="col-sm-4">'+
+                                            '           <input id="reply-email" value="'+zblogEmail+'" type="text" class="form-control" name="email" placeholder="邮箱" />'+
+                                            '       </div>'+
+                                            '   </div>'+
+                                            '   <div class="form-group">'+
+                                            '       <div class="col-xs-12">'+
+                                            '           <input name="content" type="hidden" class="form-control" id="reply-comment-textarea-input">'+
+                                            '           <textarea class="form-control" id="reply-comment-textarea" rows="4" placeholder="说点什么吧~"></textarea>'+
+                                            '       </div>'+
+                                            '   </div>'+
+                                            '   <div>'+
+                                            '   <button id="submitReplyCommentBtn" type="button" class="btn btn-pri">发表评论</button>'+
+                                            '   </div>'+
+                                            '</form>'
+                                        $(this).parent().after(replyForm);
+                                        $("#reply-comment-form").slideDown(250);
+                                    }
+                                    $(this).hide();
+                                    $(this).next().show();
+                                    $("#submitReplyCommentBtn").on('click',function () {
+                                        if($("#reply-nickname").val()==""){
+                                            layer.msg("请输入昵称~")
+                                            return;
+                                        }else if($("#reply-comment-textarea").val()==""){
+                                            layer.msg("说点什么吧~")
+                                            return;
+                                        }
+                                        var replyContent = formatContent($("#reply-comment-textarea").val());
+                                        $("#reply-comment-textarea-input").val(replyContent);
+                                        Core.postAjax("/baby/api/comment/save",$("#reply-comment-form").serialize(),function (data) {
+                                            layer.msg(data.msg);
+                                            if(data.status==200){
+                                                $("#reply-comment-textarea-input,#reply-comment-textarea").val("");
+                                                $("#reply-comment-form").hide();
+                                                $(".reply[style='display: none;']").next().hide();
+                                                $(".reply[style='display: none;']").show();
+                                                handleCommentData(data.data,1);
+                                                if(Core.getCookie("zblog-username")==""){
+                                                    Core.setCookie("zblog-username",$("#reply-nickname").val(),30);
+                                                    Core.setCookie("zblog-qq",$("#reply-qq").val(),30);
+                                                    Core.setCookie("zblog-email",$("#reply-email").val(),30);
+                                                }
+                                            }
+                                        })
+                                    })
+                                })
+                                $(".cancel-reply").click(function () {
+                                    $("#reply-comment-form").slideUp(250);
+                                    $(this).hide();
+                                    $(this).prev().show();
+                                })
+
+                                $(".comment-support").click(function () {
+                                    $thisLove = $(this);
+                                    Core.postAjax("/baby/api/love",{"bizId":$(this).attr("biz-id"),"bizType":2},function (data) {
+                                        if(data.status==200){
+                                            $thisLove.text(parseInt($thisLove.text())+1);
+                                        }
+                                    });
+                                })
+                            }
+
+                        })
+                    }
+                    init();
+
+					/*提交评论*/
+                    $("#submitCommentBtn").click(function () {
+                        if($("#nickname").val()==""){
+                            layer.msg("请输入昵称~")
+                            return;
+                        }else if($("#comment-textarea").val()==""){
+                            layer.msg("说点什么吧~")
+                            return;
+                        }
+                        var content = formatContent($("#comment-textarea").val());
+                        $("#comment-textarea-input").val(content);
+                        Core.postAjax("/baby/api/comment/save",$("#comment-form").serialize(),function (data) {
+                            layer.msg(data.msg);
+                            if(data.status==200){
+                                $("#comment-textarea-input,#comment-textarea").val("");
+                                handleCommentData(data.data);
+                                $(".no-comment").hide();
+                                if(zblogNickName!=$("#nickname").val()||zblogQQ!=$("#qq").val()||zblogEmail!=$("#email").val()){
+                                    Core.setCookie("zblog-username",$("#nickname").val(),30);
+                                    Core.setCookie("zblog-qq",$("#qq").val(),30);
+                                    Core.setCookie("zblog-email",$("#email").val(),30);
+                                }
+                            }
+                        })
+                    })
+					/*点击用户名*/
+                    $("#user-name").click(function () {
+                        if($("#user-info").hasClass("user-show")){
+                            $(".save-user").hide();
+                            $("#user-info").slideUp(250);
+                            $("#user-info").removeClass("user-show");
+
+                        }else{
+                            $(".save-user").show();
+                            $("#user-info").slideDown(250);
+                            $("#user-info").addClass("user-show");
+                        }
+
+                    })
+                    /*保存用户*/
+                    $(".save-user").click(function () {
+                        var nickname=$("#nickname").val();
+                        var qq=$("#qq").val();
+                        var email=$("#email").val();
+                        if(zblogNickName!=nickname||zblogQQ!=qq||zblogEmail!=email){
+                            Core.setCookie("zblog-username",nickname,30);
+                            Core.setCookie("zblog-qq",qq,30);
+                            Core.setCookie("zblog-email",email,30);
+                            $("#user-name").text(nickname);
+                            zblogNickName=nickname;
+                            zblogQQ=qq;
+                            zblogEmail=email;
+                            $("#reply-nickname").val(nickname);
+                            $("#reply-qq").val(qq);
+                            $("#reply-email").val(email);
+                        }
+                        $(".save-user").hide();
+                        $("#user-info").slideUp(250);
+                        $("#user-info").removeClass("user-show");
+                    })
+                    /*格式化字符串*/
+                    function formatContent(a) {
+                        a = a.replace(/\r\n/g, '<br/>');
+                        a = a.replace(/\n/g, '<br/>');
+                        a = a.replace(/\s/g, ' ');
+                        return a;
+                    }
+
+                    function handleCommentData(data,isReply){
+                        var html='<li>'+
+                            '<div class="comment-body">'+
+                            ' <div class="comment-user-img">'+
+                            '<img src="'+data.avatar+'" onerror="this.src=\'/img/user-default.png\'" />'+
+                            '</div>'+
+                            '<div class="comment-info">'+
+                            '<div class="comment-top">'+
+                            '<span class="comment-nickname"> <a href="javascript:void(0)">'+data.nickname+'</a> </span>'+
+                            '<span class="comment-time">'+data.createTime+'</span>'+
+                            ' </div>'+
+                            ' <div class="comment-content">';
+                        if(isReply){
+                          var pNickname= $("#reply-comment-form").parent().find(".comment-top .comment-nickname>a").text();
+                          var pText =  $("#reply-comment-form").parent().find(".comment-content>.comment-content-text").text();
+                          html+='<div class="comment-parent">'+
+                            '<div class="comment-parent-user">	'+
+                            '<a class="comment-link" data-link="comment-'+data.pid+'">@'+pNickname+'</a>	'+
+                            '</div>	'+
+                            '<div class="comment-parent-content">'+pText+'</div>	'+
+                            '</div>';
+                        }
+                        html+=data.content+
+                            '</div>'+
+                            '<div class="comment-footer"><span class="audit">正在审核</span>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</li>';
+                        $("#comment-ul").prepend(html);
+                    }
+
+                })
+
+
+
+			</script>
+
+		</div>
+		<div id="zplayer"></div>
+		<div class="return_top"><a class=" fa fa-arrow-up"></a></div>
+        <div id="landlord" style="left:5px;bottom:0px;">
+            <div class="message" style="opacity:0"></div>
+            <canvas id="live2d" width="500" height="560" class="live2d"></canvas>
+            <div class="live_talk_input_body">
+                <div class="live_talk_input_name_body">
+                    <input name="name" type="text" class="live_talk_name white_input" id="AIuserName" autocomplete="off" placeholder="你的名字" />
+                </div>
+                <div class="live_talk_input_text_body">
+                    <input name="talk" type="text" class="live_talk_talk white_input" id="AIuserText" autocomplete="off" placeholder="要和我聊什么呀？"/>
+                    <button type="button" class="live_talk_send_btn" id="talk_send">发送</button>
+                </div>
+            </div>
+            <input name="live_talk" id="live_talk" value="1" type="hidden" />
+            <div class="live_ico_box">
+                <div class="live_ico_item type_youdu" id="youduButton"></div>
+                <div class="live_ico_item type_quit" id="hideButton"></div>
+                <input name="live_statu_val" id="live_statu_val" value="0" type="hidden" />
+                <audio src="" style="display:none;" id="live2d_bgm" data-bgm="0" preload="none"></audio>
+                <input name="live2dBGM" value="https://t1.aixinxi.net/o_1c52p4qbp15idv6bl55h381moha.mp3" type="hidden">
+                <input name="live2dBGM" value="https://t1.aixinxi.net/o_1c52p8frrlmf1aled1e14m56una.mp3" type="hidden">
+                <input id="duType" value="douqilai,l2d_caihong" type="hidden">
+            </div>
+        </div>
+        <div id="open_live2d">召唤卡哇伊</div>
+		<div th:replace="home/fragments/footer :: copyrightDark"></div>
+		<script>
+			var message_Path = '/libs/theme/live2d/';//资源目录，如果目录不对请更改
+			var talkAPI = "";//如果有类似图灵机器人的聊天接口请填写接口路径
+		</script>
+		<script type="text/javascript" src="https://cdn.nbclass.com/statics/live2d/js/live2d.js?version=1.1"></script>
+		<script type="text/javascript" src="https://cdn.nbclass.com/statics/live2d/js/message.js?version=1.1"></script>
+	</body>
+
+</html>

@@ -10,6 +10,7 @@ package com.nbclass.enums;
 public enum ResponseStatus {
 
     SUCCESS(200, "操作成功！"),
+    TOKEN_INVALID(401, "Token错误"),
     FORBIDDEN(403, "您没有权限访问！"),
     NOT_FOUND(404, "资源不存在！"),
     ERROR(500, "服务器内部错误！");
