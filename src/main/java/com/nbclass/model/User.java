@@ -94,29 +94,34 @@ public class User {
     private Date lastLoginTime;
 
     /**
+     * 是否是管理员：1-是，0-否
+     */
+    private Integer isAdmin;
+
+    /**
      * 状态：1有效; 0无效
      */
-    public Integer status;
+    private Integer status;
 
     /**
      * 创建者id
      */
-    public Integer createId;
+    private Integer createId;
 
     /**
      * 更新者id
      */
-    public Integer updateId;
+    private Integer updateId;
 
     /**
      * 创建时间
      */
-    public Date createTime;
+    private Date createTime;
 
     /**
      * 更新时间
      */
-    public Date updateTime;
+    private Date updateTime;
 
     public User withUserId(String userId) {
         this.userId = userId;
@@ -132,6 +137,12 @@ public class User {
         this.salt = salt;
         return this;
     }
+
+    public User withIsAdmin(Integer isAdmin) {
+        this.isAdmin = isAdmin;
+        return this;
+    }
+
     public User withStatus(Integer status) {
         this.status = status;
         return this;

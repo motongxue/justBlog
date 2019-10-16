@@ -57,13 +57,13 @@ var Core = (function () {
             },
             error:function (XMLHttpRequest, textStatus, errorThrown) {
                 if(XMLHttpRequest.status==403){
-                    layer.msg("您没有权限访问，请联系管理员！")
+                    Core.msg("您没有权限访问，请联系管理员！",2)
                 }else if(XMLHttpRequest.status==500){
-                    layer.msg("服务器内部错误！")
+                    Core.msg("服务器内部错误！",2)
                 }else if(XMLHttpRequest.status==404){
-                    layer.msg("您访问的内容不存在！")
+                    Core.msg("您访问的内容不存在！",2)
                 }else{
-                    layer.msg("服务器未知错误！")
+                    Core.msg("服务器未知错误！",2)
                 }
             }
         });
@@ -80,11 +80,11 @@ var Core = (function () {
                     $("#content").html(response);
                 }else if(t=2){
                     if(XMLHttpRequest.status==403){
-                        layer.msg("您没有权限访问！")
+                        Core.msg("您没有权限访问！",2)
                     }else if(XMLHttpRequest.status==500){
-                        layer.msg("服务器内部错误！")
+                        Core.msg("服务器内部错误！",2)
                     }else{
-                        layer.msg("服务器未知错误！")
+                        Core.msg("服务器未知错误！",2)
                     }
                 }
             }
@@ -92,25 +92,33 @@ var Core = (function () {
     }
 
     /*消息提示*/
-    core.showMessage = function (t, m) {
-        if (t == 1) {
-            $(".prompt-success .prompt-text").text(m);
-            $(".prompt-success").show();
-            $(".prompt-success .alert-success").css("opacity", "1");
-            setTimeout(function () {
-                $(".prompt-success .alert-success").css("opacity", "0");
-                $(".prompt-success").hide();
-            }, 3000);
-        } else if (t = 2) {
-            $(".prompt-error .prompt-text").text(m);
-            $(".prompt-error").show();
-            $(".prompt-error .alert-danger").css("opacity", "1");
-            setTimeout(function () {
-                $(".prompt-error .alert-danger").css("opacity", "0");
-                $(".prompt-error").hide();
-            }, 5000);
+    core.msg = function(msg,d,type) {
+        if(typeof d === "number"){
+            type=d;
+        };
+        var alertId = Core.generateMixed(6);
+        var svgContent= (type===undefined||type===1) ? '<svg t="1571189863238" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3745" width="24" height="24"><path d="M837.461333 535.466667a19.072 19.072 0 0 0-22.314666 15.573333 326.314667 326.314667 0 0 1-321.792 269.226667c-180.266667 0-326.912-146.645333-326.912-326.912a326.826667 326.826667 0 0 1 597.930666-182.784 323.157333 323.157333 0 0 1 50.773334 125.056 19.242667 19.242667 0 0 0 37.888-6.698667 360.704 360.704 0 0 0-56.789334-139.946667A365.098667 365.098667 0 0 0 493.312 128 365.226667 365.226667 0 0 0 128 493.354667c0 201.472 163.882667 365.354667 365.354667 365.354666a364.672 364.672 0 0 0 359.68-300.885333 19.2 19.2 0 0 0-15.573334-22.314667" p-id="3746" fill="#2bc80f"></path><path d="M650.538667 389.504l-199.978667 200.021333-119.765333-119.765333a18.816 18.816 0 0 0-26.624 26.581333l132.224 132.181334c0.128 0.170667 0.341333 0.213333 0.469333 0.341333 0.170667 0.170667 0.213333 0.426667 0.426667 0.597333a18.773333 18.773333 0 0 0 26.581333 0l213.290667-213.333333a18.816 18.816 0 0 0-26.624-26.624" p-id="3747" fill="#2bc80f"></path></svg>' : '<svg t="1571190723226" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4874" width="24" height="24"><path d="M872.746667 573.866667a18.858667 18.858667 0 0 0-22.058667 15.445333 322.901333 322.901333 0 0 1-318.464 266.368c-178.389333 0-323.498667-145.066667-323.498667-323.498667a323.413333 323.413333 0 0 1 591.701334-180.906666 319.829333 319.829333 0 0 1 50.261333 123.818666 19.072 19.072 0 0 0 37.461333-6.656A356.949333 356.949333 0 0 0 832 329.984 361.301333 361.301333 0 0 0 532.224 170.666667 361.429333 361.429333 0 0 0 170.666667 532.181333c0 199.381333 162.218667 361.557333 361.557333 361.557334a360.874667 360.874667 0 0 0 355.925333-297.770667 19.029333 19.029333 0 0 0-15.36-22.058667" p-id="4875" fill="#a94442"></path><path d="M532.224 411.306667a20.138667 20.138667 0 0 0-20.138667 20.181333v322.133333a20.138667 20.138667 0 0 0 40.277334 0v-322.133333a20.138667 20.138667 0 0 0-20.138667-20.181333M552.362667 310.613333a20.138667 20.138667 0 0 0-40.277334 0v40.277334a20.138667 20.138667 0 0 0 40.277334 0v-40.32z" p-id="4876" fill="#a94442"></path></svg>';
+        var html='<div id="'+alertId+'" class="alert '+((type===undefined||type===1)? 'alert-success':'alert-danger')+'">'+svgContent+'<span class="alert-text">'+msg+'</span></div>';
+        $("body").append(html);
+        $("#"+alertId).fadeIn("fast");
+        setTimeout(function () {
+            $("#"+alertId).remove();
+            if (typeof d === "function") {
+                d();
+            }
+        }, 2500);
+    }
+
+    core.generateMixed = function (n) {
+        var res = "";
+        var chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        for(var i = 0; i < n ; i ++) {
+            var id = Math.ceil(Math.random()*35);
+            res += chars[id];
         }
+        return res;
     };
+
     /*bootstrap-table表格*/
     core.initTable = function (options, success) {
         var tableOptions = $.extend({}, coreOptions.tableOptions, options);
@@ -217,10 +225,10 @@ var Core = (function () {
     core.selectSingleData = function (id){
         var selectContent = $(id).bootstrapTable('getSelections');
         if(typeof(selectContent) == 'undefined' || selectContent == "") {
-            layer.msg("请先选择一条数据!");
+            Core.msg("请先选择一条数据!",2);
             return false;
         }else if(selectContent.length > 1){
-            layer.msg("只能选择一条数据!");
+            Core.msg("只能选择一条数据!",2);
             return false;
         }else{
             var selectData = selectContent[0];
@@ -231,7 +239,7 @@ var Core = (function () {
     core.selectMutiData = function (id){
         var checkedRows= $(id).bootstrapTable('getSelections');
         if(checkedRows.length==0){
-            layer.msg("请先选择一条数据！");
+            Core.msg("请先选择一条数据！",2);
             return false;
         }else{
             return checkedRows;
@@ -256,19 +264,6 @@ var Core = (function () {
     /*启用button*/
     core.unmask = function (e) {
         $(e).removeAttr('disabled');//添加disabled属性
-    };
-
-    /*询问框*/
-    core.confirm = function(content,d){
-        layer.confirm(content, {
-            icon: 3,
-            title: "系统提示",
-            btn: ['确认', '取消'],
-            btnclass: ['btn btn-primary', 'btn btn-danger'],
-        }, function (index) {
-            layer.close(index);
-            d(true);
-        });
     };
 
     //date类型到字符串
@@ -414,6 +409,14 @@ var Core = (function () {
             if (c.indexOf(name)==0) { return c.substring(name.length,c.length); }
         }
         return "";
+    };
+    core.removeCookie = function (name){
+        var cval=this.getCookie(name);
+        if(cval!=null){
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            document.cookie= name + "="+cval+";expires="+exp.toGMTString()+";path=/";
+        }
     };
     core.getCurrentUser =  function (){
        var access_token = this.getCookie("access_token");

@@ -20,7 +20,7 @@ public class CookieUtil {
     public static String getCookieByName(HttpServletRequest request, String name) {
         Map<String, Cookie> cookieMap = ReadCookieMap(request);
         if (cookieMap.containsKey(name)) {
-            return cookieMap.get(name).getName();
+            return cookieMap.get(name).getValue();
         } else {
             return null;
         }
@@ -46,7 +46,7 @@ public class CookieUtil {
             e.printStackTrace();
         }
         cookie.setMaxAge(time);
-        response.addCookie(cookie); // addCookie后，如果已经存在相同名字的cookie，则最新的覆盖旧的cookie
+        response.addCookie(cookie);
         return response;
     }
 }

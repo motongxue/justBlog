@@ -7,4 +7,5 @@ public interface UserService {
 
     ResponseVo register(User user);
 
+    ResponseVo login(User user);
 }

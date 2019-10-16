@@ -1,10 +1,3 @@
-<div th:fragment="top"  class="top-box">
-    <div class="zb-container">
-        <span class="">
-            欢迎访问BabyLove，这是一个记录世界的平台！
-        </span>
-    </div>
-</div>
 <nav id ="navbar" th:fragment="navbar" class="navbar navbar-default ">
     <div class="zb-container">
         <div class="navbar-header">
@@ -30,36 +23,25 @@
                         首页
                     </a>
                 </li>
-               <!-- <li th:each="category:${@module.get('categoryList')}" th:class="${category.id==categoryId ? 'level-1 active':(#lists.isEmpty(category.nodes)?'level-1':'dropdown')}">
-                    <a zjax="" th:if="${category.pid==null||category.pid==0}" th:href="@{${not #lists.isEmpty(category.nodes)? '#': ('/baby/category/' + category.id)}}" th:class="${#lists.isEmpty(category.nodes)?'':'dropdown-toggle'}" th:data-toggle="${#lists.isEmpty(category.nodes)?'':'dropdown'}">
-                        <span th:text="${category.name}"></span>
-                        <b th:if="${not #lists.isEmpty(category.nodes)}" class="caret"></b>
-                    </a>
-                    <ul th:if="${not #lists.isEmpty(category.nodes)}" class="dropdown-menu">
-                        <li th:each="node:${category.nodes}" th:class="${node.id==categoryId ? 'level-2 active' :'level-2'}"><a zjax="" th:href="@{${'baby/category/' + node.id}}" th:text="${node.name}"></a></li>
-                    </ul>
-                </li>-->
                 <li th:class="${categoryId=='comment' ? 'level-1 active' : 'level-1'} ">
                     <a zjax="" href="/baby/comment" >
                         留言板
                     </a>
                 </li>
-                <li class="">
+                <li>
                     <a target="_blank" href="/baby/music">
                         音乐馆
                     </a>
                 </li>
-                <li class="not-login">
-                    <a  href="/login" class="pr0" target="_blank">登录</a>
-                    <span>|</span>
-                    <a  href="/register" class="pl0" target="_blank">注册</a>
+                <li th:if="${!@perms.isLogin()}">
+                    <a  href="/login">登录</a>
                 </li>
-                <li class="nav-user-info">
+                <li class="nav-user-info" th:if="${@perms.isLogin()}">
                     <a class="user-avatar"><img src=""/></a>
-                    <ul  class="dropdown-menu display-none">
-                        <li class="level-2"><a href="@{${'baby/category/' + node.id}">测试菜单</a></li>
-                        <li class="level-2"><a href="@{${'baby/category/' + node.id}">测试菜单</a></li>
-                        <li class="level-2"><a href="@{${'baby/category/' + node.id}">测试菜单</a></li>
+                    <ul  class="dropdown-menu">
+                        <li class="level-2 isAdmin"><a href="/admin">控制台</a></li>
+                        <li class="level-2"><a href="/center">个人中心</a></li>
+                        <li class="level-2"><a id="logout">退出登录</a></li>
                     </ul>
                 </li>
                 <li>
@@ -70,4 +52,13 @@
             </ul>
         </div>
     </div>
+    <script>
+        var userInfo = Core.getCurrentUser();
+        if(userInfo!=null){
+            $(".user-avatar img").attr("src",userInfo.avatar!=null?userInfo.avatar:"/img/user-default.png");
+            if(userInfo.isAdmin!==1){
+                $(".isAdmin").remove();
+            }
+        }
+    </script>
 </nav>

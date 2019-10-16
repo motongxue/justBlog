@@ -40,9 +40,10 @@ public class JwtUtil {
                     .withIssuer(jwtProp.getIssuer()) //发行人
                     .withIssuedAt(date)  //发行时间
                     .withExpiresAt(DateUtil.addDays(date, jwtProp.getExpire())) //过期时间点
-                    .withClaim("userId",user.getUserId())
-                    .withClaim("username",user.getUsername())
-                    .withClaim("avatar",user.getAvatar());
+                    .withClaim("userId", user.getUserId())
+                    .withClaim("username", user.getUsername())
+                    .withClaim("avatar", user.getAvatar())
+                    .withClaim("isAdmin", user.getIsAdmin());
             //传入参数
             //签名加密
             return builder.sign(algorithm);
@@ -73,7 +74,8 @@ public class JwtUtil {
         JwtUser jwtUser = new JwtUser();
         jwtUser.setUserId(map.get("userId").asString());
         jwtUser.setUsername(map.get("username").asString());
-        jwtUser.setAvatar(map.get("avatar").asString());
+        jwtUser.setAvatar(map.get("avatar")!=null ? map.get("avatar").asString() : null);
+        jwtUser.setIsAdmin(map.get("isAdmin").asInt());
         jwtUser.setIssuedAt(new Date(map.get("iat").asInt()*1000L));
         jwtUser.setExpiration(new Date(map.get("exp").asInt()*1000L));
         return jwtUser;

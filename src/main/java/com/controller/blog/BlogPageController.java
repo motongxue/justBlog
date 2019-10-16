@@ -1,11 +1,8 @@
 package com.controller.blog;
 
-import com.nbclass.util.CookieUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 前端页面控制器
@@ -18,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 public class BlogPageController {
 
     private static final String THEME_PREFIX = "blog/";
-
     /**
      * 首页入口
      */

@@ -28,11 +28,10 @@ public class PasswordHelper {
      * 校验密码
      *
      * @param password
-     * @param salt
-     * @param encryptPassword
-     * @return ${return}
+     * @param user
+     * @return boolean
      */
-    public static boolean verify(String password,String salt, String encryptPassword){
-        return Objects.equals(MD5.md5Hex(password + salt), encryptPassword);
+    public static boolean verify(String password, User user){
+        return Objects.equals(MD5.md5Hex(password + user.getSalt()), user.getPassword());
     }
 }
