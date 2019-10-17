@@ -5,7 +5,7 @@ import com.nbclass.vo.ResponseVo;
 
 public interface UserService {
 
-    ResponseVo register(User user);
+    ResponseVo add(User user);
 
     ResponseVo login(User user);
 }

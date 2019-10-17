@@ -1,4 +1,4 @@
-package com.controller.blog;
+package com.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;

@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService {
     private JwtUtil jwtUtil;
 
     @Override
-    public ResponseVo register(User user) {
-        if(userMapper.selectByUsername(user.getUsername())!=null){
+    public ResponseVo add(User user) {
+        if(userMapper.selectByUsername(user.getUsername())!=null ){
             return ResponseUtil.error("用户已存在!");
         }
         user.setCreateTime(new Date());
@@ -47,10 +47,9 @@ public class UserServiceImpl implements UserService {
             Map<String, Object> map = new HashMap<>();
             map.put("username",user.getUsername());
             map.put("dateNow",new Date());
-            mailService.sendTemplateMail(TemplateType.RegisterSuccess,"zqf@eyecloud.tech","test",map);
+            mailService.sendTemplateMail(TemplateType.RegisterSuccess, user.getEmail(), TemplateType.RegisterSuccess.getDesc(), map);
         }
-        String token = jwtUtil.genToken(user);
-        return ResponseUtil.success("注册成功", token);
+        return ResponseUtil.success("添加成功");
     }
 
     @Override

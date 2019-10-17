@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2019/10/10
  * @author nbclass
  */
-@Table(name = "sys_user")
+@Table(name = "zb_user")
 @Data
 public class User {
 

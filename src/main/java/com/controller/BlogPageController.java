@@ -1,5 +1,6 @@
-package com.controller.blog;
+package com.controller;
 
+import com.nbclass.annotation.AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +24,7 @@ public class BlogPageController {
         return THEME_PREFIX + "zblog" + "/index";
     }
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login() {
         return THEME_PREFIX + "zblog" + "/login";
-    }
-    @GetMapping("/register")
-    public String register(Model model) {
-        return THEME_PREFIX + "zblog" + "/register";
     }
 }

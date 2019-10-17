@@ -1,7 +1,7 @@
 package com.nbclass.enums;
 
 public enum TemplateType {
-    RegisterSuccess("registerSuccess", "注册成功邮件模板"),
+    RegisterSuccess("registerSuccess", "注册成功"),
     
     ;
     private String templateName;
@@ -16,13 +16,8 @@ public enum TemplateType {
     public String getName() {
         return templateName;
     }
-
-    public static TemplateType getByName(String name) {
-        for(TemplateType type : TemplateType.values()){
-            if(type.name().equalsIgnoreCase(name)){
-                return type;
-            }
-        }
-        return null;
+    public String getDesc() {
+        return desc;
     }
+
 }

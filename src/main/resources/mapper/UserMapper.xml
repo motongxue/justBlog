@@ -31,7 +31,7 @@
 
     <select id="selectUsers" resultMap="BaseResultMap" parameterType="com.nbclass.model.User">
         SELECT a.*,c.role_id AS role_id,c.name AS role_name,c.description AS  role_description
-        FROM sys_user a
+        FROM zb_user a
         WHERE a.status=1
         <if test="username !=null and username != ''">
             AND a.username like concat('%', #{username}, '%')
@@ -45,19 +45,19 @@
     </select>
 
     <select id="selectByUsername" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/> FROM sys_user WHERE username = #{username,jdbcType=VARCHAR}
+        SELECT <include refid="Base_Column_List"/> FROM zb_user WHERE username = #{username,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByUserId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/> FROM sys_user WHERE user_id = #{userId,jdbcType=VARCHAR}
+        SELECT <include refid="Base_Column_List"/> FROM zb_user WHERE user_id = #{userId,jdbcType=VARCHAR}
     </select>
 
     <update id="updateLastLoginTime" parameterType="com.nbclass.model.User">
-        update sys_user SET last_login_time = now() where id = #{id,jdbcType=BIGINT}
+        update zb_user SET last_login_time = now() where id = #{id,jdbcType=BIGINT}
     </update>
 
     <update id="updateByUserId" parameterType="com.nbclass.model.User">
-        update sys_user SET email=#{email},nickname=#{nickname},img=#{img},phone=#{phone},sex=#{sex},age=#{age},update_time = now() where user_id = #{userId,jdbcType=BIGINT}
+        update zb_user SET email=#{email},nickname=#{nickname},img=#{img},phone=#{phone},sex=#{sex},age=#{age},update_time = now() where user_id = #{userId,jdbcType=BIGINT}
     </update>
 
 </mapper>
