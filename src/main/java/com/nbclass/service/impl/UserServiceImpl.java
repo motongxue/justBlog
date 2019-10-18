@@ -1,12 +1,12 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.enums.TemplateType;
-import com.nbclass.jwt.JwtUtil;
+import com.nbclass.framework.jwt.JwtUtil;
 import com.nbclass.mapper.UserMapper;
-import com.nbclass.model.User;
+import com.nbclass.model.BlogUser;
 import com.nbclass.service.MailService;
 import com.nbclass.service.UserService;
-import com.nbclass.util.*;
+import com.nbclass.framework.util.*;
 import com.nbclass.vo.ResponseVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private JwtUtil jwtUtil;
 
     @Override
-    public ResponseVo add(User user) {
+    public ResponseVo add(BlogUser user) {
         if(userMapper.selectByUsername(user.getUsername())!=null ){
             return ResponseUtil.error("用户已存在!");
         }
@@ -37,7 +37,6 @@ public class UserServiceImpl implements UserService {
         user.withUserId(UUIDUtil.getUniqueIdByUUId())
             .withSalt(UUIDUtil.uuid())
             .withNickname(user.getUsername())
-            .withIsAdmin(CoreConst.ROLE_USER)
             .withStatus(CoreConst.STATUS_VALID)
             .withCreateTime(new Date())
         ;
@@ -53,8 +52,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseVo login(User login) {
-        User user = userMapper.selectByUsername(login.getUsername());
+    public ResponseVo login(BlogUser login) {
+        BlogUser user = userMapper.selectByUsername(login.getUsername());
         if(user==null || !PasswordHelper.verify(login.getPassword(),user)){
             return ResponseUtil.error("用户名或者密码错误");
         }

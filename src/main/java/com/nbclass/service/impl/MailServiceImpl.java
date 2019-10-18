@@ -1,7 +1,7 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.enums.TemplateType;
-import com.nbclass.exception.ZbException;
+import com.nbclass.framework.exception.ZbException;
 import com.nbclass.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

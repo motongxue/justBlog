@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/font-icon/css/icon.css?version=1.0"/>
 		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/swiper4/css/swiper.min.css"/>
 		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/simplemde/github-markdown.min.css">
-		<link rel="stylesheet" th:href="@{/theme/zblog/css/web-common.css}"/>
+		<link rel="stylesheet" th:href="@{/theme/zblog/css/blog.css}"/>
 		<script src="https://cdn.nbclass.com/statics/adminlte/libs/jquery.min.js"></script>
 		<script src="https://cdn.nbclass.com/statics/adminlte/libs/bootstrap.min.js"></script>
 		<script src="https://cdn.nbclass.com/statics/layer/layer.js"></script>
@@ -21,6 +21,19 @@
 	</header>
 	<div class="zb-container zb-content">
 		<div class="zb-main">
+			<div th:if="${not #lists.isEmpty(@module.get('notifyList'))}" class="notice">
+				<div class="notice-icon">
+					<i class="fa fa-volume-up"></i>
+				</div>
+				<ul class="notice-list">
+					<li th:each="notify:${@module.get('notifyList')}">
+						<a th:if="${not #strings.isEmpty(notify.url)}" th:href="${notify.url}" target="_blank" th:text="${notify.title}">
+						</a>
+						<a th:if="${#strings.isEmpty(notify.url)}" th:text="${notify.title}">
+						</a>
+					</li>
+				</ul>
+			</div>
 			<!--<div class="swiper-container mb-20" th:if="${not #lists.isEmpty(sliderList)}">
 				<div class="swiper-wrapper">
 					<div th:each="item:${sliderList}" class="swiper-slide">
@@ -70,6 +83,18 @@
 		<div th:replace="blog/zblog/fragments/sidebar :: sidebar"></div>
 	</div>
 	<div class="return_top"><a class=" fa fa-arrow-up"></a></div>
+	<script>
+		$(function () {
+            /*通知*/
+            if ($(".notice li").length>1) {
+                $(".notice").textSlider({
+                    line: 1,
+                    speed: 300,
+                    timer: 5000
+                });
+            }
+        })
+	</script>
 	</body>
 
 </html>

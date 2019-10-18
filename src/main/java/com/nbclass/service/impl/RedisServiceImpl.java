@@ -1,7 +1,7 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.service.RedisService;
-import com.nbclass.util.GsonUtil;
+import com.nbclass.framework.util.GsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

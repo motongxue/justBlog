@@ -59,7 +59,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 mapper:
-  mappers: com.nbclass.util.MyMapper
+  mappers: com.nbclass.framework.util.MyMapper
   not-empty: false
   identity: MYSQL
 pagehelper:

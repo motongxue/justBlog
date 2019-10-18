@@ -23,25 +23,13 @@
                         首页
                     </a>
                 </li>
-                <li th:class="${categoryId=='comment' ? 'level-1 active' : 'level-1'} ">
-                    <a zjax="" href="/baby/comment" >
-                        留言板
+                <li th:if="${category.pid==null||category.pid==0}" th:each="category:${@module.get('categoryList')}" th:class="${#lists.isEmpty(category.nodes)?'':'dropdown'}">
+                    <a zjax="" th:if="${category.pid==null||category.pid==0}" th:href="@{${not #lists.isEmpty(category.nodes)? '#': ('/' + category.aliasName)}}" th:class="${#lists.isEmpty(category.nodes)?'':'dropdown-toggle'}" th:data-toggle="${#lists.isEmpty(category.nodes)?'':'dropdown'}">
+                        <span th:text="${category.name}"></span>
+                        <b th:if="${not #lists.isEmpty(category.nodes)}" class="caret"></b>
                     </a>
-                </li>
-                <li>
-                    <a target="_blank" href="/baby/music">
-                        音乐馆
-                    </a>
-                </li>
-                <li th:if="${!@perms.isLogin()}">
-                    <a  href="/login">登录</a>
-                </li>
-                <li class="nav-user-info" th:if="${@perms.isLogin()}">
-                    <a class="user-avatar"><img src=""/></a>
-                    <ul  class="dropdown-menu">
-                        <li class="level-2 isAdmin"><a href="/admin">控制台</a></li>
-                        <li class="level-2"><a href="/center">个人中心</a></li>
-                        <li class="level-2"><a id="logout">退出登录</a></li>
+                    <ul th:if="${not #lists.isEmpty(category.nodes)}" class="dropdown-menu">
+                        <li th:each="node:${category.nodes}"><a zjax="" th:href="@{${'/' + node.aliasName}}" th:text="${node.name}"></a></li>
                     </ul>
                 </li>
                 <li>
@@ -52,13 +40,5 @@
             </ul>
         </div>
     </div>
-    <script>
-        var userInfo = Core.getCurrentUser();
-        if(userInfo!=null){
-            $(".user-avatar img").attr("src",userInfo.avatar!=null?userInfo.avatar:"/img/user-default.png");
-            if(userInfo.isAdmin!==1){
-                $(".isAdmin").remove();
-            }
-        }
-    </script>
+
 </nav>

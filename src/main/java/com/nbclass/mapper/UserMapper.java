@@ -1,11 +1,10 @@
 package com.nbclass.mapper;
 
-import com.nbclass.model.User;
-import com.nbclass.util.MyMapper;
+import com.nbclass.model.BlogUser;
+import com.nbclass.framework.util.MyMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * UserMapper
@@ -15,46 +14,46 @@ import java.util.Map;
  * @author nbclass
  */
 @Repository
-public interface UserMapper extends MyMapper<User> {
+public interface UserMapper extends MyMapper<BlogUser> {
     /**
      * 根据user参数查询用户列表
      * @param user
      * @return list
      */
-    List<User> selectUsers(User user);
+    List<BlogUser> selectList(BlogUser user);
 
     /**
      * 根据用户名查询用户
      * @param username
      * @return user
      */
-    User selectByUsername(String username);
+    BlogUser selectByUsername(String username);
 
     /**
      * 根据用户ID查询用户
      * @param userId
      * @return user
      */
-    User selectByUserId(String userId);
+    BlogUser selectByUserId(String userId);
 
     /**
      * 更新最后登录时间
      * @param user
      */
-    void updateLastLoginTime(User user);
+    void updateLastLoginTime(BlogUser user);
 
     /**
      * 根据用户id更新用户信息
      * @param user
      * @return int
      */
-    int updateByUserId(User user);
+    int updateByUserId(BlogUser user);
 
     /**
      * 根据角色id查询用户list
      * @param roleId
      * @return list
      */
-    List<User> findByRoleId(String roleId);
+    List<BlogUser> findByRoleId(String roleId);
 
 }
