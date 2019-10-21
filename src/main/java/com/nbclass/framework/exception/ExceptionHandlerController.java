@@ -33,7 +33,7 @@ public class ExceptionHandlerController {
         return "forward:/error";
     }
 
-    @ExceptionHandler(ArticleNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     public String handleArticle(Exception e, HttpServletRequest request) {
         request.setAttribute("javax.servlet.error.status_code", ResponseStatus.NOT_FOUND.getCode());
         return "forward:/error";

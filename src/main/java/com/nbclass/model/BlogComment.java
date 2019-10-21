@@ -95,7 +95,5 @@ public class BlogComment implements Serializable {
     */
     private Date updateTime;
 
-    public BlogComment() {
-    }
 
 }

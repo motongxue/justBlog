@@ -50,7 +50,5 @@ public class BlogConfig implements Serializable {
     */
     private Date updateTime;
 
-    public BlogConfig() {
-    }
 
 }

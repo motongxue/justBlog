@@ -18,7 +18,7 @@ import java.util.List;
 public interface CategoryMapper extends MyMapper<BlogCategory> {
     /**
      * 根据参数查询栏目列表
-     * @param category
+     * @param category 查询参数
      * @return list
      */
     List<BlogCategory> selectList(BlogCategory category);

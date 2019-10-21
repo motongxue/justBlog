@@ -22,7 +22,19 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
+    public List<BlogCategory> selectAll() {
+        return categoryMapper.selectList(new BlogCategory());
+    }
+
+    @Override
     public List<BlogCategory> selectList(BlogCategory category) {
         return categoryMapper.selectList(category);
+    }
+
+    @Override
+    public BlogCategory selectByAlias(String alias) {
+        BlogCategory category = new BlogCategory();
+        category.setAliasName(alias);
+        return categoryMapper.selectOne(category);
     }
 }

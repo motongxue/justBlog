@@ -25,11 +25,6 @@ public class BlogCategory implements Serializable {
     private Integer id;
 
     /**
-    * 分类id
-    */
-    private String categoryId;
-
-    /**
     * 分类名称
     */
     private String name;

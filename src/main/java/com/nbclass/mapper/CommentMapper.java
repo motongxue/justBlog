@@ -18,7 +18,7 @@ import java.util.List;
 public interface CommentMapper extends MyMapper<BlogComment> {
     /**
      * 根据参数查询评论列表
-     * @param comment
+     * @param comment 查询参数
      * @return list
      */
     List<BlogComment> selectList(BlogComment comment);

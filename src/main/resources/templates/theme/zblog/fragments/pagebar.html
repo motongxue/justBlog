@@ -1,9 +1,9 @@
 <nav th:fragment="pageBar"  th:if="${page!=null && page.pages gt 1}" id="pageBar">
-    <ul class="pager page-btn" th:data-url="${#httpServletRequest.getScheme() + '://' + #httpServletRequest.getServerName() + ':' + #request.getServerPort()  + #request.getContextPath() + '/' + pageUrl}">
-       <li><a zjax th:href="${#httpServletRequest.getScheme() + '://' + #httpServletRequest.getServerName() + ':' + #request.getServerPort()  + #request.getContextPath() + '/' + pageUrl+'/'+page.prePage}" th:class="${page.hasPreviousPage == true ? 'pointer' : 'pointer btn disabled'}" ><i class="fa fa-angle-double-left"></i></a></li>
+    <ul class="pager page-btn" th:data-url="${'/' + pageUrl}">
+        <li><a zjax th:href="${'/' + pageUrl+'/'+page.prePage}" th:class="${page.hasPreviousPage ? '' : 'disabled'}" ><i class="fa fa-angle-double-left"></i></a></li>
         <span id="pageNo">
         </span>
-        <li><a zjax th:href="${#httpServletRequest.getScheme() + '://' + #httpServletRequest.getServerName() + ':' + #request.getServerPort()  + #request.getContextPath() + '/' + pageUrl+'/'+page.nextPage}" th:class="${page.hasNextPage == true ? 'pointer' : 'pointer btn disabled'}"><i class="fa fa-angle-double-right"></i></a></li>
+        <li><a zjax th:href="${'/' + pageUrl+'/'+page.nextPage}" th:class="${page.hasNextPage ? '' : 'disabled'}"><i class="fa fa-angle-double-right"></i></a></li>
     </ul>
 
     <script>
@@ -31,9 +31,9 @@
                 }
                 for(var h=0;h<pageArr.length;h++){
                     if(pageArr[h]==currentPage){
-                        pageHtml+=''+dataUrl+'<li><a class="pointer active" zjax href="/" >'+pageArr[h]+''+pageArr[h]+'</a></li>';
+                        pageHtml+='<li><a class="active" zjax href="'+dataUrl+'/'+pageArr[h]+'" >'+pageArr[h]+'</a></li>';
                     }else{
-                        pageHtml+=''+dataUrl+'<li><a class="pointer"  zjax href="/" >'+pageArr[h]+''+pageArr[h]+'</a></li>';
+                        pageHtml+='<li><a  zjax href="'+dataUrl+'/'+pageArr[h]+'" >'+pageArr[h]+'</a></li>';
                     }
                 }
                 $("#pageNo").append(pageHtml);

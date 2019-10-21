@@ -55,7 +55,5 @@ public class BlogSlider implements Serializable {
     */
     private Date updateTime;
 
-    public BlogSlider() {
-    }
 
 }

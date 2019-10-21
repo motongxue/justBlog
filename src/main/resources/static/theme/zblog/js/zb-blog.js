@@ -44,6 +44,8 @@ $(window).scroll(function() {
 });
 
 $(function () {
+    loadSlider();
+
     /*登出*/
     $("#logout").click(function () {
        Core.postAjax("/logout",{},function (data) {
@@ -64,6 +66,36 @@ $(function () {
         var curUser = Core.getCurrentUser();
         if(curUser){
             $(".nav-user-info .nav-user-info img").attr("src",curUser.avatar!=null?curUser.avatar:'/img/user-default.png');
+        }
+    }
+
+    function loadSlider(){
+        if($(".swiper-container").length){
+            var swiper = new Swiper('.swiper-container', {
+                speed:500,
+                spaceBetween: 30,
+                centeredSlides: true,
+                loop : true,
+                effect : 'fade',
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+            swiper.el.onmouseover = function(){
+                swiper.autoplay.stop();
+            }
+            swiper.el.onmouseout = function(){
+                swiper.autoplay.start();
+            }
         }
     }
 

@@ -41,7 +41,7 @@
         update_time
     </sql>
 
-    <select id="selectList">
+    <select id="selectList" resultMap="BaseResultMap">
 
     </select>
 

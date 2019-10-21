@@ -70,7 +70,5 @@ public class BlogLink implements Serializable {
     */
     private Date updateTime;
 
-    public BlogLink() {
-    }
 
 }

@@ -1,10 +1,7 @@
 package com.nbclass.service;
 
-import com.github.pagehelper.PageHelper;
 import com.nbclass.enums.SliderType;
-import com.nbclass.model.BlogCategory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nbclass.framework.util.CoreConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,33 +21,38 @@ public class ModuleService {
     private TagService tagService;
     @Autowired
     private SliderService sliderService;
+    @Autowired
+    private ArticleService articleService;
+    @Autowired
+    private ConfigService configService;
+    @Autowired
+    private LinkService linkService;
 
     public Object get(String moduleName) {
         switch (moduleName) {
             case "categoryList":        //分类
-                return categoryService.selectList(new BlogCategory());
+                return categoryService.selectAll();
             case "tagList":             //标签
                 return tagService.selectAll();
-            case "notifyList":          //轮播文章
+            case "linkList":            //友链
+                return linkService.selectAll();
+            case "notifyList":          //系统公告
                 return sliderService.selectByType(SliderType.NOTIFY.getType());
             case "sliderList":          //轮播文章
                 return sliderService.selectByType(SliderType.SLIDER.getType());
-           /*
-
             case "recentList":          //最近文章
-                return bizArticleService.recentList(CoreConst.PAGE_SIZE);
+                return articleService.recentList(CoreConst.PAGE_SIZE);
             case "recommendedList":    //推荐文章
-                return bizArticleService.recommendedList(CoreConst.PAGE_SIZE);
+                return articleService.recommendedList(CoreConst.PAGE_SIZE);
             case "hotList":             //热门文章
-                return bizArticleService.hotList(CoreConst.PAGE_SIZE);
-            case "linkList":            //友链
-                return bizLinkService.selectByStatus(CoreConst.STATUS_VALID);
+                return articleService.hotList(CoreConst.PAGE_SIZE);
+            case "randomList":         //随机文章
+                return articleService.randomList(CoreConst.PAGE_SIZE);
             case "siteInfo":            //网站信息统计
-                return siteInfoService.getSiteInfo();
-            case "sysConfig":           //网站基本信息配置
-                return sysConfigService.selectAll();
-            case "notifies":             //热门文章
-                return notifyService.selectAll();
+                return articleService.siteInfoStatistics();
+            case "sysConfig":           //网站基本信息
+                return configService.selectAll();
+           /*
             case "latestComments":      //最新评论
                 PageHelper.startPage(1,10);
                 CommentConditionVo commentConditionVo = new CommentConditionVo();

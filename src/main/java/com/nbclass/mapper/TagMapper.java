@@ -18,4 +18,5 @@ import java.util.List;
 public interface TagMapper extends MyMapper<BlogTag> {
 
 
+
 }

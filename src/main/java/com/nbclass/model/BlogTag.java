@@ -38,7 +38,5 @@ public class BlogTag implements Serializable {
     */
     private Date updateTime;
 
-    public BlogTag() {
-    }
 
 }

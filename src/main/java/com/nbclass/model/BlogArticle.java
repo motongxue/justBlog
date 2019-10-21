@@ -4,6 +4,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
 
@@ -119,6 +120,11 @@ public class BlogArticle implements Serializable {
     private Integer commentNum;
 
     /**
+     * 文章模板
+     */
+    private String template;
+
+    /**
     * seo_key
     */
     private String seoKey;
@@ -143,7 +149,9 @@ public class BlogArticle implements Serializable {
     */
     private Date updateTime;
 
-    public BlogArticle() {
-    }
+    @Transient
+    private BlogCategory category;
 
+    @Transient
+    private List<BlogTag> tags;
 }

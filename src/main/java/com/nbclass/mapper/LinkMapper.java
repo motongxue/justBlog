@@ -16,12 +16,18 @@ import java.util.List;
  */
 @Repository
 public interface LinkMapper extends MyMapper<BlogLink> {
+
     /**
      * 根据参数查询友链列表
-     * @param link
+     * @param link 查询参数
      * @return list
      */
     List<BlogLink> selectList(BlogLink link);
 
-
+    /**
+     * 根据参数查询友链列表
+     * @param ids id集合
+     * @return int
+     */
+    int deleteBatch(Integer[] ids);
 }
