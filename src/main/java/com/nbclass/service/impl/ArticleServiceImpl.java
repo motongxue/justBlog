@@ -1,19 +1,21 @@
 package com.nbclass.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.util.CoreConst;
+import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.mapper.ArticleMapper;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.service.ArticleService;
+import com.nbclass.service.RedisService;
 import com.nbclass.vo.ArticleVo;
+import com.nbclass.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ArticleServiceImpl
@@ -24,6 +26,8 @@ import java.util.Map;
  */
 @Service
 public class ArticleServiceImpl implements ArticleService {
+    @Autowired
+    private RedisService redisService;
     @Autowired
     private ArticleMapper articleMapper;
 
@@ -100,5 +104,37 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Map<String, Object> siteInfoStatistics() {
         return articleMapper.siteInfoStatistics();
+    }
+
+    @Override
+    public ResponseVo articleLook(Integer articleId, String ip) {
+        String cacheKey = CacheKeyPrefix.ARTICLE_LOOK.getPrefix()+articleId+"_"+ip;
+        Object obj = redisService.get(cacheKey);
+        if(obj==null){
+            Map<String,Object> map = new HashMap<>();
+            map.put("articleId", articleId);
+            map.put("lookNum", true);
+            articleMapper.updateNum(map);
+            //1小时过期
+            redisService.set(cacheKey, true, 1, TimeUnit.HOURS);
+        }
+        return ResponseUtil.success();
+    }
+
+    @Override
+    public ResponseVo articleLove(Integer articleId, String ip) {
+        String cacheKey = CacheKeyPrefix.ARTICLE_LOVE.getPrefix()+articleId+"_"+ip;
+        Object obj = redisService.get(cacheKey);
+        if(obj==null){
+            Map<String,Object> map = new HashMap<>();
+            map.put("articleId", articleId);
+            map.put("supportNum", true);
+            articleMapper.updateNum(map);
+            //1小时过期
+            redisService.set(cacheKey, true, 1, TimeUnit.HOURS);
+        }else{
+            return ResponseUtil.error("您已经点过赞了~");
+        }
+        return ResponseUtil.success();
     }
 }

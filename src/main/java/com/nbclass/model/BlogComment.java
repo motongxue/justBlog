@@ -4,6 +4,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +27,19 @@ public class BlogComment implements Serializable {
     private Integer sid;
 
     /**
+     * 主评论id
+     */
+    private Integer mid;
+
+    /**
     * 父级评论的id
     */
-    private Integer pid;
+    private Integer parentId;
+
+    /**
+     * 父级评论的昵称 （冗余）
+     */
+    private String parentNickname;
 
     /**
     * 评论人的qq（未登录用户）
@@ -71,6 +82,10 @@ public class BlogComment implements Serializable {
     private String content;
 
     /**
+     * 楼层
+     */
+    private Integer floor;
+    /**
     * 支持（赞）数
     */
     private Integer supportNum;
@@ -95,5 +110,12 @@ public class BlogComment implements Serializable {
     */
     private Date updateTime;
 
+    @Transient
+    BlogComment parent;
 
+    @Transient
+    List<BlogComment> nodes;
+
+    @Transient
+    BlogArticle article;
 }

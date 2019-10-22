@@ -1189,51 +1189,75 @@ body {
 
 .comment li {
     padding: 10px 0;
-    border-bottom: 1px dashed #e5e5e5
 }
 
-.comment-body .comment-user-img {
+.comment-body{
+    padding-top: 10px;
+}
+
+.comment-body-sub{
+    margin-left: 55px;
+    padding: 10px 0;
+}
+
+.comment-body .comment-info, .comment-body-sub{
+    border-bottom: 1px dashed #e5e5e5;
+}
+
+.comment-body .comment-user-img, .comment-body-sub .comment-user-img{
     float: left
 }
 
-.comment-body .comment-user-img>img {
+.comment-body .comment-user-img>img, .comment-body-sub .comment-user-img>img {
     width: 42px;
     height: 42px;
     border-radius: 50%
 }
 
-.comment-body .comment-info {
-    margin-left: 55px
+.comment-body .comment-info{
+    margin-left: 55px;
+    padding-bottom: 10px;
+}
+.comment-body-sub .comment-info{
+    margin-left: 55px;
+}
+.comment-body .comment-info .comment-nickname a, .comment-body-sub .comment-info .comment-nickname a{
+    color: #333;
 }
 
-.comment-body .comment-info .comment-time {
-    float: right;
-    color: #c0c0c0
+.comment-body-sub .comment-info .comment-nickname a.comment-link{
+    margin-left: 5px;
+    color:#0bb8ca;
 }
 
-.comment-body .comment-info .comment-content {
-    color: #566573;
+.comment-body .comment-info .comment-time, .comment-body .comment-info .comment-floor, .comment-body-sub .comment-info .comment-time{
+    margin-left: 10px;
+    color: #999
+}
+
+.comment-body .comment-info .comment-content, .comment-body-sub .comment-info .comment-content {
+    color: #555;
     margin-top: 5px
 }
 
-.comment-body .comment-info .comment-footer {
+.comment-body .comment-info .comment-footer, .comment-body-sub .comment-info .comment-footer {
     color: #999;
     text-align: right
 }
 
-.comment-body .comment-info .comment-footer .audit {
+.comment-body .comment-info .comment-footer .audit, .comment-body-sub .comment-info .comment-footer .audit {
     color: #0bb8ca
 }
 
-.comment-body .comment-info p {
+.comment-body .comment-info p, .comment-body-sub .comment-info p {
     margin: 0
 }
 
-.comment-body .comment-info .reply,.comment-body .comment-info .cancel-reply {
+.comment-body .comment-info .reply,.comment-body .comment-info .cancel-reply, .comment-body-sub .comment-info .reply,.comment-body-sub .comment-info .cancel-reply {
     cursor: pointer
 }
 
-.comment-body .comment-info .reply:hover,.comment-body .comment-info .cancel-reply:hover {
+.comment-body .comment-info .reply:hover,.comment-body .comment-info .cancel-reply:hover, .comment-body-sub .comment-info .reply:hover,.comment-body-sub .comment-info .cancel-reply:hover {
     color: #0bb8ca
 }
 

@@ -12,7 +12,6 @@
 		<link rel="stylesheet" th:href="@{/theme/zblog/css/blog.css}"/>
 		<script src="https://cdn.nbclass.com/statics/adminlte/libs/jquery.min.js"></script>
 		<script src="https://cdn.nbclass.com/statics/adminlte/libs/bootstrap.min.js"></script>
-		<script src="https://cdn.nbclass.com/statics/layer/layer.js"></script>
 		<script th:src="@{/js/core.js}"></script>
 		<script th:src="@{/theme/zblog/js/zb-blog.js}"></script>
 	</head>
@@ -72,18 +71,20 @@
 			<div th:replace="theme/zblog/fragments/sidebar :: sidebar"></div>
 			<script>
                 var sid=[[${article.id}]];
-                /*$(function () {
-                    Core.postAjax("/baby/api/article/look",{"articleId":sid})
+                $(function () {
+                    Core.postAjax("/api/article/look",{"articleId":sid})
                     $(".thumbs-button").click(function () {
-                        Core.postAjax("/baby/api/love",{"bizId":sid,"bizType":1},function (data) {
+                        Core.postAjax("/api/article/love",{"articleId":sid},function (data) {
                             if(data.status==200){
                                 $("#loveCount").text(parseInt($("#loveCount").text())+1);
+                            }else{
+                                Core.msg(data.msg,2)
                             }
                         });
                     })
-                })*/
+                })
 			</script>
-			<!--<script  th:if="${article.comment==1}">
+			<script  th:if="${article.isComment}">
                 $(function () {
                     var zblogNickName=Core.getCookie("zblog-username");
                     var zblogQQ=Core.getCookie("zblog-qq");
@@ -97,8 +98,9 @@
                     }else{
                         $("#user-info").show();
                     }
-                    function init(pageNumber) {
-                        Core.postAjax("/baby/api/comments",{"sid":sid,"pageNumber": (pageNumber==null? 1 : pageNumber),"status":1},function (data) {
+                    function init(pageNum) {
+                        Core.postAjax("/api/comments",{"sid":sid,"pageNum": (pageNum==null? 1 : pageNum)},function (data) {
+                            var data = data.data;
                             var commentOne="";
                             if(data.list.length==0){
                                 commentOne+='<div class="no-comment">暂无评论，快来占领宝座</div>';
@@ -116,27 +118,49 @@
                                         '				<span class="comment-nickname">'+
                                         '					<a href="javascript:void(0)">'+value.nickname+'</a>'+
                                         '				</span>'+
-                                        '				<span class="comment-time">'+value.createTime+
+                                        '				<span class="comment-time">'+Core.getDateDiff(new Date(value.createTime))+
+                                        '				</span>'+
+                                        '				<span class="comment-floor">#'+value.floor+'楼'+
                                         '				</span>'+
                                         '			</div>'+
-                                        '           <div class="comment-content">';
-                                    if(value.parent!=null){
-                                        commentOne +=
-                                            '<div class="comment-parent">'+
-                                            '				<div class="comment-parent-user"><a class="comment-link" data-link="comment-'+value.parent.id+'">@'+value.parent.nickname+'</a></div>'+
-                                            '				<div class="comment-parent-content">'+value.parent.content+'</div>'+
-                                            '			</div> ';
-                                    }
-                                    commentOne +='<div class="comment-content-text">'+value.content+'</div>'+
+                                        '           <div class="comment-content">'+
+                                        '               <div class="comment-content-text">'+value.content+'</div>'+
                                         '			</div>'+
                                         '			<div class="comment-footer">'+
-                                        '				<span class="reply mr-5" reply-id="'+value.id+'">回复</span>'+
+                                        '				<span class="reply mr-5" reply-id="'+value.id+'" reply-mid="'+value.id+'" reply-nickname="'+value.nickname+'">回复</span>'+
                                         '				<span class="cancel-reply mr-5" style="display: none;">取消回复</span>'+
-                                        '				<span class="comment-support pointer fa fa-thumbs-o-up" biz-id="'+value.id+'">'+value.loveCount+'</span>'+
+                                        '				<span class="comment-support pointer fa fa-thumbs-o-up" biz-id="'+value.id+'">'+value.supportNum+'</span>'+
                                         '			</div>'+
                                         '		</div>'+
-                                        '	</div> '+
-                                        '</li>';
+                                        '	</div> ';
+                                    if(value.nodes!=null){
+                                        $.each(value.nodes, function (nIndex,nValue) {
+                                            commentOne +=
+                                                '<div class="comment-body-sub" id="comment-'+nValue.id+'">'+
+                                                '		<div class="comment-user-img">'+
+                                                '			<img src="'+(nValue.avatar||"/img/user-default.png")+'" onerror="this.src=\'/img/user-default.png\'" />'+
+                                                '		</div>'+
+                                                '		<div class="comment-info">'+
+                                                '			<div class="comment-top">'+
+                                                '				<span class="comment-nickname">'+
+                                                '					<a href="javascript:void(0)">'+nValue.nickname+'</a><a class="comment-link" data-link="comment-'+nValue.parentId+'">@'+nValue.parentNickname+'</a>'+
+                                                '				</span>'+
+                                                '				<span class="comment-time">'+Core.getDateDiff(new Date(nValue.createTime))+
+                                                '				</span>'+
+                                                '			</div>'+
+                                                '           <div class="comment-content">'+
+                                                '               <div class="comment-content-text">'+nValue.content+'</div>'+
+                                                '			</div>'+
+                                                '			<div class="comment-footer">'+
+                                                '				<span class="reply mr-5" reply-id="'+nValue.id+'" reply-mid="'+nValue.mid+'" reply-nickname="'+nValue.nickname+'">回复</span>'+
+                                                '				<span class="cancel-reply mr-5" style="display: none;">取消回复</span>'+
+                                                '				<span class="comment-support pointer fa fa-thumbs-o-up" biz-id="'+nValue.id+'">'+nValue.supportNum+'</span>'+
+                                                '			</div>'+
+                                                '		</div>'+
+                                                '</div> ';
+                                        })
+                                    }
+                                    commentOne +='</li>';
                                 })
                                 $("#comment-more").remove();
                                 if(data.hasNextPage){
@@ -151,11 +175,13 @@
                                 $("#comment-ul").on("click",".comment-link",function () {
                                     var commentLinkId = $(this).attr("data-link");
                                     $("html,body").animate({
-                                        scrollTop:$("#"+commentLinkId).offset().top},{duration: 300,easing: "swing"})
+                                        scrollTop:$("#"+commentLinkId).offset().top-55},{duration: 300,easing: "swing"})
                                 })
 
                                 $(".reply").click(function () {
                                     var replyId=$(this).attr("reply-id");
+                                    var replyMid=$(this).attr("reply-mid");
+                                    var replyNickname=$(this).attr("reply-nickname");
                                     if($("#reply-comment-form").length>0){
                                         $replyForm=$("#reply-comment-form");
                                         $("#reply-comment-form").remove();
@@ -169,7 +195,9 @@
                                         var replyForm =
                                             '<form id="reply-comment-form" style="display: none;" class="form-horizontal mt-10">'+
                                             '   <input name="sid" type="hidden" value="'+sid+'"  />'+
-                                            '   <input id="replyId" name="pid" type="hidden" value="'+replyId+'"  />'+
+                                            '   <input id="replyMid" name="mid" type="hidden" value="'+replyMid+'"  />'+
+                                            '   <input id="replyId" name="parentId" type="hidden" value="'+replyId+'"  />'+
+                                            '   <input id="replyNickname" name="parentNickname" type="hidden" value="'+replyNickname+'"  />'+
                                             '   <div class="form-group" style="display: '+(zblogNickName==""?"block":"none")+'">'+
                                             '       <div class="col-sm-4">'+
                                             '           <input id="reply-nickname" value="'+zblogNickName+'"  type="text" class="form-control" name="nickname" placeholder="昵称(必填)" />'+
@@ -198,16 +226,16 @@
                                     $(this).next().show();
                                     $("#submitReplyCommentBtn").on('click',function () {
                                         if($("#reply-nickname").val()==""){
-                                            layer.msg("请输入昵称~")
+                                            Core.msg("请输入昵称~")
                                             return;
                                         }else if($("#reply-comment-textarea").val()==""){
-                                            layer.msg("说点什么吧~")
+                                            Core.msg("说点什么吧~")
                                             return;
                                         }
                                         var replyContent = formatContent($("#reply-comment-textarea").val());
                                         $("#reply-comment-textarea-input").val(replyContent);
-                                        Core.postAjax("/baby/api/comment/save",$("#reply-comment-form").serialize(),function (data) {
-                                            layer.msg(data.msg);
+                                        Core.postAjax("/api/comment/save",$("#reply-comment-form").serialize(),function (data) {
+                                            Core.msg(data.msg);
                                             if(data.status==200){
                                                 $("#reply-comment-textarea-input,#reply-comment-textarea").val("");
                                                 $("#reply-comment-form").hide();
@@ -231,9 +259,11 @@
 
                                 $(".comment-support").click(function () {
                                     $thisLove = $(this);
-                                    Core.postAjax("/baby/api/love",{"bizId":$(this).attr("biz-id"),"bizType":2},function (data) {
+                                    Core.postAjax("/api/comment/love",{"commentId":$(this).attr("biz-id")},function (data) {
                                         if(data.status==200){
                                             $thisLove.text(parseInt($thisLove.text())+1);
+                                        }else{
+                                            Core.msg(data.msg,2);
                                         }
                                     });
                                 })
@@ -246,16 +276,16 @@
 					/*提交评论*/
                     $("#submitCommentBtn").click(function () {
                         if($("#nickname").val()==""){
-                            layer.msg("请输入昵称~")
+                            Core.msg("请输入昵称~")
                             return;
                         }else if($("#comment-textarea").val()==""){
-                            layer.msg("说点什么吧~")
+                            Core.msg("说点什么吧~")
                             return;
                         }
                         var content = formatContent($("#comment-textarea").val());
                         $("#comment-textarea-input").val(content);
-                        Core.postAjax("/baby/api/comment/save",$("#comment-form").serialize(),function (data) {
-                            layer.msg(data.msg);
+                        Core.postAjax("/api/comment/save",$("#comment-form").serialize(),function (data) {
+                            Core.msg(data.msg);
                             if(data.status==200){
                                 $("#comment-textarea-input,#comment-textarea").val("");
                                 handleCommentData(data.data);
@@ -320,15 +350,15 @@
                             '<div class="comment-info">'+
                             '<div class="comment-top">'+
                             '<span class="comment-nickname"> <a href="javascript:void(0)">'+data.nickname+'</a> </span>'+
-                            '<span class="comment-time">'+data.createTime+'</span>'+
+                            '<span class="comment-time">'+Core.getDateDiff(new Date(data.createTime))+'</span>'+
                             ' </div>'+
                             ' <div class="comment-content">';
                         if(isReply){
-                          var pNickname= $("#reply-comment-form").parent().find(".comment-top .comment-nickname>a").text();
+                          var pNickname= $("#reply-comment-form").parent().find(".comment-top .comment-nickname>a:first-child").text();
                           var pText =  $("#reply-comment-form").parent().find(".comment-content>.comment-content-text").text();
                           html+='<div class="comment-parent">'+
                             '<div class="comment-parent-user">	'+
-                            '<a class="comment-link" data-link="comment-'+data.pid+'">@'+pNickname+'</a>	'+
+                            '<a class="comment-link" data-link="comment-'+data.parentId+'">@'+pNickname+'</a>	'+
                             '</div>	'+
                             '<div class="comment-parent-content">'+pText+'</div>	'+
                             '</div>';
@@ -347,7 +377,7 @@
 
 
 
-			</script>-->
+			</script>
 
 		</div>
 		<div class="return_top"><a class=" fa fa-arrow-up"></a></div>

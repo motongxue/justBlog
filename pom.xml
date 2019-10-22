@@ -34,6 +34,7 @@
 		<jsoup.version>1.9.2</jsoup.version>
 		<jwt.version>3.8.1</jwt.version>
 		<lombok.version>1.18.0</lombok.version>
+        <userAgent.version>1.21</userAgent.version>
 	</properties>
 
 	<dependencies>
@@ -145,6 +146,11 @@
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
 			<version>${jwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.bitwalker</groupId>
+			<artifactId>UserAgentUtils</artifactId>
+			<version>${userAgent.version}</version>
 		</dependency>
 
 		<dependency>

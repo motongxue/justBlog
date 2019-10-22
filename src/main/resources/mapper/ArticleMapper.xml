@@ -190,6 +190,18 @@
         INNER JOIN blog_category category ON a.category_id = category.id
         INNER JOIN blog_article_tag atag ON a.id = atag.article_id
         INNER JOIN blog_tag t ON atag.tag_id = t.id
+        WHERE a.alias_name=#{alias}
     </select>
+
+    <update id="updateNum" parameterType="map">
+        update blog_article
+        <set>
+            <if test="lookNum != null">look_num = look_num+1, </if>
+            <if test="supportNum != null">support_num = support_num+1, </if>
+            <if test="opposeNum != null">oppose_num = oppose_num+1, </if>
+            <if test="commentNum != null">comment_num = comment_num+1, </if>
+        </set>
+        where id=#{articleId}
+    </update>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.nbclass.service;
 
 import com.nbclass.model.BlogArticle;
 import com.nbclass.vo.ArticleVo;
+import com.nbclass.vo.ResponseVo;
 
 import java.util.List;
 import java.util.Map;
@@ -65,4 +66,17 @@ public interface ArticleService {
      * @return map
      */
     Map<String, Object> siteInfoStatistics();
+
+    /**
+     * 文章查看
+     * @return ResponseVo
+     */
+    ResponseVo articleLook(Integer articleId, String ip);
+
+    /**
+     * 文章点赞
+     * @return ResponseVo
+     */
+    ResponseVo articleLove(Integer articleId, String ip);
+
 }

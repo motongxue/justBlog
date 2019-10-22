@@ -45,4 +45,10 @@ public interface ArticleMapper extends MyMapper<BlogArticle> {
      */
     BlogArticle selectByAliasName(String alias);
 
+    /**
+     * 更新文章相关数量
+     * @return int
+     */
+    int updateNum(Map<String,Object> map);
+
 }
