@@ -21,4 +21,7 @@ public class ZbProperties{
      */
     private String workDir;
 
+    public String getWorkDir(){
+        return  workDir.startsWith("/") ? workDir : (workDir+"/");
+    }
 }

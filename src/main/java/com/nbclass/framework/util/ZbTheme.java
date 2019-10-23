@@ -1,4 +1,4 @@
-package com.nbclass.model;
+package com.nbclass.framework.util;
 
 import lombok.Data;
 
@@ -6,15 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 
 @Data
-public class BlogTheme  implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class ZbTheme implements Comparator<ZbTheme> {
 
     /**
      * 名称
@@ -37,6 +33,10 @@ public class BlogTheme  implements Serializable {
     private Integer setFlag;
 
     /**
+     * 设置内容的json
+     */
+    private String settings;
+    /**
      * 状态 1-启用，0-未启用
      */
     private Integer status;
@@ -51,5 +51,9 @@ public class BlogTheme  implements Serializable {
      */
     private Date updateTime;
 
+    @Override
+    public int compare(ZbTheme left, ZbTheme right) {
+        return left.getName().compareTo(right.getName());
+    }
 
 }

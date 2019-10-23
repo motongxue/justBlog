@@ -1,13 +1,11 @@
 package com.nbclass.service;
 
-import com.nbclass.model.BlogTheme;
+import com.nbclass.framework.util.ZbTheme;
 
 public interface ThemeService {
 
-    int useTheme(Integer id);
+    void useTheme(ZbTheme theme);
 
-    BlogTheme selectCurrent();
-
-    int deleteBatch(Integer[] ids);
+    ZbTheme selectCurrent();
 
 }

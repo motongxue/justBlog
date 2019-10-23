@@ -1,8 +1,8 @@
 package com.nbclass.service.impl;
 
-import com.nbclass.framework.util.CoreConst;
-import com.nbclass.mapper.ThemeMapper;
-import com.nbclass.model.BlogTheme;
+import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.framework.util.ZbTheme;
+import com.nbclass.service.RedisService;
 import com.nbclass.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,22 +11,16 @@ import org.springframework.stereotype.Service;
 public class ThemeServiceImpl implements ThemeService {
 
     @Autowired
-    private ThemeMapper themeMapper;
+    private RedisService redisService;
 
     @Override
-    public int useTheme(Integer id) {
-        return themeMapper.updateStatusById(id, CoreConst.STATUS_VALID);
+    public void useTheme(ZbTheme theme) {
+        redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), theme);;
     }
 
     @Override
-    public BlogTheme selectCurrent() {
-        BlogTheme bizTheme = new BlogTheme();
-        bizTheme.setStatus(CoreConst.STATUS_VALID);
-        return themeMapper.selectOne(bizTheme);
+    public ZbTheme selectCurrent() {
+        return redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
     }
 
-    @Override
-    public int deleteBatch(Integer[] ids) {
-        return themeMapper.deleteBatch(ids);
-    }
 }

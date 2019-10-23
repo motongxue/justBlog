@@ -59,26 +59,32 @@ public class FileUtil {
         }
     }
 
-    public static LinkedList<String> scanSystemTheme(Path topPath) {
-        if (!Files.isDirectory(topPath)) {
+    public static LinkedList<String> scanSystemTheme(String topPath) {
+        File filePath = new File(topPath);
+        if (!filePath.isDirectory()) {
             return null;
         }
-        try (Stream<Path> pathStream = Files.list(topPath)) {
-            LinkedList<String> themeList = new LinkedList<>();
-            pathStream.forEach(path -> {
-                if (Files.isDirectory(path)) {
-                    themeList.add(path.getFileName().toString());
-                }
-            });
-            return themeList;
-        } catch (IOException e) {
-            throw new ZbException("Failed to scan system theme");
+        File[] files = filePath.listFiles();
+        LinkedList<String> themeList = new LinkedList<>();
+        for(File file:files){
+            if(file.isDirectory()){
+                themeList.add(file.getName());
+            }
         }
+        return themeList;
     }
 
     public static boolean isExist(String path){
         File file =new File(path);
         return file.exists();
+    }
+
+    public static void copyDictionary(String source, String dest){
+        try {
+            FileUtils.copyDirectory(new File(source),new File(dest));
+        } catch (IOException e) {
+            throw new ZbException("Failed to copyDictionary",e);
+        }
     }
 
     private static List<ZbFile> listFiles(List<ZbFile> list, Path topPath, boolean recursion){
