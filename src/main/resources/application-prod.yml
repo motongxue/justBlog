@@ -13,3 +13,15 @@ spring:
     host: localhost
     port: 6379
     password: Abc523179414
+  mail:
+    host: smtp.qq.com #发送邮件服务器
+    username: xxx@qq.com #发送邮件的邮箱地址
+    password:  xxxxxx #qq邮箱设置里的授权码
+    properties.mail.smtp.port: 465
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+zb:
+  workDir: /home/

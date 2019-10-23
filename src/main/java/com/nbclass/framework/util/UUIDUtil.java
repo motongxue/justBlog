@@ -2,9 +2,11 @@ package com.nbclass.framework.util;
 
 import java.util.UUID;
 /**
+ * UUIDUtil
+ *
  * @version V1.0
- * @date 2018年7月11日
- * @author superzheng
+ * @date 2019/10/11
+ * @author nbclass
  */
 public class UUIDUtil {
 

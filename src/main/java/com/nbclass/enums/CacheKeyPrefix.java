@@ -2,7 +2,7 @@ package com.nbclass.enums;
 
 public enum CacheKeyPrefix {
     ARTICLE_LOOK("ARTICLE_LOOK_"),ARTICLE_LOVE("ARTICLE_LOVE_"),COMMENT_LOVE("COMMENT_LOVE_"),
-    COMMENT_FLOOR("COMMENT_FLOOR_")
+    COMMENT_FLOOR("COMMENT_FLOOR_"),CURRENT_THEME("CURRENT_THEME")
     ;
 
     String prefix;

@@ -2,6 +2,13 @@ package com.nbclass.framework.util;
 
 import java.util.regex.Pattern;
 
+/**
+ * ValidatorUtil
+ *
+ * @version V1.0
+ * @date 2019/10/11
+ * @author nbclass
+ */
 public class ValidatorUtil {
     /**
      * 正则表达式：验证用户名

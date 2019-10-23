@@ -10,9 +10,11 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 /**
+ * CopyUtil
+ *
  * @version V1.0
- * @date 2018年7月11日
- * @author superzheng
+ * @date 2019/10/11
+ * @author nbclass
  */
 public class CopyUtil {
     private static Logger logger = LoggerFactory.getLogger(CopyUtil.class);

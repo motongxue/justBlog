@@ -71,3 +71,6 @@ jwt:
   secret: 8ba38824023f4e8a854a866bcb9e7c6d
   issuer: sys_user
   expire: 30
+zb:
+  staticThemePrefix: /static/theme/
+  workDir: D:\file\

@@ -6,6 +6,13 @@ import com.google.gson.GsonBuilder;
 import java.io.Reader;
 import java.lang.reflect.Type;
 
+/**
+ * GsonUtil
+ *
+ * @version V1.0
+ * @date 2019/10/11
+ * @author nbclass
+ */
 public class GsonUtil {
 
 	private static Gson gson = new GsonBuilder().disableHtmlEscaping().create();

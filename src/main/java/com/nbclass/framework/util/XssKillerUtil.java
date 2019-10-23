@@ -7,11 +7,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
- * @version 1.0
- * @website https://www.zhyd.me
- * @date 2018/8/07 18:13
- * @since 1.0
+ * XssKillerUtil
+ *
+ * @version V1.0
+ * @date 2019/10/11
+ * @author nbclass
  */
 public class XssKillerUtil {
     private static final String[] WHITE_LIST = {"p", "strong", "pre", "code", "span", "blockquote", "em", "a", "br","br/"};

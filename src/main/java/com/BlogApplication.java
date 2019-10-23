@@ -12,7 +12,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication
 @MapperScan(basePackages = "com.nbclass.mapper")
 public class BlogApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(BlogApplication.class, args);
 	}

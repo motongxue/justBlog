@@ -15,4 +15,6 @@ public class CoreConst {
     public static final Integer  IS_NO                     = 0;
     public static final Integer  PAGE_SIZE                = 10;
     public static final String   ACCESS_TOKEN             = "access_token";
+    public static final String   ROOT_PATH                = System.getProperty("user.dir");
+    public static final String   THEME_FOLDER             = "templates/theme/";
 }

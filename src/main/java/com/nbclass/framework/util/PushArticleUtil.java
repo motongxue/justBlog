@@ -8,9 +8,11 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
+ * 推送文章Util
+ *
  * @version V1.0
- * @date 2018年10月28日
- * @author superzheng
+ * @date 2019/10/11
+ * @author nbclass
  */
 public class PushArticleUtil {
     /*推送百度*/

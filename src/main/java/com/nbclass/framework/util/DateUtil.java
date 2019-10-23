@@ -12,7 +12,13 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ * DateUtil
+ *
+ * @version V1.0
+ * @date 2019/10/11
+ * @author nbclass
+ */
 public class DateUtil{
 
     public final static long   ONE_DAY_SECONDS       = 86400;

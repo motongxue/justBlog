@@ -27,13 +27,11 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.Method;
 
 /**
- * AOP相关的工具
+ * AspectUtil
  *
- * @author yadong.zhang (yadong.zhang0415(a)gmail.com)
- * @version 1.0
- * @website https://www.zhyd.me
- * @date 2018/6/29 11:59
- * @since 1.0
+ * @version V1.0
+ * @date 2019/10/11
+ * @author nbclass
  */
 public class AspectUtil {
 
