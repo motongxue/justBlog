@@ -1,16 +1,14 @@
 package com.nbclass.framework.util;
 
 import com.nbclass.framework.exception.ZbException;
-import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -25,6 +23,26 @@ public class FileUtil {
 
     private static final String[] CAN_EDIT_SUFFIX = {".html", ".css", ".js", ".yaml", ".yml", ".properties"};
 
+
+    public static void copyFolder(Path source, Path target) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+
+            private Path current;
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                current = target.resolve(source.relativize(dir).toString());
+                Files.createDirectories(current);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.copy(file, target.resolve(source.relativize(file).toString()), StandardCopyOption.REPLACE_EXISTING);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
 
 
     public static List<ZbFile> listFiles(Path topPath, boolean recursion){
@@ -59,31 +77,20 @@ public class FileUtil {
         }
     }
 
-    public static LinkedList<String> scanSystemTheme(String topPath) {
-        File filePath = new File(topPath);
-        if (!filePath.isDirectory()) {
+    public static LinkedList<String> scanSystemTheme(Path topPath) {
+        if (!Files.isDirectory(topPath)) {
             return null;
         }
-        File[] files = filePath.listFiles();
-        LinkedList<String> themeList = new LinkedList<>();
-        for(File file:files){
-            if(file.isDirectory()){
-                themeList.add(file.getName());
-            }
-        }
-        return themeList;
-    }
-
-    public static boolean isExist(String path){
-        File file =new File(path);
-        return file.exists();
-    }
-
-    public static void copyDictionary(String source, String dest){
-        try {
-            FileUtils.copyDirectory(new File(source),new File(dest));
+        try (Stream<Path> pathStream = Files.list(topPath)) {
+            LinkedList<String> themeList = new LinkedList<>();
+            pathStream.forEach(path -> {
+                if (Files.isDirectory(path)) {
+                    themeList.add(path.getFileName().toString());
+                }
+            });
+            return themeList;
         } catch (IOException e) {
-            throw new ZbException("Failed to copyDictionary",e);
+            throw new ZbException("Failed to scan system theme");
         }
     }
 
@@ -129,8 +136,7 @@ public class FileUtil {
 
     public static void main(String[] args) {
         try {
-            String filePath = new ClassPathResource("/templates/theme/zblog/").getPath();
-           /* String filePath = ResourceUtils.getFile("classpath:templates/theme/zblog/").getPath();*/
+             String filePath = ResourceUtils.getFile("classpath:templates/theme/zblog/").getPath();
             List<ZbFile> files = FileUtil.listFiles(Paths.get(filePath), true);
             List<ZbFile> files1  = FileUtil.listFiles(Paths.get(filePath), false);
             List<ZbFile> files2 = FileUtil.listFileTree(Paths.get(filePath));
