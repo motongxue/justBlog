@@ -1,16 +1,18 @@
-package com.nbclass.framework.util;
+package com.nbclass.framework.Theme;
 
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Map;
 
 @Data
 public class ZbTheme implements Comparator<ZbTheme> {
+
+    /**
+     * 主题主键
+     */
+    private String id;
 
     /**
      * 名称
@@ -33,9 +35,17 @@ public class ZbTheme implements Comparator<ZbTheme> {
     private Integer setFlag;
 
     /**
-     * 设置内容的json
+     * 设置的配置
      */
-    private String settings;
+    private Object settings;
+
+    /**
+     * 设置的配置的form
+     */
+    private Map<String,Object> form;
+
+    private String version;
+
     /**
      * 状态 1-启用，0-未启用
      */

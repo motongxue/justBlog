@@ -1,14 +1,17 @@
 package com.nbclass.framework.util;
 
+import com.nbclass.framework.Theme.ZbFile;
+import com.nbclass.framework.Theme.ZbTheme;
+import com.nbclass.framework.Theme.ZbThemeForm;
+import com.nbclass.framework.Theme.ZbThemeSetting;
 import com.nbclass.framework.exception.ZbException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -77,18 +80,25 @@ public class FileUtil {
         }
     }
 
-    public static LinkedList<String> scanSystemTheme(Path topPath) {
+    public static Map<String, ZbTheme> scanSystemTheme(Path topPath) {
         if (!Files.isDirectory(topPath)) {
             return null;
         }
         try (Stream<Path> pathStream = Files.list(topPath)) {
-            LinkedList<String> themeList = new LinkedList<>();
+            Map<String,ZbTheme> resMap = new LinkedHashMap<>();
             pathStream.forEach(path -> {
                 if (Files.isDirectory(path)) {
-                    themeList.add(path.getFileName().toString());
+                    String s = readFile(Paths.get(path.toString()+"/setting.json"));
+                    if(StringUtils.isNotEmpty(s)){
+                        ZbTheme zbTheme=GsonUtil.fromJson(s,ZbTheme.class);
+                        String id=path.getFileName().toString();
+                        zbTheme.setId(id);
+                        resMap.put(id,zbTheme);
+                    }
+
                 }
             });
-            return themeList;
+            return resMap;
         } catch (IOException e) {
             throw new ZbException("Failed to scan system theme");
         }
@@ -134,6 +144,13 @@ public class FileUtil {
         return false;
     }
 
+    private static String readFile(Path path){
+        try {
+            return new String(Files.readAllBytes(path));
+        } catch (IOException e) {
+            return null;
+        }
+    }
     public static void main(String[] args) {
         try {
              String filePath = ResourceUtils.getFile("classpath:templates/theme/zblog/").getPath();

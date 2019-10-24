@@ -71,7 +71,7 @@ public class RedisServiceImpl implements RedisService {
     public <T> List<T> getList(String key, Class<T> clz) {
         String json = get(key);
         if (json != null) {
-            return (List<T>) GsonUtil.fromJson(json, clz);
+            return GsonUtil.fromJson(json, clz);
         }
         return null;
     }

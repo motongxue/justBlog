@@ -1,6 +1,6 @@
 package com.nbclass.service;
 
-import com.nbclass.framework.util.ZbTheme;
+import com.nbclass.framework.Theme.ZbTheme;
 
 public interface ThemeService {
 
@@ -8,4 +8,7 @@ public interface ThemeService {
 
     ZbTheme selectCurrent();
 
+    void initThymeleafVars();
+
+    void updateSettings(String settingsJson);
 }

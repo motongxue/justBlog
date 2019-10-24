@@ -5,9 +5,9 @@
         </div>
         <div class="panel-body">
             <ul>
-                <div class="avatar"> <img th:src="${@module.get('sysConfig').SITE_PERSON_PIC}" alt=""></div>
-                <p th:text="${@module.get('sysConfig').SITE_PERSON_NAME}" class="abname"></p>
-                <p th:text="${@module.get('sysConfig').SITE_PERSON_DESC}" class="abtext"></p>
+                <div class="avatar"> <img th:src="${currentTheme.form.sitePersonPic.value}" alt=""></div>
+                <p th:text="${currentTheme.form.sitePersonName.value}" class="abname"></p>
+                <p th:text="${currentTheme.form.sitePersonDesc.value}" class="abtext"></p>
             </ul>
         </div>
     </div>

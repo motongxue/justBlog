@@ -1,27 +1,29 @@
 package com.nbclass.controller.blog;
 
 import com.github.pagehelper.PageInfo;
+import com.nbclass.enums.BlogConfigKey;
+import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.enums.SliderType;
 import com.nbclass.framework.exception.ResourceNotFoundException;
 import com.nbclass.framework.util.CopyUtil;
 import com.nbclass.framework.util.CoreConst;
+import com.nbclass.framework.Theme.ZbTheme;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogCategory;
-import com.nbclass.service.ArticleService;
-import com.nbclass.service.CategoryService;
-import com.nbclass.service.SliderService;
-import com.nbclass.service.ThemeService;
+import com.nbclass.service.*;
 import com.nbclass.vo.ArticleVo;
 import com.nbclass.vo.PageVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 前端页面控制器
@@ -46,6 +48,12 @@ public class BlogWebController {
 
     @Autowired
     private SliderService sliderService;
+
+    @ModelAttribute("currentTheme")
+    public ZbTheme getCurrentTheme(){
+        return themeService.selectCurrent();
+    };
+
 
     /**
      * 首页入口
@@ -119,9 +127,11 @@ public class BlogWebController {
         vo.setStatus(CoreConst.STATUS_VALID);
         List<BlogArticle> articleList =  articleService.selectList(vo);
         PageInfo<BlogArticle> pageInfo = new PageInfo<>(articleList);
-        PageVo pageVo = CopyUtil.getCopy(pageInfo,PageVo.class);
+        PageVo pageVo = new PageVo();
+        BeanUtils.copyProperties(pageInfo,pageVo);
         model.addAttribute("page", pageVo);
         model.addAttribute("pageUrl", pageUrl);
         model.addAttribute("articleList",articleList);
     }
+
 }

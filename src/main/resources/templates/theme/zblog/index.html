@@ -4,16 +4,15 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>首页</title>
-		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/adminlte/css/bootstrap.min.css"/>
+		<link rel="stylesheet" th:href="${static+'/static/css/bootstrap.min.css'}"/>
 		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/font-icon/css/icon.css?version=1.0"/>
-		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/swiper4/css/swiper.min.css"/>
-		<link rel="stylesheet" th:href="@{/theme/zblog/css/blog.css}"/>
-		<script src="https://cdn.nbclass.com/statics/adminlte/libs/jquery.min.js"></script>
-		<script src="https://cdn.nbclass.com/statics/adminlte/libs/bootstrap.min.js"></script>
-		<script src="https://cdn.nbclass.com/statics/layer/layer.js"></script>
-		<script src="https://cdn.nbclass.com/statics/swiper4/js/swiper.min.js" ></script>
-		<script th:src="@{/js/core.js}"></script>
-		<script th:src="@{/theme/zblog/js/zb-blog.js}"></script>
+		<link rel="stylesheet" th:href="${static+'/static/css/swiper.min.css'}"/>
+		<link rel="stylesheet" th:href="${static+'/static/css/blog.css'}"/>
+		<script th:src="${static+'/static/js/jquery.min.js'}"></script>
+		<script th:src="${static+'/static/js/bootstrap.min.js'}"></script>
+		<script th:src="${static+'/static/js/swiper.min.js'}"></script>
+		<script th:src="${static+'/static/js/core.js'}"></script>
+		<script th:src="${static+'/static/js/zb-blog.js'}"></script>
 	</head>
 	<body>
 	<header id="header">

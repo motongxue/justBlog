@@ -21,11 +21,12 @@ public class GsonUtil {
 		return gson.toJson(obj);
 	}
 
-	public static Object fromJson(String str, Type type) {
+	public static <T> T fromJson(String str, Type type) {
 		return gson.fromJson(str, type);
 	}
 
 	public static Object fromJson(Reader reader, Type type) {
 		return gson.fromJson(reader, type);
 	}
+
 }

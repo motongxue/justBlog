@@ -1,15 +1,25 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.enums.BlogConfigKey;
 import com.nbclass.enums.CacheKeyPrefix;
-import com.nbclass.framework.util.ZbTheme;
+import com.nbclass.framework.Theme.ZbTheme;
+import com.nbclass.framework.util.GsonUtil;
+import com.nbclass.service.ConfigService;
 import com.nbclass.service.RedisService;
 import com.nbclass.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ThemeServiceImpl implements ThemeService {
-
+    @Autowired
+    private ThymeleafViewResolver thymeleafViewResolver;
+    @Autowired
+    private ConfigService configService;
     @Autowired
     private RedisService redisService;
 
@@ -20,7 +30,28 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public ZbTheme selectCurrent() {
-        return redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
+        String settings = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
+        return GsonUtil.fromJson(settings, ZbTheme.class);
+    }
+
+    @Override
+    public void initThymeleafVars() {
+        if (thymeleafViewResolver != null) {
+            ZbTheme currentTheme = selectCurrent();
+            Map<String, Object> vars = new HashMap<>();
+            String cdn = configService.selectAll().get(BlogConfigKey.SITE_CDN.getValue());
+            vars.put("static", String.format("%s/theme/%s",cdn!=null ? cdn : "",currentTheme.getName()));
+            vars.put("currentTheme", currentTheme);
+            thymeleafViewResolver.setStaticVariables(vars);
+        }
+    }
+
+    @Override
+    public void updateSettings(String settingsJson) {
+        //TODO:修改主题设置时，需要检查当前主题CURRENT_THEME，和缓存中的主题THEME_XXX,赋值form属性;
+
+        //重新初始化模板常量
+        initThymeleafVars();
     }
 
 }

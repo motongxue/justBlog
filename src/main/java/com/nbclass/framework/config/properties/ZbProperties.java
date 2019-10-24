@@ -1,5 +1,6 @@
 package com.nbclass.framework.config.properties;
 
+import com.nbclass.framework.util.CoreConst;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @ConfigurationProperties("zb")
-@Component
+@Component("zbProperties")
 public class ZbProperties{
 
     /**
@@ -23,5 +24,9 @@ public class ZbProperties{
 
     public String getWorkDir(){
         return  workDir.startsWith("/") ? workDir : (workDir+"/");
+    }
+
+    public String getUploadFolder(){
+        return  getWorkDir()+ CoreConst.FILE_FOLDER;
     }
 }
