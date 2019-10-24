@@ -31,9 +31,9 @@ Spring Boot、MyBatis、Redis、mysql、thymeleaf、jwt<br/>
 <br/>
 支持作者买生姜水：
 
-![微信](https://cdn.nbclass.com/statics/img/zhifubao.jpg)
+![微信](https://cdn.nbclass.com/statics/img/weixin.jpg)
 
-![支付宝](![avatar](https://cdn.nbclass.com/statics/img/weixin.jpg)
+![支付宝](https://cdn.nbclass.com/statics/img/zhifubao.jpg)
 
 #### 其他开源项目
 [zb-shiro权限系统](https://gitee.com/supperzh/zb-shiro)<br/>
