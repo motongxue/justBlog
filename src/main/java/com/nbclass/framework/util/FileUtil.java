@@ -1,9 +1,7 @@
 package com.nbclass.framework.util;
 
-import com.nbclass.framework.Theme.ZbFile;
-import com.nbclass.framework.Theme.ZbTheme;
-import com.nbclass.framework.Theme.ZbThemeForm;
-import com.nbclass.framework.Theme.ZbThemeSetting;
+import com.nbclass.framework.theme.ZbFile;
+import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.exception.ZbException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ResourceUtils;
@@ -80,7 +78,7 @@ public class FileUtil {
         }
     }
 
-    public static Map<String, ZbTheme> scanSystemTheme(Path topPath) {
+    public static Map<String, ZbTheme> scanThemeFolder(Path topPath) {
         if (!Files.isDirectory(topPath)) {
             return null;
         }

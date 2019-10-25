@@ -1,4 +1,4 @@
-package com.nbclass.framework.Theme;
+package com.nbclass.framework.theme;
 
 import lombok.Data;
 

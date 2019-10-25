@@ -1,4 +1,4 @@
-package com.nbclass.framework.Theme;
+package com.nbclass.framework.theme;
 
 import lombok.Data;
 
@@ -63,7 +63,7 @@ public class ZbTheme implements Comparator<ZbTheme> {
 
     @Override
     public int compare(ZbTheme left, ZbTheme right) {
-        return left.getName().compareTo(right.getName());
+        return left.getId().compareTo(right.getId());
     }
 
 }

@@ -1,6 +1,6 @@
 package com.nbclass.service;
 
-import com.nbclass.framework.Theme.ZbTheme;
+import com.nbclass.framework.theme.ZbTheme;
 
 public interface ThemeService {
 

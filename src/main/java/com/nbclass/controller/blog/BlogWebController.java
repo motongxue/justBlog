@@ -1,14 +1,11 @@
 package com.nbclass.controller.blog;
 
 import com.github.pagehelper.PageInfo;
-import com.nbclass.enums.BlogConfigKey;
-import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.enums.SliderType;
+import com.nbclass.framework.config.properties.ZbProperties;
 import com.nbclass.framework.exception.ResourceNotFoundException;
-import com.nbclass.framework.util.CopyUtil;
 import com.nbclass.framework.util.CoreConst;
-import com.nbclass.framework.Theme.ZbTheme;
-import com.nbclass.framework.util.GsonUtil;
+import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.*;
@@ -21,6 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.List;
 import java.util.Map;
@@ -35,11 +35,6 @@ import java.util.Map;
 @Controller
 public class BlogWebController {
 
-    private static final String THEME_PREFIX = "theme";
-
-    @Autowired
-    private ThemeService themeService;
-
     @Autowired
     private CategoryService categoryService;
 
@@ -48,13 +43,6 @@ public class BlogWebController {
 
     @Autowired
     private SliderService sliderService;
-
-    @ModelAttribute("currentTheme")
-    public ZbTheme getCurrentTheme(){
-        return themeService.selectCurrent();
-    };
-
-
     /**
      * 首页入口
      */
@@ -64,7 +52,7 @@ public class BlogWebController {
         loadArticle(model, vo, "index");
         model.addAttribute("notifyList",sliderService.selectByType(SliderType.NOTIFY.getType()));
         model.addAttribute("sliderList",sliderService.selectByType(SliderType.SLIDER.getType()));
-        return String.format("%s/%s/%s", THEME_PREFIX, themeService.selectCurrent().getName(), "index");
+        return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
     @GetMapping("index/{pageNum}")
@@ -72,7 +60,7 @@ public class BlogWebController {
         ArticleVo vo = new ArticleVo();
         vo.setPageNum(pageNum);
         loadArticle(model, vo, "index");
-        return String.format("%s/%s/%s", THEME_PREFIX, themeService.selectCurrent().getName(), "index");
+        return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
     @GetMapping("/{category}")
@@ -84,7 +72,7 @@ public class BlogWebController {
         ArticleVo vo = new ArticleVo();
         vo.setCategory(category);
         loadArticle(model, vo, category);
-        return String.format("%s/%s/%s", THEME_PREFIX, themeService.selectCurrent().getName(), blogCategory.getTemplate());
+        return String.format("theme/%s/%s", CoreConst.currentTheme,  blogCategory.getTemplate());
     }
 
     @GetMapping("/{category}/page/{pageNum}")
@@ -97,7 +85,7 @@ public class BlogWebController {
         vo.setPageNum(pageNum);
         vo.setCategory(category);
         loadArticle(model, vo, category);
-        return String.format("%s/%s/%s", THEME_PREFIX, themeService.selectCurrent().getName(), blogCategory.getTemplate());
+        return String.format("theme/%s/%s", CoreConst.currentTheme,  blogCategory.getTemplate());
     }
 
     @GetMapping("/tag/{tagId}")
@@ -120,7 +108,7 @@ public class BlogWebController {
             throw new ResourceNotFoundException();
         }
         model.addAttribute("article", article);
-        return String.format("%s/%s/%s", THEME_PREFIX, themeService.selectCurrent().getName(), article.getTemplate());
+        return String.format("theme/%s/%s", CoreConst.currentTheme,  article.getTemplate());
     }
 
     private void loadArticle(Model model, ArticleVo vo, String pageUrl) {
@@ -133,5 +121,6 @@ public class BlogWebController {
         model.addAttribute("pageUrl", pageUrl);
         model.addAttribute("articleList",articleList);
     }
+
 
 }

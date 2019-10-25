@@ -4,6 +4,6 @@ ${AnsiColor.BLUE}
 ( N | B | C | L | A | S | S )
  \_/ \_/ \_/ \_/ \_/ \_/ \_/
 
- ${AnsiColor.GREEN}
- :: Spring-Boot ${spring-boot.version} ::
+${AnsiColor.GREEN}
+- Spring-Boot ${spring-boot.version} -
 

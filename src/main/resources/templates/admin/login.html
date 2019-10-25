@@ -10,7 +10,7 @@
 <body>
 <div class="lowin">
 	<div class="lowin-brand">
-		<img th:src="@{img/logo.jpg}" alt="logo">
+		<img th:src="@{/img/picture.jpg}" alt="logo">
 	</div>
 	<div class="lowin-wrapper">
 		<div class="lowin-box lowin-login">
@@ -65,7 +65,7 @@
 	<footer class="lowin-footer">
 	</footer>
 </div>
-<script src="https://cdn.nbclass.com/statics/adminlte/libs/jquery.min.js"></script>
+<script th:src="@{js/jquery.min.js}"></script>
 <script th:src="@{js/core.js}"></script>
 <script th:src="@{js/auth.js}"></script>
 <script>

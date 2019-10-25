@@ -79,9 +79,6 @@ public class CommentServiceImpl implements CommentService {
             }
             if(StringUtils.isNotBlank(comment.getQq())){
                 comment.setAvatar("https://q1.qlogo.cn/g?b=qq&nk="+comment.getQq()+"&s=100");
-            }else if(StringUtils.isNotBlank(comment.getEmail())){
-                String entry = MD5.md5Hex(comment.getEmail());
-                comment.setAvatar("https://www.gravatar.com/avatar/"+entry+"?d="+ URLEncoder.encode("https://cdn.nbclass.com/blog/img/user-default.png","UTF-8"));
             }
             comment.setCreateTime(new Date());
             commentMapper.insertSelective(comment);

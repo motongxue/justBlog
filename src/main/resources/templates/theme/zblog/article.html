@@ -6,14 +6,13 @@
 		<meta name="keywords" th:content="${article.seoKey}">
 		<meta name="description" th:content="${article.seoDesc}">
 		<title th:text="${article.title}"></title>
-		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/adminlte/css/bootstrap.min.css"/>
-		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/font-icon/css/icon.css?version=1.0"/>
-		<link rel="stylesheet" href="https://cdn.nbclass.com/statics/simplemde/github-markdown.min.css">
-		<link rel="stylesheet" th:href="@{/theme/zblog/css/blog.css}"/>
-		<script src="https://cdn.nbclass.com/statics/adminlte/libs/jquery.min.js"></script>
-		<script src="https://cdn.nbclass.com/statics/adminlte/libs/bootstrap.min.js"></script>
-		<script th:src="@{/js/core.js}"></script>
-		<script th:src="@{/theme/zblog/js/zb-blog.js}"></script>
+		<link href="https://cdn.bootcss.com/font-awesome/5.10.2/css/all.min.css" rel="stylesheet">
+		<link th:href="${static+'/css/bootstrap.min.css'}" rel="stylesheet"/>
+		<link th:href="${static+'/css/github-markdown.min.css'}"rel="stylesheet" />
+		<link th:href="${static+'/css/blog.css'}"rel="stylesheet" />
+		<script th:src="${static+'/js/jquery.min.js'}"></script>
+		<script th:src="${static+'/js/bootstrap.min.js'}"></script>
+		<script th:src="${static+'/js/blog.js'}"></script>
 	</head>
 	<body>
 		<header id="header">
@@ -32,8 +31,8 @@
 						<span class="thumbs-button fa fa-thumbs-up"> 点赞 <span id="loveCount" th:text="${article.supportNum}"></span></span>
 						<span class="reward-button fa fa-money"> 打赏
 						<p class="reward-content">
-							<span class="reward-img"><img src="https://cdn.nbclass.com/statics/img/weixin.jpg"><br>微信赞赏</span>
-							<span class="reward-img"><img src="https://cdn.nbclass.com/statics/img/zhifubao.jpg"><br>支付宝赞赏</span></p>
+							<span class="reward-img"><img th:src="${static+'/img/weixin.jpg'}"><br>微信赞赏</span>
+							<span class="reward-img"><img th:src="${static+'/img/zhifubao.jpg'}"><br>支付宝赞赏</span></p>
 						<span class="reward-bottom"></span>
 						<span class="reward-bottom-top"></span>
 						</span>
@@ -372,11 +371,7 @@
                             '</li>';
                         $("#comment-ul").prepend(html);
                     }
-
                 })
-
-
-
 			</script>
 
 		</div>

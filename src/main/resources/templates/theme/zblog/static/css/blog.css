@@ -507,29 +507,6 @@ img {
     opacity: .6!important
 }
 
-.error-content .error-img-content {
-    margin-top: 56px;
-    padding-top: 100px;
-    margin-bottom: 70px;
-    text-align: center
-}
-
-.error-content .error-text {
-    font-size: 16px;
-    color: #666;
-    text-align: center
-}
-
-.error-content .error-btn-content {
-    margin-top: 70px;
-    padding-bottom: 30px;
-    text-align: center
-}
-
-.error-content .error-btn-content a {
-    color: #fff
-}
-
 #nprogress {
     pointer-events: none
 }

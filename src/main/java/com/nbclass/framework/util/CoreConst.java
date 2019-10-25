@@ -7,6 +7,7 @@ package com.nbclass.framework.util;
  * @date 2019-10-12
  */
 public class CoreConst {
+    public static String currentTheme = "";
     public static final Integer  SUCCESS_CODE             = 200;
     public static final Integer  FAIL_CODE                = 500;
     public static final Integer  STATUS_VALID             = 1;

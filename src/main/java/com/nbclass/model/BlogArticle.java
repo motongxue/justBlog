@@ -137,7 +137,7 @@ public class BlogArticle implements Serializable {
     /**
     * 用户状态：1有效; 0-草稿
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 创建时间

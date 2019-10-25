@@ -1,6 +1,5 @@
 package com.nbclass.service;
 
-import com.nbclass.model.BlogCategory;
 import com.nbclass.model.BlogTag;
 
 import java.util.List;
