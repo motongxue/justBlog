@@ -9,6 +9,7 @@
 3.导航：支持添加分类目录，分类菜单，页面， 支持返回指定模板<br/>
 4.文章：文章可选模板<br/>
 5.模板：可在线编辑主题中html模板，js，css等文件，可添加删除模板<br/>
+6.完美支持企业建站，无任何多余配置
 
 #### 技术栈
 Spring Boot、MyBatis、Redis、mysql、thymeleaf、jwt<br/>
@@ -31,9 +32,11 @@ Spring Boot、MyBatis、Redis、mysql、thymeleaf、jwt<br/>
 <br/>
 支持作者买生姜水：
 
-![微信](https://cdn.nbclass.com/statics/img/zhifubao.jpg)
-
-![支付宝](![avatar](https://cdn.nbclass.com/statics/img/weixin.jpg)
+微信<br/>
+![微信](https://cdn.nbclass.com/statics/img/weixin.jpg)
+<br/>
+支付宝<br/>
+![支付宝](https://cdn.nbclass.com/statics/img/zhifubao.jpg)
 
 #### 其他开源项目
 [zb-shiro权限系统](https://gitee.com/supperzh/zb-shiro)<br/>
