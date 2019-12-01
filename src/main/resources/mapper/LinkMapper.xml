@@ -31,7 +31,7 @@
         update_time
     </sql>
 
-    <select id="selectList" resultMap="BaseResultMap" parameterType="com.nbclass.model.BlogLink">
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.nbclass.vo.LinkVo">
         SELECT *
         FROM blog_link
         WHERE 1=1

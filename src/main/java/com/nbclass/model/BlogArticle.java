@@ -3,8 +3,7 @@ package com.nbclass.model;
 import java.io.Serializable;
 import lombok.Data;
 
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +21,8 @@ public class BlogArticle implements Serializable {
     /**
     * id
     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**

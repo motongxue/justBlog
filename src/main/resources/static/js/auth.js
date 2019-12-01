@@ -130,40 +130,46 @@ var Auth = {
         });
     },
     submitLogin(e){
-        Core.mask(".login-btn");
-        Core.postAjax(Auth.vars.option.login_url, $("#login-form").serialize(),function (data) {
+        App.mask(".login-btn");
+        App.postAjax(Auth.vars.option.login_url, $("#login-form").serialize(),function (data) {
             if(data.status===200){
                 var access_token=data.data;
                 var payload = JSON.parse(window.atob(access_token.split(".")[1]));
-                Core.setCookieLong("access_token",access_token,payload.exp*1000);
-                Core.msg(data.msg, function(){
-                    Core.unmask(".login-btn");
-                    window.location.href="/"
+                App.setCookieLong("access_token",access_token,payload.exp*1000);
+                App.msg({
+                    "content":data.msg,
+                    "icon":1
+                }, function(){
+                    App.unmask(".login-btn");
+                    window.location.href="/index"
                 })
             }else{
-                Core.unmask(".login-btn");
-                Core.msg(data.msg, 2);
+                App.unmask(".login-btn");
+                App.msgE(data.msg);
             }
         });
     },
     submitRegister(e){
-        Core.mask(".register-btn");
-        Core.postAjax(Auth.vars.option.register_url, $("#register-form").serialize(),function (data) {
+        App.mask(".register-btn");
+        App.postAjax(Auth.vars.option.register_url, $("#register-form").serialize(),function (data) {
             if(data.status===200){
                 var access_token=data.data;
                 var payload = JSON.parse(window.atob(access_token.split(".")[1]));
-                Core.setCookieLong("access_token",access_token,payload.exp*1000);
-                Core.msg(data.msg, function(){
-                    Core.unmask(".login-btn");
+                App.setCookieLong("access_token",access_token,payload.exp*1000);
+                App.msg({
+                    "content":data.msg,
+                    "icon":1
+                }, function(){
+                    App.unmask(".login-btn");
                     window.location.href="/"
                 })
             }else{
-                Core.unmask(".register-btn");
-                Core.msg(data.msg, 2);
+                App.unmask(".register-btn");
+                App.msgE(data.msg);
             }
         });
     },
     submitForgot(e){
-        Core.msg("忘记密码暂未开放",2)
+        App.msgE("忘记密码暂未开放")
     }
 }

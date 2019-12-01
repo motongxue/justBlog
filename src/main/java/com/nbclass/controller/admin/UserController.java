@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author nbclass
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("/admin/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("add")
+    @PostMapping("/add")
 
     public ResponseVo add(BlogUser user){
         return userService.add(user);
