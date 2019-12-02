@@ -2,6 +2,10 @@ package com.nbclass.model;
 
 import java.io.Serializable;
 import lombok.Data;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +20,8 @@ public class BlogTag implements Serializable {
     /**
     * id
     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**

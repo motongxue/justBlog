@@ -3,6 +3,7 @@ package com.nbclass.mapper;
 import com.nbclass.framework.util.MyMapper;
 import com.nbclass.model.BlogConfig;
 import com.nbclass.model.BlogLink;
+import com.nbclass.vo.LinkVo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface LinkMapper extends MyMapper<BlogLink> {
      * @param link 查询参数
      * @return list
      */
-    List<BlogLink> selectList(BlogLink link);
+    List<BlogLink> selectList(LinkVo link);
 
     /**
      * 根据参数查询友链列表

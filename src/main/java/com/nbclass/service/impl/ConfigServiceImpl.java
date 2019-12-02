@@ -34,10 +34,6 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public int updateByKey(String key,String value) {
-        BlogConfig config = new BlogConfig();
-        config.setSysKey(key);
-        config = configMapper.selectOne(config);
-        config.setSysValue(value);
-        return configMapper.updateByPrimaryKeySelective(config);
+        return configMapper.updateByKey(key, value);
     }
 }

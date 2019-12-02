@@ -23,6 +23,10 @@ public class ResponseUtil {
 		return vo(CoreConst.SUCCESS_CODE, msg, data);
 	}
 
+	public static ResponseVo success(Object data){
+		return vo(CoreConst.SUCCESS_CODE, null, data);
+	}
+
 	public static ResponseVo error(){
 		return vo(CoreConst.FAIL_CODE,null,null);
 	}
