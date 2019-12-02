@@ -141,7 +141,7 @@ var Auth = {
                     "icon":1
                 }, function(){
                     App.unmask(".login-btn");
-                    window.location.href="/admin"
+                    parent.location.reload();
                 })
             }else{
                 App.unmask(".login-btn");
