@@ -74,7 +74,6 @@ public class JwtUtil {
         jwtUser.setUserId(map.get("userId").asString());
         jwtUser.setUsername(map.get("username").asString());
         jwtUser.setAvatar(map.get("avatar")!=null ? map.get("avatar").asString() : null);
-        jwtUser.setIsAdmin(map.get("isAdmin").asInt());
         jwtUser.setIssuedAt(new Date(map.get("iat").asInt()*1000L));
         jwtUser.setExpiration(new Date(map.get("exp").asInt()*1000L));
         return jwtUser;
