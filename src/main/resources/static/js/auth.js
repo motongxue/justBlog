@@ -138,10 +138,15 @@ var Auth = {
                 App.setCookieLong("access_token",access_token,payload.exp*1000);
                 App.msg({
                     "content":data.msg,
-                    "icon":1
+                    "icon":1,
+                    "time":1500
                 }, function(){
                     App.unmask(".login-btn");
-                    parent.location.reload();
+                    if(window.top === window.self){
+                        window.location.href="/admin";
+                    }else{
+                        window.location.href=parent.$(".content-iframe .tab-pane.active>iframe").attr("src");
+                    }
                 })
             }else{
                 App.unmask(".login-btn");
