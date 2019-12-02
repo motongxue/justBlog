@@ -32,7 +32,7 @@ public class BlogTag implements Serializable {
     /**
     * 状态：1有效; 0删除
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 创建时间

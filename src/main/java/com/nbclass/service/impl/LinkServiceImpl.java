@@ -7,6 +7,7 @@ import com.nbclass.vo.LinkVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,15 +30,11 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Override
-    public BlogLink selectById(Integer id) {
-        BlogLink link = new BlogLink();
-        link.setId(id);
-        return linkMapper.selectByPrimaryKey(link);
-    }
-
-    @Override
     public void save(BlogLink blogLink) {
+        Date date = new Date();
+        blogLink.setUpdateTime(date);
         if(blogLink.getId()==null){
+            blogLink.setCreateTime(date);
             linkMapper.insertSelective(blogLink);
         }else{
             linkMapper.updateByPrimaryKeySelective(blogLink);

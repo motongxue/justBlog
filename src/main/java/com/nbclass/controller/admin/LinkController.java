@@ -32,22 +32,11 @@ public class LinkController {
         return ResponseUtil.success(pageInfo);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/save")
     @AccessToken
     public ResponseVo add(BlogLink link){
-        Date date = new Date();
-        link.setCreateTime(date);
-        link.setUpdateTime(date);
         linkService.save(link);
         return ResponseUtil.success("新增友链成功");
-    }
-
-    @PostMapping("/edit")
-    @AccessToken
-    public ResponseVo edit(BlogLink link){
-        link.setUpdateTime(new Date());
-        linkService.save(link);
-        return ResponseUtil.success("编辑友链成功");
     }
 
     @PostMapping("/delete")

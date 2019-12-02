@@ -43,7 +43,7 @@ public class BlogConfig implements Serializable {
     /**
     * 状态  1-有效，0-无效
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 创建时间

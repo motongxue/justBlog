@@ -41,7 +41,7 @@ public class BlogArticleTag implements Serializable {
     /**
     * status
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 添加时间

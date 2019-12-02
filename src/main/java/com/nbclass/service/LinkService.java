@@ -11,8 +11,6 @@ public interface LinkService {
 
     List<BlogLink> selectAll();
 
-    BlogLink selectById(Integer id);
-
     void save(BlogLink blogLink);
 
     void deleteBatch(Integer[] ids);

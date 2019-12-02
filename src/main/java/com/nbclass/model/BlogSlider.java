@@ -43,12 +43,12 @@ public class BlogSlider implements Serializable {
     /**
     * 1-有效，0-无效
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 1-系统公告，2-轮播
     */
-    private Boolean type;
+    private Integer type;
 
     /**
     * create_time

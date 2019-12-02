@@ -58,12 +58,12 @@ public class BlogLink implements Serializable {
     /**
     * 1-管理员添加 2-自助申请
     */
-    private Boolean origin;
+    private Integer origin;
 
     /**
     * 状态
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 添加时间

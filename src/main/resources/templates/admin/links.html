@@ -35,7 +35,7 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group col-md-1 col-sm-6 " style="text-align:left;">
+						<div class="form-group col-md-1 col-sm-6 text-left">
 							<button type="button" id="btn_query" class="btn btn-primary">查询</button>
 						</div>
 					</form>
@@ -44,7 +44,7 @@
             <div class="z-card">
                 <div class="z-card-body">
 					<div class="btn-group z-table-btn-group" role="group">
-						<button id="btn_add" type="button" class="btn btn-primary" data-toggle="modal" data-target="#linkModal">新增</button>
+						<button id="btn_add" type="button" class="btn btn-primary">新增</button>
 						<button id="btn_batch_delete" type="button" class="btn btn-danger">批量删除</button>
 					</div>
                     <table id="table"
@@ -68,7 +68,68 @@
                 </div>
             </div>
 		</div>
-		<div id="linkModal" class="modal fade" tabindex="-1" role="dialog">
+		<div id="link-modal" class="display-none">
+			<form class="form-horizontal" id="linkForm">
+				<input  name="id" type="hidden"/>
+				<input  name="origin" type="hidden" value="1"/>
+				<div class="z-card-body">
+					<div class="form-group">
+						<label class="control-label col-sm-3" for="status">状态: </label>
+						<div class="col-sm-8">
+							<label class="radio-inline pr-5"><input type="radio" name="status" value="1" checked="checked"> 启用</label>
+							<label class="radio-inline pr-5"><input type="radio" name="status" value="0"> 禁用</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">站点名称 <span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input  name="name" class="form-control" require="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">站点链接 <span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input name="url" class="form-control" require="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">站点描述 <span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input name="description" class="form-control" require="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">站长图片:</label>
+						<div class="col-sm-8">
+							<input name="img" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">站长邮箱:</label>
+						<div class="col-sm-8">
+							<input name="email" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">站长QQ:</label>
+						<div class="col-sm-8">
+							<input name="qq" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">备注:</label>
+						<div class="col-sm-8">
+							<input name="remark" class="form-control">
+						</div>
+					</div>
+					<div class="text-right">
+						<button type="button" id="saveLink" class="btn btn-primary">确定</button>
+						<button type="button" data-dismiss="modal" class="btn btn-light">取消</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--<div id="linkModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog"  role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -76,81 +137,27 @@
 						<h4 class="modal-title">新增友链</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-horizontal" id="linkForm">
-							<input  name="id" type="hidden"/>
-							<input  name="origin" type="hidden" value="1"/>
-							<div class="z-card-body">
-								<div class="form-group">
-									<label class="control-label col-sm-3" for="status">状态: </label>
-									<div class="col-sm-8">
-										<label class="radio-inline pr-5"><input type="radio" name="status" value="1" checked="checked"> 启用</label>
-										<label class="radio-inline pr-5"><input type="radio" name="status" value="0"> 禁用</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<label  class="col-sm-3 control-label">站点名称 <span class="red">*</span>:</label>
-									<div class="col-sm-8">
-										<input  name="name" class="form-control" require="">
-									</div>
-								</div>
-								<div class="form-group">
-									<label  class="col-sm-3 control-label">站点链接 <span class="red">*</span>:</label>
-									<div class="col-sm-8">
-										<input name="url" class="form-control" require="">
-									</div>
-								</div>
-								<div class="form-group">
-									<label  class="col-sm-3 control-label">站点描述 <span class="red">*</span>:</label>
-									<div class="col-sm-8">
-										<input name="description" class="form-control" require="">
-									</div>
-								</div>
-								<div class="form-group">
-									<label  class="col-sm-3 control-label">站长图片:</label>
-									<div class="col-sm-8">
-										<input name="img" class="form-control">
-									</div>
-								</div>
-								<div class="form-group">
-									<label  class="col-sm-3 control-label">站长邮箱:</label>
-									<div class="col-sm-8">
-										<input name="email" class="form-control">
-									</div>
-								</div>
-								<div class="form-group">
-									<label  class="col-sm-3 control-label">站长QQ:</label>
-									<div class="col-sm-8">
-										<input name="qq" class="form-control">
-									</div>
-								</div>
-								<div class="form-group">
-									<label  class="col-sm-3 control-label">备注:</label>
-									<div class="col-sm-8">
-										<input name="remark" class="form-control">
-									</div>
-								</div>
-								<div class="text-right">
-									<button type="button" id="saveLink" class="btn btn-primary">确定</button>
-									<button type="button" data-dismiss="modal" class="btn btn-light">取消</button>
-								</div>
-							</div>
-						</form>
+
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>-->
 		<script th:src="@{/js/jquery.min.js}"></script>
 		<script th:src="@{/js/bootstrap.min.js}"></script>
-		<script th:src="@{/js/app.js}"></script>
+		<script th:src="@{/js/app-manage.js}"></script>
         <script>
             $(function () {
+                var popId;
                 App.initSelect("select");
                 App.initTable("#table");
 				$("#btn_query").on('click', function(){
 					App.refreshTable("#table");
 				});
 				$("#btn_add").on('click', function(){
-					App.clearError("#linkForm");
+                    popId = App.popup({"title":"新增友链","content":$("#link-modal")},function(){
+                        App.resetForm("#linkForm");
+                        $("input[name='status'][value='1']").prop("checked",true);
+                    });
 				});
 				$("#btn_batch_delete").on('click', function(){
 					var checkedRows= App.getSelections("#table");
@@ -161,7 +168,7 @@
 								ids.push(item.id);
 							});
 							App.postAjax("/admin/link/batch/delete", {"ids": ids}, function (data) {
-								if (data.status == 200) {
+								if (data.status === 200) {
 									App.refreshTable("#table");
 								}
 								App.msgS(data.msg);
@@ -172,13 +179,14 @@
 					}
 				});
 				$("#saveLink").on('click', function(){
+				    App.closePopup(popId);
 					if(App.validate("#linkForm")){
 						App.mask("#saveLink");
-						App.postAjax("/admin/link/add",$("#linkForm").serialize(),function (data) {
+						App.postAjax("/admin/link/save",$("#linkForm").serialize(),function (data) {
 							App.unmask("#saveLink");
-							if(data.status==200){
+							if(data.status===200){
 								$("#linkModal").modal("hide");
-								$("#linkForm")[0].reset();
+                                App.resetForm("#linkForm");
 								App.refreshTable("#table");
 							}
 							App.msgS(data.msg);
@@ -208,13 +216,13 @@
             }
 
             function formatOpt(index,value){
-                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editLink('+value+')">编辑</a>';
+                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editLink('+value+')"  data-toggle="modal" data-target="#linkModal">编辑</a>';
                 var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteLink('+value+')">删除</a>';
                 return editBtn + deleteBtn;
             }
             
             function editLink(value) {
-                console.log(App.getDataByKey("#table",value))
+                App.fillForm("#linkForm",App.getDataByKey("#table",value));
             }
 
             function deleteLink(value) {
@@ -230,5 +238,6 @@
 
 
         </script>
+
 	</body>
 </html>

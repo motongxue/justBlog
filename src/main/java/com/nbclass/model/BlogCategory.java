@@ -48,12 +48,12 @@ public class BlogCategory implements Serializable {
     /**
     * sort
     */
-    private Boolean sort;
+    private Integer sort;
 
     /**
     * 1-栏目，2-页面
     */
-    private Boolean type;
+    private Integer type;
 
     /**
     * 模板名称
@@ -63,7 +63,7 @@ public class BlogCategory implements Serializable {
     /**
     * 用户状态：1有效; 0删除
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 创建时间

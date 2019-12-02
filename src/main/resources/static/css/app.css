@@ -88,6 +88,12 @@ a:hover, a:focus {
 .clear{
 	clear: both;
 }
+.display-none{
+    display: none;
+}
+.display-block{
+    display: block;
+}
 input,textarea {
    /* -webkit-appearance: none;*/
 }

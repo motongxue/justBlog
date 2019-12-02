@@ -53,7 +53,7 @@ public class BlogArticle implements Serializable {
     /**
     * 1-富文本，2-markdown
     */
-    private Boolean editorType;
+    private Integer editorType;
 
     /**
     * 路径别名
@@ -68,27 +68,27 @@ public class BlogArticle implements Serializable {
     /**
     * 是否置顶，1-是，0-否
     */
-    private Boolean isTop;
+    private Integer isTop;
 
     /**
     * 是否推荐，1-是，0-否
     */
-    private Boolean isRec;
+    private Integer isRec;
 
     /**
     * 1-公开，2-私密
     */
-    private Boolean isPublic;
+    private Integer isPublic;
 
     /**
     * tinyint(1)
     */
-    private Boolean isComment;
+    private Integer isComment;
 
     /**
     * 文章类型，1-图文，2-视频
     */
-    private Boolean type;
+    private Integer type;
 
     /**
     * 视频地址
@@ -98,7 +98,7 @@ public class BlogArticle implements Serializable {
     /**
     * 1-原创，2-转载
     */
-    private Boolean origin;
+    private Integer origin;
 
     /**
     * 阅读数

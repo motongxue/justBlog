@@ -99,7 +99,7 @@ public class BlogComment implements Serializable {
     /**
     * 0-待审核，1-通过，2-驳回
     */
-    private Boolean status;
+    private Integer status;
 
     /**
     * 添加时间

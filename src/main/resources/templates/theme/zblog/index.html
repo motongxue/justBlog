@@ -52,7 +52,7 @@
 				Sorry, 暂未发现任何文章~
 			</div>
 			<div th:each="item,temp : ${articleList}" class="blogs">
-				<span th:if="${item.isTop==true}" class="fa fa-superscript-top superscript superscript-top"></span>
+				<span th:if="${item.isTop==1}" class="fa fa-superscript-top superscript superscript-top"></span>
 				<span class="blogpic"><a><img th:src="${item.cover}"></a><span class="blog-type"><a zjax="" th:href="@{${'/'+item.category.aliasName}}" th:text="${item.category.name}"></a></span></span>
 				<h3 class="blogtitle"><a zjax="" th:href="@{${'/a/'+item.aliasName}}" th:text="${item.title}" ></a></h3>
 				<p  th:text="${item.intro}" class="blogtext"></p>
