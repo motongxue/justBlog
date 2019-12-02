@@ -760,6 +760,8 @@ input,textarea {
     z-index: 1088;
     background-color: rgba(0, 0, 0, 0.2);
     opacity: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
     visibility: hidden;
     -webkit-transition: opacity .3s 0s,visibility 0s .3s;
     -moz-transition: opacity .3s 0s,visibility 0s .3s;
@@ -777,7 +779,7 @@ input,textarea {
 .z-popup-container {
     position: relative;
     width: calc(100% - 20px);
-    margin: 4em auto 0;
+    margin: 4em auto 1em;
     background: #fff;
     border-radius: 6px;
     box-shadow: 0 0 20px rgba(0,0,0,.2);
@@ -854,7 +856,7 @@ input,textarea {
     right: 9px
 }
 .z-popup-container .z-popup-btn-group{
-	padding: 0 15px 15px;
+	padding: 0 20px 15px;
     text-align: right;
 }
 .z-popup-container .z-popup-btn-group .btn:not(:last-child){
@@ -873,13 +875,6 @@ input,textarea {
 		width: 600px;
 	}
 }
-
-@media only screen and (min-width: 1170px) {
-    .z-popup-container {
-        margin:8em auto 0;
-    }
-}
-
 
 /*checkbox*/
 .z-checkbox,.z-radio {
