@@ -1,5 +1,6 @@
 package com.nbclass.controller.admin;
 
+import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.service.ConfigService;
 import com.nbclass.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,22 +29,26 @@ public class AdminPageController {
     private ConfigService configService;
 
     @GetMapping(value = {"", "/"})
+    @AccessToken
     public String index() {
         return  pathSuffix + "index";
     }
 
     @GetMapping("/welcome")
+    @AccessToken
     public String welcome() {
         return  pathSuffix + "welcome";
     }
 
     @GetMapping("/site/info")
+    @AccessToken
     public String websiteInfo(Model model){
         model.addAttribute("siteInfo",configService.selectAll());
         return  pathSuffix + "siteinfo";
     }
 
     @GetMapping("/links")
+    @AccessToken
     public String links(){
         return  pathSuffix + "links";
     }

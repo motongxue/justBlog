@@ -1,5 +1,6 @@
 package com.nbclass.controller.admin;
 
+import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.model.BlogUser;
 import com.nbclass.service.UserService;
 import com.nbclass.vo.ResponseVo;
@@ -23,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/add")
-
+    @AccessToken
     public ResponseVo add(BlogUser user){
         return userService.add(user);
     }

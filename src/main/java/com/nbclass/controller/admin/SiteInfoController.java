@@ -1,5 +1,6 @@
 package com.nbclass.controller.admin;
 
+import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ConfigService;
 import com.nbclass.vo.ResponseVo;
@@ -18,6 +19,7 @@ public class SiteInfoController {
     private ConfigService configService;
 
     @PostMapping("/edit")
+    @AccessToken
     public ResponseVo save(@RequestParam Map<String,String> map){
         try {
             for (String key : map.keySet()) {

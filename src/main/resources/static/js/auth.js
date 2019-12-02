@@ -141,7 +141,7 @@ var Auth = {
                     "icon":1
                 }, function(){
                     App.unmask(".login-btn");
-                    window.location.href="/index"
+                    window.location.href="/admin"
                 })
             }else{
                 App.unmask(".login-btn");
@@ -150,26 +150,9 @@ var Auth = {
         });
     },
     submitRegister(e){
-        App.mask(".register-btn");
-        App.postAjax(Auth.vars.option.register_url, $("#register-form").serialize(),function (data) {
-            if(data.status===200){
-                var access_token=data.data;
-                var payload = JSON.parse(window.atob(access_token.split(".")[1]));
-                App.setCookieLong("access_token",access_token,payload.exp*1000);
-                App.msg({
-                    "content":data.msg,
-                    "icon":1
-                }, function(){
-                    App.unmask(".login-btn");
-                    window.location.href="/"
-                })
-            }else{
-                App.unmask(".register-btn");
-                App.msgE(data.msg);
-            }
-        });
+        App.msgE("注册暂未开放");
     },
     submitForgot(e){
-        App.msgE("忘记密码暂未开放")
+        App.msgE("忘记密码暂未开放");
     }
 }
