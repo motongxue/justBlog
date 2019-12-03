@@ -21,13 +21,7 @@
             <result property="description" column="p_description"/>
             <result property="status" column="p_status"/>
         </association>
-        <collection property="nodes" column="n_id" javaType="ArrayList" ofType="com.nbclass.model.BlogCategory">
-            <result property="id" column="n_id"/>
-            <result property="pid" column="n_pid"/>
-            <result property="name" jdbcType="VARCHAR" column="n_name"/>
-            <result property="aliasName" column="n_alias_name" />
-            <result property="description" jdbcType="VARCHAR" column="n_description"/>
-            <result property="status" jdbcType="INTEGER" column="n_status"/>
+        <collection property="nodes" column="id" select="getChildrenList">
         </collection>
     </resultMap>
 
@@ -53,19 +47,18 @@
         p.`name` AS p_name,
         p.alias_name as p_alias_name,
         p.description AS p_description,
-        p.`status` AS p_status,
-        n.`id` AS n_id,
-        n.`pid` AS n_pid,
-        n.`name` AS n_name,
-        n.alias_name as n_alias_name,
-        n.description AS n_description,
-        n.`status` AS n_status
+        p.`status` AS p_status
         FROM
         blog_category t
         LEFT JOIN blog_category p ON t.pid = p.id
-        LEFT JOIN blog_category n ON n.pid = t.id
+        where t.pid is null
         ORDER BY t.sort ASC
     </select>
 
+    <select id="getChildrenList" resultMap="BaseResultMap">
+        select * from blog_category
+        where pid = #{id}
+        ORDER BY sort ASC
+    </select>
 
 </mapper>
