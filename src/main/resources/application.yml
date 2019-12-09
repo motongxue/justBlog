@@ -62,5 +62,4 @@ jwt:
   issuer: sys_user
   expire: 30
 zb:
-  staticThemePrefix: /static/theme/
   workDir: D:\file\
