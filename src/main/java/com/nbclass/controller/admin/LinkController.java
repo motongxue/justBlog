@@ -36,7 +36,7 @@ public class LinkController {
     @AccessToken
     public ResponseVo add(BlogLink link){
         linkService.save(link);
-        return ResponseUtil.success("新增友链成功");
+        return ResponseUtil.success("保存友链成功");
     }
 
     @PostMapping("/delete")

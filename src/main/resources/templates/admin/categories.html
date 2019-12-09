@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title>栏目管理</title>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+		<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+		<link rel="stylesheet" th:href="@{/css/app.css}"/>
+	</head>
+	<body>
+		<div class="z-content">
+            <div class="z-card">
+                <div class="z-card-body">
+					<div class="btn-group z-table-btn-group" role="group">
+						<button id="btn_add" type="button" class="btn btn-primary">新增</button>
+					</div>
+                    <table id="table" data-url="/admin/category/list" data-key="id" data-page="false" data-tree="true" data-tree-field="name" data-response-handler="responseHandler">
+                        <thead>
+                            <tr>
+                                <th data-field="name">栏目名称</th>
+								<th data-field="template">模板名称</th>
+								<th data-field="type" data-formatter="formatType">类型</th>
+								<th data-field="description">描述</th>
+                                <th data-field="sort">排序</th>
+                                <th data-field="id" data-formatter="formatOpt" data-align="center" data-width="100">操作</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+		</div>
+		<div id="category-modal" class="display-none">
+			<form class="form-horizontal" id="categoryForm">
+				<input  name="id" type="hidden"/>
+				<div class="z-card-body">
+					<div class="form-group">
+						<label  class="col-sm-3"></label>
+						<div class="col-sm-8">
+							<div class="z-radio">
+								<input type="radio" name="type" value="0" require="">
+								<label><i></i>目录</label>
+							</div>
+							<div class="z-radio">
+								<input type="radio" name="type" value="1" require="">
+								<label><i></i>文章分类</label>
+							</div>
+							<div class="z-radio">
+								<input type="radio" name="type" value="2" require="">
+								<label><i></i>页面</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">上级目录 :</label>
+						<div class="col-sm-8">
+							<input id="pid" name="pid"  class="form-control"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">栏目名称 <span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input name="name" class="form-control" require=""/>
+						</div>
+					</div>
+					<div class="form-group" id="template-content">
+						<label  class="col-sm-3 control-label">模板名称 <span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input name="template" class="form-control" require=""/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">栏目描述<span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input name="description" class="form-control" require=""/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">排序 <span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input name="sort" class="form-control" number="" require="" max="3"/>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/app.js}"></script>
+        <script>
+            var popId;
+            $(function () {
+                App.initSelect("select");
+                App.initTable("#table");
+
+				$("#btn_query").on('click', function(){
+					App.refreshTable("#table");
+				});
+
+				$("#btn_add").on('click', function(){
+					showPopup(1);
+				});
+				
+				
+				$("input[name='type']").on("change",function () {
+					if($(this).val()==="0"){
+					    $("#template-content").hide();
+					}else{
+                        $("#template-content").show();
+					}
+                })
+
+            });
+
+
+            initCategoriesSelect();
+            function  initCategoriesSelect() {
+                App.postAjax("/admin/category/list",{type:0},function (data) {
+                    App.initTreeSelect("#pid",{
+                        placeHolder:"无",
+                        data: data.data,
+                        iconType:2,
+                        nameField:'name',
+                        valueField:'id',
+                        click:function(data){
+                            App.msgS("name:"+data.name);
+                        }
+                    });
+                });
+            }
+
+            function responseHandler(data){
+                return {list:data.data};
+			}
+
+			function  formatType(index,value) {
+                var typeStr = "-";
+                if(value===0){
+                    typeStr='<span class="badge badge-success">目录</span>';
+				}else if(value===1){
+                    typeStr='<span class="badge badge-primary">文章栏目</span>';
+				}else if(value===2){
+                    typeStr='<span class="badge badge-warning">页面</span>';
+                }
+                return typeStr;
+            }
+            function formatOpt(index,value){
+                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editCategory('+value+')">编辑</a>';
+                var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteCategory('+value+')">删除</a>';
+                return editBtn + deleteBtn;
+            }
+            
+            function editCategory(id) {
+				showPopup(2,id);
+            }
+
+            function deleteCategory(value) {
+				App.confirm({content: "确定删除?"},function () {
+					App.postAjax("/admin/category/delete", {"id": value}, function (data) {
+						if (data.status == 200) {
+							App.refreshTable("#table");
+						}
+						App.msgS(data.msg);
+					})
+				})
+            }
+
+            function showPopup(type,v) {
+				popId = App.popup({
+					title: type===2?"分类-编辑":"分类-新增",
+					content: $("#category-modal"),
+					onCancel: closePopup,
+					onShow: function () {
+                        if(type===2){
+                           var selectData = App.getTableDataByKey("#table",v);
+                           App.fillForm("#categoryForm",selectData);
+                           $("input[name='type']").attr("disabled","disabled");
+                           $("#pid").parent().addClass("z-select-disabled");
+                           if(selectData.type===0){
+                               $("#template-content").hide();
+						   }
+                           if(selectData.pid!=null){
+                               $("#pid").next().find("input").val(selectData.parent.name);
+						   }
+						}
+                    }
+				},function(){
+					if(App.validate("#categoryForm")){
+						App.mask("#saveCategory");
+						App.postAjax("/admin/category/save",$("#categoryForm").serialize(),function (data) {
+							App.unmask("#saveCategory");
+							App.msgS(data.msg);
+							if(data.status===200){
+								App.refreshTable("#table");
+								closePopup();
+							}
+						});
+					}
+				},function(){
+					closePopup(popId);
+				});
+			}
+			
+			function closePopup() {
+				App.closePopup(popId,function () {
+					App.resetForm("#categoryForm");
+					$("#categoryForm [name='id']").val("");
+                    $("input[name='type']").removeAttr("disabled");
+                    $("#pid").parent().removeClass("z-select-disabled");
+                    $("#template-content").show();
+				});
+			}
+        </script>
+
+	</body>
+</html>

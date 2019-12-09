@@ -67,7 +67,7 @@ public class FileUtil {
                 themeFile.setIsFile(Files.isRegularFile(path));
                 themeFile.setIsEdit(isEditable(path));
                 if (Files.isDirectory(path)) {
-                    themeFile.setNode(listFileTree(path));
+                    themeFile.setChildren(listFileTree(path));
                 }
                 themeFiles.add(themeFile);
             });

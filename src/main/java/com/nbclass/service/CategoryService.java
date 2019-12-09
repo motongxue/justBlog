@@ -1,6 +1,8 @@
 package com.nbclass.service;
 
 import com.nbclass.model.BlogCategory;
+import com.nbclass.model.BlogLink;
+import com.nbclass.vo.CategoryVo;
 
 import java.util.List;
 
@@ -13,9 +15,11 @@ import java.util.List;
  */
 public interface CategoryService {
 
-    List<BlogCategory> selectAll();
-
-    List<BlogCategory> selectList(BlogCategory category);
+    List<BlogCategory> selectAll(Integer type);
 
     BlogCategory selectByAlias(String alias);
+
+    void save(BlogCategory category);
+
+    void deleteById(Integer id);
 }

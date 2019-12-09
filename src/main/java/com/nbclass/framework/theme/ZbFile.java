@@ -23,7 +23,7 @@ public class ZbFile implements Comparator<ZbFile> {
 
     private Boolean isEdit;
 
-    private List<ZbFile> node;
+    private List<ZbFile> children;
 
     @Override
     public int compare(ZbFile leftFile, ZbFile rightFile) {

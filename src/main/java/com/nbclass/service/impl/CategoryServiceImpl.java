@@ -3,9 +3,11 @@ package com.nbclass.service.impl;
 import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.CategoryService;
+import com.nbclass.vo.CategoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,13 +24,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public List<BlogCategory> selectAll() {
-        return categoryMapper.selectList(new BlogCategory());
-    }
-
-    @Override
-    public List<BlogCategory> selectList(BlogCategory category) {
-        return categoryMapper.selectList(category);
+    public List<BlogCategory> selectAll(Integer type) {
+        return categoryMapper.selectList(type);
     }
 
     @Override
@@ -36,5 +33,22 @@ public class CategoryServiceImpl implements CategoryService {
         BlogCategory category = new BlogCategory();
         category.setAliasName(alias);
         return categoryMapper.selectOne(category);
+    }
+
+    @Override
+    public void save(BlogCategory category) {
+        Date date = new Date();
+        category.setUpdateTime(date);
+        if(category.getId()==null){
+            category.setCreateTime(date);
+            categoryMapper.insertSelective(category);
+        }else{
+            categoryMapper.updateByPrimaryKeySelective(category);
+        }
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        categoryMapper.deleteById(id);
     }
 }

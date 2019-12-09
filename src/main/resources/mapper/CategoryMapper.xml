@@ -13,6 +13,7 @@
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
+        <result column="open" property="open" />
         <association property="parent" javaType="com.nbclass.model.BlogCategory">
             <result property="id" column="p_id"/>
             <result property="pid" column="p_pid"/>
@@ -21,7 +22,7 @@
             <result property="description" column="p_description"/>
             <result property="status" column="p_status"/>
         </association>
-        <collection property="nodes" column="id" select="getChildrenList">
+        <collection property="children" column="{id=id,type=queryType}" select="getChildrenList">
         </collection>
     </resultMap>
 
@@ -40,8 +41,9 @@
     </sql>
 
 
-    <select id="selectList" resultMap="BaseResultMap" parameterType="com.nbclass.model.BlogCategory">
+    <select id="selectList" resultMap="BaseResultMap" parameterType="int">
         SELECT t.*,
+        #{type} as queryType, true as `open`,
         p.id AS p_id,
         p.`pid` AS p_pid,
         p.`name` AS p_name,
@@ -52,13 +54,33 @@
         blog_category t
         LEFT JOIN blog_category p ON t.pid = p.id
         where t.pid is null
+        <if test="type !=null">
+            AND t.type = #{type}
+        </if>
         ORDER BY t.sort ASC
     </select>
 
     <select id="getChildrenList" resultMap="BaseResultMap">
-        select * from blog_category
-        where pid = #{id}
-        ORDER BY sort ASC
+        SELECT t.*,
+        #{type} as queryType,true as `open`,
+        p.id AS p_id,
+        p.`pid` AS p_pid,
+        p.`name` AS p_name,
+        p.alias_name as p_alias_name,
+        p.description AS p_description,
+        p.`status` AS p_status
+        from blog_category t
+        LEFT JOIN blog_category p ON t.pid = p.id
+        where t.pid = #{id}
+        <if test="type !=null">
+            AND t.type = #{type}
+        </if>
+        ORDER BY t.sort ASC
     </select>
+
+    <delete id="deleteById">
+        delete from blog_category
+        where id=#{id}
+    </delete>
 
 </mapper>

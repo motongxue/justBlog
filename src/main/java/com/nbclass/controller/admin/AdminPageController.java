@@ -1,8 +1,8 @@
 package com.nbclass.controller.admin;
 
 import com.nbclass.framework.annotation.AccessToken;
+import com.nbclass.service.CategoryService;
 import com.nbclass.service.ConfigService;
-import com.nbclass.service.LinkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +23,7 @@ public class AdminPageController {
     private static final String pathSuffix="admin/";
 
     @Autowired
-    private LinkService linkService;
+    private CategoryService categoryService;
 
     @Autowired
     private ConfigService configService;
@@ -45,6 +45,12 @@ public class AdminPageController {
     public String websiteInfo(Model model){
         model.addAttribute("siteInfo",configService.selectAll());
         return  pathSuffix + "siteinfo";
+    }
+
+    @GetMapping("/categories")
+    @AccessToken
+    public String categories(){
+        return  pathSuffix + "categories";
     }
 
     @GetMapping("/links")

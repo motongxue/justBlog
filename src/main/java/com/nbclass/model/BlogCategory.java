@@ -51,7 +51,7 @@ public class BlogCategory implements Serializable {
     private Integer sort;
 
     /**
-    * 1-栏目，2-页面
+    * 0-目录，1-文章栏目，2-页面
     */
     private Integer type;
 
@@ -85,7 +85,13 @@ public class BlogCategory implements Serializable {
      * 子节点
      */
     @Transient
-    private List<BlogCategory> nodes;
+    private List<BlogCategory> children;
 
+
+    @Transient
+    private Boolean checked;
+
+    @Transient
+    private Boolean open;
 
 }
