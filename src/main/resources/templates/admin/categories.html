@@ -86,12 +86,13 @@
 		</div>
 		<script th:src="@{/js/jquery.min.js}"></script>
 		<script th:src="@{/js/bootstrap.min.js}"></script>
-		<script th:src="@{/js/app.js}"></script>
+		<script th:src="@{/js/app-manage.js}"></script>
         <script>
             var popId;
             $(function () {
                 App.initSelect("select");
                 App.initTable("#table");
+                loadTreeSelect(1);
 
 				$("#btn_query").on('click', function(){
 					App.refreshTable("#table");
@@ -100,32 +101,31 @@
 				$("#btn_add").on('click', function(){
 					showPopup(1);
 				});
-				
-				
+
 				$("input[name='type']").on("change",function () {
 					if($(this).val()==="0"){
 					    $("#template-content").hide();
 					}else{
                         $("#template-content").show();
 					}
-                })
-
+                });
             });
 
-
-            initCategoriesSelect();
-            function  initCategoriesSelect() {
+            //加载下拉树
+			function  loadTreeSelect(type) {
                 App.postAjax("/admin/category/list",{type:0},function (data) {
-                    App.initTreeSelect("#pid",{
-                        placeHolder:"无",
+                    var treeSelectOptions = {
+                        placeHolder: "无",
                         data: data.data,
-                        iconType:2,
-                        nameField:'name',
-                        valueField:'id',
-                        click:function(data){
-                            App.msgS("name:"+data.name);
-                        }
-                    });
+                        iconType: 2,
+                        nameField: 'name',
+                        valueField: 'id'
+                    };
+                    if(type===1) {
+                        App.initTreeSelect("#pid", treeSelectOptions);
+                    }else{
+                        App.reloadTreeSelect("#pid", treeSelectOptions);
+					}
                 });
             }
 
@@ -149,18 +149,26 @@
                 var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteCategory('+value+')">删除</a>';
                 return editBtn + deleteBtn;
             }
-            
+
             function editCategory(id) {
 				showPopup(2,id);
             }
 
             function deleteCategory(value) {
+                var selectData = App.getTableDataByKey("#table",value);
+                if(selectData.type===0 && selectData.children!=null && selectData.children.length>0){
+                    App.msgE("存在子栏目，无法删除！");
+                    return;
+                }
 				App.confirm({content: "确定删除?"},function () {
 					App.postAjax("/admin/category/delete", {"id": value}, function (data) {
-						if (data.status == 200) {
+						if (data.status === 200) {
 							App.refreshTable("#table");
+                            loadTreeSelect(2);
+                            App.msgS(data.msg);
+						}else{
+                            App.msgE(data.msg);
 						}
-						App.msgS(data.msg);
 					})
 				})
             }
@@ -191,8 +199,9 @@
 							App.unmask("#saveCategory");
 							App.msgS(data.msg);
 							if(data.status===200){
-								App.refreshTable("#table");
 								closePopup();
+                                App.refreshTable("#table");
+                                loadTreeSelect(2);
 							}
 						});
 					}
@@ -200,7 +209,7 @@
 					closePopup(popId);
 				});
 			}
-			
+
 			function closePopup() {
 				App.closePopup(popId,function () {
 					App.resetForm("#categoryForm");

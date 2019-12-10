@@ -58,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     private static List<BlogCategory> toTree(List<BlogCategory> list) {
         List<BlogCategory> treeList = new ArrayList<>();
         for (BlogCategory tree : list) {
+            tree.setOpen(true);
             if(tree.getPid()==null||tree.getPid() == 0){
                 treeList.add(tree);
             }
