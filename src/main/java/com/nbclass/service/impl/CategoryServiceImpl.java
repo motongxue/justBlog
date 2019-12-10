@@ -7,6 +7,7 @@ import com.nbclass.vo.CategoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<BlogCategory> selectAll(Integer type) {
-        return categoryMapper.selectList(type);
+        List<BlogCategory> categories = categoryMapper.selectByType(type);
+        return toTree(categories);
     }
 
     @Override
@@ -50,5 +52,33 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteById(Integer id) {
         categoryMapper.deleteById(id);
+    }
+
+
+    private static List<BlogCategory> toTree(List<BlogCategory> list) {
+        List<BlogCategory> treeList = new ArrayList<>();
+        for (BlogCategory tree : list) {
+            if(tree.getPid()==null||tree.getPid() == 0){
+                treeList.add(tree);
+            }
+        }
+        for (BlogCategory tree : list) {
+            toTreeChildren(treeList,tree);
+        }
+        return treeList;
+    }
+
+    private static void toTreeChildren(List<BlogCategory> treeList, BlogCategory tree) {
+        for (BlogCategory node : treeList) {
+            if(tree.getPid()!=null && tree.getPid().equals(node.getId())){
+                if(node.getChildren() == null){
+                    node.setChildren(new ArrayList<>());
+                }
+                node.getChildren().add(tree);
+            }
+            if(node.getChildren() != null){
+                toTreeChildren(node.getChildren(),tree);
+            }
+        }
     }
 }
