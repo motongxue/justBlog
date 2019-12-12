@@ -51,9 +51,9 @@ public class BlogCategory implements Serializable {
     private Integer sort;
 
     /**
-    * 0-目录，1-文章栏目，2-页面
+    * 图标
     */
-    private Integer type;
+    private String icon;
 
     /**
     * 模板名称

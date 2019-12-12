@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * UserMapper
+ * CategoryMapper
  *
  * @version V1.0
  * @date 2019/10/10
@@ -20,10 +20,10 @@ import java.util.List;
 public interface CategoryMapper extends MyMapper<BlogCategory> {
     /**
      * 根据参数查询栏目列表
-     * @param type 类型
+     * @param status 状态
      * @return list
      */
-    List<BlogCategory> selectByType(@Param("type") Integer type);
+    List<BlogCategory> selectByStatus(Integer status);
 
 
     /**

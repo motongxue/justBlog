@@ -157,7 +157,7 @@ img {
     height: 100%
 }
 
-.nav>li:hover .dropdown-menu {
+.nav li.dropdown:hover>.dropdown-menu {
     display: block
 }
 
@@ -219,22 +219,34 @@ img {
     padding: 5px 18px;
 }
 
-.dropdown-menu>.active>a {
+.navbar-nav .dropdown-menu>.active>a {
     color: #0bb8ca!important;
     background-color: #fff
 }
 
-.dropdown-menu>.active>a:hover {
+.navbar-nav .dropdown-menu>.active>a:hover {
     background-color: #f5f5f5
 }
 
-.navbar-right .dropdown-menu {
+.navbar-nav ul.dropdown-menu {
     left: 0;
     right: auto;
     padding: 0;
     border: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0
+}
+.navbar-nav ul ul.dropdown-menu{
+    left: 100%;
+    top: 0;
+    margin: 0;
+    border-radius: 0;
+}
+.navbar-nav .caret{
+    margin-top: -2px;
+}
+.navbar-nav ul .caret{
+    transform: rotate(-90deg);
 }
 
 .navbar-default .navbar-nav>.color-red>a {

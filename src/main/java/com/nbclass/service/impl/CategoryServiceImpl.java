@@ -1,5 +1,6 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.framework.util.CoreConst;
 import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.CategoryService;
@@ -25,8 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public List<BlogCategory> selectAll(Integer type) {
-        List<BlogCategory> categories = categoryMapper.selectByType(type);
+    public List<BlogCategory> selectAll() {
+        List<BlogCategory> categories = categoryMapper.selectByStatus(CoreConst.STATUS_VALID);
         return toTree(categories);
     }
 

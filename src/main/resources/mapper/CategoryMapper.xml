@@ -8,19 +8,21 @@
         <result column="description" property="description" />
         <result column="pid" property="pid" />
         <result column="sort" property="sort" />
-        <result column="type" property="type" />
+        <result column="icon" property="icon" />
         <result column="template" property="template" />
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="open" property="open" />
         <association property="parent" javaType="com.nbclass.model.BlogCategory">
-            <result property="id" column="p_id"/>
-            <result property="pid" column="p_pid"/>
-            <result property="name" column="p_name"/>
-            <result property="aliasName" column="p_alias_name" />
-            <result property="description" column="p_description"/>
-            <result property="status" column="p_status"/>
+            <result column="p_id" property="id"/>
+            <result column="p_pid" property="pid"/>
+            <result column="p_name" property="name"/>
+            <result column="p_alias_name" property="aliasName"/>
+            <result column="p_template" property="template" />
+            <result column="p_icon" property="icon" />
+            <result column="p_description" property="description"/>
+            <result column="p_status" property="status"/>
         </association>
     </resultMap>
 
@@ -31,7 +33,6 @@
         description,
         pid,
         sort,
-        type,
         template,
         status,
         create_time,
@@ -39,21 +40,20 @@
     </sql>
 
 
-    <select id="selectByType" resultMap="BaseResultMap" parameterType="int">
+    <select id="selectByStatus" resultMap="BaseResultMap" parameterType="int">
         SELECT t.*,
         p.id AS p_id,
         p.`pid` AS p_pid,
         p.`name` AS p_name,
         p.alias_name as p_alias_name,
+        p.template as p_template,
+        p.icon as p_icon,
         p.description AS p_description,
         p.`status` AS p_status
         FROM
         blog_category t
         LEFT JOIN blog_category p ON t.pid = p.id
-        where t.status=1
-        <if test="type !=null">
-            AND t.type = #{type}
-        </if>
+        where t.status=#{status}
         ORDER BY t.sort ASC
     </select>
 

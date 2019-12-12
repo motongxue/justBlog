@@ -15,6 +15,9 @@ a:hover, a:focus {
     transition: all 0.3s ease;
     text-decoration: none;
 }
+.color-999{
+    color: #999;
+}
 .mr-0{
     margin-right: 0px;
 }

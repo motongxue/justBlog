@@ -1,0 +1,19 @@
+<th:block th:fragment="menu(menus)">
+    <li th:each="menu:${menus}"  th:class="${#lists.isEmpty(menu.children)?'':'dropdown'}">
+        <a  th:class="${#lists.isEmpty(menu.children)?'':'dropdown-toggle'}" th:href="${not #lists.isEmpty(menu.children)? '#': ('/' + menu.aliasName)}">
+            <span th:text="${menu.name}"></span>
+            <b th:if="${not #lists.isEmpty(menu.children)}" class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" th:if="${not #lists.isEmpty(menu.children)}">
+            <li th:each="child:${menu.children}" th:class="${#lists.isEmpty(child.children)?'':'dropdown'}">
+                <a  th:class="${#lists.isEmpty(child.children)?'':'dropdown-toggle'}" th:href="${not #lists.isEmpty(child.children)? '#': ('/' + child.aliasName)}">
+                    <span th:text="${child.name}"></span>
+                    <b th:if="${not #lists.isEmpty(child.children)}" class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" th:if="${not #lists.isEmpty(child.children)}">
+                    <th:block th:include="this::menu(${child.children})" />
+                </ul>
+            </li>
+        </ul>
+    </li>
+</th:block>
