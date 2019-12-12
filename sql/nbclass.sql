@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50642
 File Encoding         : 65001
 
-Date: 2019-10-24 17:34:55
+Date: 2019-12-12 18:39:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -52,8 +52,8 @@ CREATE TABLE `blog_article` (
 -- ----------------------------
 -- Records of blog_article
 -- ----------------------------
-INSERT INTO `blog_article` VALUES ('1', '标题1', 'intro1', '/theme/zblog/static/img/diao.jpg', '<p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p>', null, '1', 'article1', '1', '1', '1', '1', '1', '1', null, '1', '10', '3', '0', '0', 'article', null, null, '1', '2019-10-21 13:48:04', '2019-10-22 13:37:12');
-INSERT INTO `blog_article` VALUES ('2', '标题2', 'intro2', '/theme/zblog/static/img/diao.jpg', '<p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p>', null, '1', 'article2', '1', '0', '0', '1', '1', '1', null, '1', '3', '1', '0', '0', 'article', null, null, '1', '2019-10-21 13:51:15', '2019-10-21 18:25:25');
+INSERT INTO `blog_article` VALUES ('1', '标题1', 'intro1', '/theme/zblog/static/img/diao.jpg', '<p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p><p>content1</p>', null, '1', 'article1', '1', '1', '1', '1', '0', '1', null, '1', '14', '3', '0', '0', 'article', null, null, '1', '2019-10-21 13:48:04', '2019-10-22 13:37:12');
+INSERT INTO `blog_article` VALUES ('2', '标题2', 'intro2', '/theme/zblog/static/img/diao.jpg', '<p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p><p>content2</p>', null, '1', 'article2', '1', '0', '0', '1', '1', '1', null, '1', '5', '1', '0', '0', 'article', null, null, '1', '2019-10-21 13:51:15', '2019-10-21 18:25:25');
 INSERT INTO `blog_article` VALUES ('3', '标题3', 'intro3', '/theme/zblog/static/img/diao.jpg', '<p>content3</p><p>content3</p><p>content3</p><p>content3</p><p>content3</p><p>content3</p><p>content3</p><p>content3</p><p>content3</p><p>content3</p>', '', '1', 'article3', '2', '0', '0', '1', '1', '1', '', '1', '6', '0', '0', '0', 'article', '', '', '1', '2019-10-21 13:51:52', '2019-10-21 18:25:28');
 INSERT INTO `blog_article` VALUES ('4', '标题4', 'intro4', '/theme/zblog/static/img/diao.jpg', '<p>content4</p><p>content4</p><p>content4</p><p>content4</p><p>content4</p><p>content4</p><p>content4</p><p>content4</p><p>content4</p><p>content4</p>', '', '1', 'article4', '2', '0', '0', '1', '1', '1', '', '1', '3', '0', '0', '0', 'article', '', '', '1', '2019-10-21 13:51:54', '2019-10-21 18:25:27');
 INSERT INTO `blog_article` VALUES ('5', '标题5', 'intro5', '/theme/zblog/static/img/diao.jpg', '<p>content5</p><p>content5</p><p>content5</p><p>content5</p><p>content5</p><p>content5</p><p>content5</p><p>content5</p><p>content5</p><p>content5</p>', '', '1', 'article5', '4', '0', '0', '1', '1', '1', '', '1', '6', '0', '0', '0', 'article', '', '', '1', '2019-10-21 13:51:55', '2019-10-21 18:25:29');
@@ -97,26 +97,33 @@ INSERT INTO `blog_article_tag` VALUES ('9', '5', '5', '1', '2019-08-21 14:01:14'
 DROP TABLE IF EXISTS `blog_category`;
 CREATE TABLE `blog_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL COMMENT '分类名称',
   `alias_name` varchar(50) DEFAULT NULL COMMENT '分类别名',
-  `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
-  `pid` int(11) DEFAULT NULL,
-  `sort` tinyint(2) DEFAULT NULL,
-  `type` tinyint(2) DEFAULT NULL COMMENT '0-目录，1-文章分类，2-页面',
+  `sort` int(5) DEFAULT NULL COMMENT '排序',
+  `icon` varchar(50) DEFAULT NULL COMMENT '图标',
   `template` varchar(50) DEFAULT NULL COMMENT '模板名称',
+  `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   `status` tinyint(1) DEFAULT '1' COMMENT '用户状态：1有效; 0删除',
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of blog_category
 -- ----------------------------
-INSERT INTO `blog_category` VALUES ('1', '菜单1', 'cadan1', 'cadan1111', null, '1', '1', 'index', '1', '2019-10-18 15:29:37', '2019-10-18 15:29:41');
-INSERT INTO `blog_category` VALUES ('2', '菜单2', 'cadan2', 'cadan2222', null, '3', '1', 'index', '1', '2019-10-18 15:29:37', '2019-10-18 15:43:06');
-INSERT INTO `blog_category` VALUES ('3', '菜单多级', 'caidanduoji', 'caidanduoji', null, '2', '0', null, '1', '2019-10-18 15:42:35', '2019-10-18 15:43:13');
-INSERT INTO `blog_category` VALUES ('4', '菜单2级', 'caidan2ji', 'caidan2ji', '3', '1', '1', 'index', '1', '2019-10-18 15:44:29', '2019-10-18 15:44:32');
+INSERT INTO `blog_category` VALUES ('24', null, '菜单1', null, '1', '1', '1', '1', '1', '2019-12-10 10:46:06', '2019-12-12 16:11:21');
+INSERT INTO `blog_category` VALUES ('25', null, '一级目录1', null, '11', '0', '', '11', '1', '2019-12-10 10:49:18', '2019-12-12 16:12:01');
+INSERT INTO `blog_category` VALUES ('26', '25', '二级菜单2', null, '22', '0', '22', '22', '1', '2019-12-10 10:49:30', '2019-12-12 16:12:09');
+INSERT INTO `blog_category` VALUES ('27', '25', '二级菜单1', null, '1', '1', '222', '222', '1', '2019-12-10 11:09:27', '2019-12-12 16:11:48');
+INSERT INTO `blog_category` VALUES ('28', '25', '二级目录1', null, '3', '0', '', '3', '1', '2019-12-10 11:09:38', '2019-12-12 16:12:19');
+INSERT INTO `blog_category` VALUES ('29', '28', '三级菜单1', null, '5', '1', '5', '5', '1', '2019-12-10 11:10:02', '2019-12-12 16:12:27');
+INSERT INTO `blog_category` VALUES ('30', '28', '三级目录1', null, '1', '0', '', '111', '1', '2019-12-12 16:55:18', '2019-12-12 16:55:18');
+INSERT INTO `blog_category` VALUES ('31', '28', '三级目录', null, '22', '0', '', '111', '1', '2019-12-12 16:56:40', '2019-12-12 16:56:40');
+INSERT INTO `blog_category` VALUES ('32', '31', '四级菜单', null, '111', '1', '啊哈哈', '啊哈哈', '1', '2019-12-12 16:57:13', '2019-12-12 16:57:13');
+INSERT INTO `blog_category` VALUES ('33', '28', '三级菜单2', null, '12', '1', '222', '222', '1', '2019-12-12 16:58:37', '2019-12-12 16:58:37');
+INSERT INTO `blog_category` VALUES ('34', null, '1', '3', '5', '4', '2', '6', '1', '2019-12-12 18:37:38', '2019-12-12 18:37:38');
 
 -- ----------------------------
 -- Table structure for blog_comment
@@ -151,8 +158,8 @@ CREATE TABLE `blog_comment` (
 INSERT INTO `blog_comment` VALUES ('1', '1', null, null, null, '', 'aaa', null, '', '0:0:0:0:0:0:0:1', null, null, 'aaa评论', '111', '2', '2', '1', '2019-08-14 17:55:41', '2019-10-22 17:53:48');
 INSERT INTO `blog_comment` VALUES ('2', '1', '1', '1', 'aaa', '', 'bbb', null, '', '0:0:0:0:0:0:0:1', null, null, 'bbb回复aaa', null, '3', '4', '1', '2019-10-19 17:55:49', '2019-10-22 16:24:24');
 INSERT INTO `blog_comment` VALUES ('3', '1', '1', '2', 'bbb', '', 'ccc', null, '', '0:0:0:0:0:0:0:1', null, null, 'ccc回复bbb', null, '5', '6', '1', '2019-10-02 17:55:53', '2019-10-22 16:24:11');
-INSERT INTO `blog_comment` VALUES ('4', '1', '1', '1', 'aaa', '', 'ddd', null, '', '0:0:0:0:0:0:0:1', null, null, 'ddd回复aaa', null, '7', '8', '1', '2019-08-14 18:04:31', '2019-10-22 13:19:38');
-INSERT INTO `blog_comment` VALUES ('5', '1', null, null, null, null, 'eee', null, null, '1.1.1.1.1.1', null, null, 'eee评论', '99', '10', '0', '1', '2019-10-22 13:12:22', '2019-10-22 17:53:47');
+INSERT INTO `blog_comment` VALUES ('4', '1', '1', '1', 'aaa', '', 'ddd', null, '', '0:0:0:0:0:0:0:1', null, null, 'ddd回复aaa', null, '8', '8', '1', '2019-08-14 18:04:31', '2019-10-25 16:17:12');
+INSERT INTO `blog_comment` VALUES ('5', '1', null, null, null, null, 'eee', null, null, '1.1.1.1.1.1', null, null, 'eee评论', '99', '11', '0', '1', '2019-10-22 13:12:22', '2019-10-25 16:15:55');
 INSERT INTO `blog_comment` VALUES ('6', '1', '5', '5', 'eee', null, 'fff', null, null, null, null, null, 'fff回复eee', null, '1', '0', '1', '2019-10-22 13:16:45', '2019-10-22 17:14:42');
 INSERT INTO `blog_comment` VALUES ('7', '1', '5', '6', 'fff', null, 'ggg', null, null, null, null, null, 'ggg回复fff', null, '1', '0', '1', '2018-10-28 13:17:57', '2019-10-22 17:14:37');
 INSERT INTO `blog_comment` VALUES ('11', '1', null, null, null, '666666', 'asdasd', 'https://q1.qlogo.cn/g?b=qq&nk=666666&s=100', 'zqf@eyecloud.tech', null, 'Windows 10', 'Chrome', 'fasasd asd ', '113', '0', '0', '0', '2019-10-22 18:20:48', '2019-10-22 18:20:47');
@@ -231,12 +238,12 @@ CREATE TABLE `blog_link` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '添加时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of blog_link
 -- ----------------------------
-INSERT INTO `blog_link` VALUES ('1', '测试友链', 'https://baidu.com', '友链', '111', '222', '333', '1', '1', '2019-10-21 16:34:51', '2019-10-21 16:34:52');
+INSERT INTO `blog_link` VALUES ('20', '111', '111', '111', '111', '111', '', '1', '1', '2019-12-03 14:15:47', '2019-12-03 14:15:47');
 
 -- ----------------------------
 -- Table structure for blog_slider
