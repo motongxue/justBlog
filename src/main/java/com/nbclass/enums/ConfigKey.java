@@ -1,6 +1,6 @@
 package com.nbclass.enums;
 
-public enum BlogConfigKey {
+public enum ConfigKey {
     CLOUD_STORAGE_CONFIG("CLOUD_STORAGE_CONFIG","云存储配置"),
     SITE_HOST("SITE_HOST","网站域名"),
     SITE_CDN("SITE_CDN","网站CDN域名"),
@@ -15,7 +15,7 @@ public enum BlogConfigKey {
     private String value;
     private String describe;
 
-    private BlogConfigKey(String value, String describe) {
+    private ConfigKey(String value, String describe) {
         this.value = value;
         this.describe = describe;
     }

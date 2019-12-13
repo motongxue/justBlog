@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title>文章管理</title>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+		<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+		<link rel="stylesheet" th:href="@{/css/app.css}"/>
+	</head>
+	<body>
+		<div class="z-content">
+            <div class="z-card">
+                <div class="z-card-body">
+					<div class="btn-group z-table-btn-group" role="group">
+						<button id="btn_add" type="button" class="btn btn-primary">新增</button>
+					</div>
+                    <table id="table" data-url="/admin/article/list" data-key="id" data-response-handler="responseHandler">
+                        <thead>
+                            <tr>
+                                <th data-field="name" data-align="center">标题</th>
+								<th data-field="lookCount" data-align="center">浏览</th>
+								<th data-field="commentCount" data-align="center">评论</th>
+								<th data-field="loveCount" data-align="center">喜欢</th>
+                                <th data-field="id" data-align="center" data-formatter="formatOpt" data-width="100">操作</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/app.js}"></script>
+        <script>
+            $(function () {
+                App.initTable("#table");
+				$("#btn_query").on('click', function(){
+					App.refreshTable("#table");
+				});
+
+				$("#btn_add").on('click', function(){
+					/*showPopup(1);*/
+				});
+
+
+            });
+
+            function responseHandler(data){
+                return {list:data.data};
+			}
+
+
+            function formatOpt(index,value){
+                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editArticle('+value+')">编辑</a>';
+                var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteArticle('+value+')">删除</a>';
+                return editBtn + deleteBtn;
+            }
+
+            function editArticle(id) {
+				showPopup(2,id);
+            }
+
+            function deleteArticle(value) {
+                var selectData = App.getTableDataByKey("#table",value);
+                if(selectData.type===0 && selectData.children!=null && selectData.children.length>0){
+                    App.msgE("存在子栏目，无法删除！");
+                    return;
+                }
+				App.confirm({content: "确定删除?"},function () {
+					App.postAjax("/admin/article/delete", {"id": value}, function (data) {
+						if (data.status === 200) {
+							App.refreshTable("#table");
+                            loadTreeSelect(2);
+                            App.msgS(data.msg);
+						}else{
+                            App.msgE(data.msg);
+						}
+					})
+				})
+            }
+
+            function showPopup(type,v) {
+			}
+
+        </script>
+
+	</body>
+</html>

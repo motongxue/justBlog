@@ -1,6 +1,6 @@
 package com.nbclass.service.impl;
 
-import com.nbclass.enums.BlogConfigKey;
+import com.nbclass.enums.ConfigKey;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.util.CoreConst;
@@ -14,7 +14,6 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Service
 public class ThemeServiceImpl implements ThemeService {
@@ -41,7 +40,7 @@ public class ThemeServiceImpl implements ThemeService {
         if (thymeleafViewResolver != null) {
             ZbTheme currentTheme = selectCurrent();
             Map<String, Object> vars = new HashMap<>();
-            String cdn = configService.selectAll().get(BlogConfigKey.SITE_CDN.getValue());
+            String cdn = configService.selectAll().get(ConfigKey.SITE_CDN.getValue());
             String staticPath = String.format("%s/theme/%s/static",cdn!=null ? cdn : "",currentTheme.getId());
             vars.put("static", staticPath);
             vars.put("currentTheme", currentTheme);

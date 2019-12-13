@@ -29,9 +29,9 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public List<BlogCategory> selectAll(Integer type) {
+    public List<BlogCategory> selectAll(Integer type, boolean disabled) {
         List<BlogCategory> categories = categoryMapper.selectByType(type);
-        return listToTree(categories);
+        return listToTree(categories, disabled);
     }
 
     @Override
@@ -62,10 +62,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-    private static List<BlogCategory> listToTree(List<BlogCategory> list) {
+    private static List<BlogCategory> listToTree(List<BlogCategory> list, boolean disabled) {
         //用递归找子。
         List<BlogCategory> treeList = new ArrayList<>();
         for (BlogCategory tree : list) {
+            tree.setOpen(true);
+            if(disabled && tree.getType()==0){
+                tree.setDisabled(true);
+            }
             if (tree.getPid()==null||tree.getPid() == 0) {
                 treeList.add(findChildren(tree, list));
             }

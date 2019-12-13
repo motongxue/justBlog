@@ -99,4 +99,7 @@ public class BlogCategory implements Serializable {
     @Transient
     private Boolean open;
 
+
+    @Transient
+    private Boolean disabled;
 }

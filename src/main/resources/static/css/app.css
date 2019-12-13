@@ -66,6 +66,9 @@ a:hover, a:focus {
 .mt-20{
     margin-top: 20px;
 }
+.ml-80{
+    margin-left: 80px;
+}
 .mb-0{
     margin-bottom: 0px;
 }
@@ -1572,4 +1575,9 @@ select.form-control{
 .z-select-tree .z-tree{
     padding: 6px 12px;
     line-height: 22px;
+}
+
+.label-four {
+    width: 80px;
+    float: left;
 }

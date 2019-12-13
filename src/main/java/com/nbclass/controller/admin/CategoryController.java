@@ -1,12 +1,9 @@
 package com.nbclass.controller.admin;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.CategoryService;
-import com.nbclass.vo.CategoryVo;
 import com.nbclass.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +20,8 @@ public class CategoryController {
 
     @PostMapping("/list")
     @AccessToken
-    public ResponseVo list(Integer type){
-        List<BlogCategory> categories = categoryService.selectAll(type);
+    public ResponseVo list(Integer type, boolean disabled){
+        List<BlogCategory> categories = categoryService.selectAll(type, disabled);
         return ResponseUtil.success(categories);
     }
 

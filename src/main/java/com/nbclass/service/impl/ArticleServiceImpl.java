@@ -25,7 +25,8 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-10-21
  */
 @Service
-public class ArticleServiceImpl implements ArticleService {
+public class ArticleServiceImpl implements ArticleService
+{
     @Autowired
     private RedisService redisService;
     @Autowired
@@ -33,7 +34,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<BlogArticle> selectList(ArticleVo vo) {
-        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         List<BlogArticle> list = articleMapper.selectList(vo);
         if (!CollectionUtils.isEmpty(list)) {
             List<Integer> ids = new ArrayList<>();
@@ -63,6 +63,7 @@ public class ArticleServiceImpl implements ArticleService {
             .withStatus(CoreConst.STATUS_VALID)
             .withIsPublic(CoreConst.IS_YES)
             .setPageSize(pageSize);
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         return this.selectList(vo);
     }
 
@@ -73,6 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .withStatus(CoreConst.STATUS_VALID)
                 .withIsPublic(CoreConst.IS_YES)
                 .setPageSize(pageSize);
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         return this.selectList(vo);
     }
 
@@ -83,6 +85,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .withStatus(CoreConst.STATUS_VALID)
                 .withIsPublic(CoreConst.IS_YES)
                 .setPageSize(pageSize);
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         return this.selectList(vo);
     }
 
@@ -93,6 +96,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .withStatus(CoreConst.STATUS_VALID)
                 .withIsPublic(CoreConst.IS_YES)
                 .setPageSize(pageSize);
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         return this.selectList(vo);
     }
 
@@ -137,4 +141,23 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return ResponseUtil.success();
     }
+
+    @Override
+    public void save(BlogArticle article) {
+        Date date = new Date();
+        article.setUpdateTime(date);
+        if(article.getId()==null){
+            article.setCreateTime(date);
+            articleMapper.insertSelective(article);
+        }else{
+            articleMapper.updateByPrimaryKeySelective(article);
+        }
+    }
+
+    @Override
+    public void deleteByIds(Integer[] ids) {
+        articleMapper.deleteBatch(ids);
+    }
+
+
 }

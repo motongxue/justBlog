@@ -204,4 +204,14 @@
         where id=#{articleId}
     </update>
 
+    <delete id="deleteBatch" parameterType="map">
+        DELETE FROM
+        blog_article
+        where
+        id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
 </mapper>

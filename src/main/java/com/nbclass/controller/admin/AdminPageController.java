@@ -1,8 +1,11 @@
 package com.nbclass.controller.admin;
 
+import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
+import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.service.CategoryService;
 import com.nbclass.service.ConfigService;
+import com.nbclass.vo.CloudStorageConfigVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,10 +53,31 @@ public class AdminPageController {
         return  pathSuffix + "categories";
     }
 
+    @GetMapping("/articles")
+    @AccessToken
+    public String articles(){
+        return  pathSuffix + "articles";
+    }
+
+    @GetMapping("/article/add")
+    @AccessToken
+    public String articleAdd(){
+        return  pathSuffix + "article-add";
+    }
+
     @GetMapping("/links")
     @AccessToken
     public String links(){
         return  pathSuffix + "links";
+    }
+
+    @GetMapping(value = "/config")
+    @AccessToken
+    public String config(Model model){
+        String json = configService.selectAll().get(ConfigKey.CLOUD_STORAGE_CONFIG.getValue());
+        CloudStorageConfigVo cloudStorageConfig = GsonUtil.fromJson(json, CloudStorageConfigVo.class);
+        model.addAttribute("cloudStorageConfig",cloudStorageConfig);
+        return pathSuffix + "config";
     }
 
 }

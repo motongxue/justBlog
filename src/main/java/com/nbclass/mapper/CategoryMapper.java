@@ -20,7 +20,7 @@ import java.util.List;
 public interface CategoryMapper extends MyMapper<BlogCategory> {
     /**
      * 根据参数查询栏目列表
-     * @param status 状态
+     * @param type 状态
      * @return list
      */
     List<BlogCategory> selectByType(@Param("type") Integer type);

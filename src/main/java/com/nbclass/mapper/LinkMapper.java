@@ -26,7 +26,7 @@ public interface LinkMapper extends MyMapper<BlogLink> {
     List<BlogLink> selectList(LinkVo link);
 
     /**
-     * 根据参数查询友链列表
+     * 根据ids删除友链
      * @param ids id集合
      * @return int
      */

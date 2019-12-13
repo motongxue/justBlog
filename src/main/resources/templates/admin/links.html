@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -140,14 +140,14 @@
 				});
 
 				$("#btn_batch_delete").on('click', function(){
-					var checkedRows= App.getSelections("#table");
+					var checkedRows= App.getTableSelections("#table");
 					if(checkedRows.length>0){
 						App.confirm({content: "确定删除选中的"+checkedRows.length+"条记录？"},function () {
 							var ids=[];
 							$.each(checkedRows, function (i, item) {
 								ids.push(item.id);
 							});
-							App.postAjax("/admin/link/batch/delete", {"ids": ids}, function (data) {
+							App.postAjax("/admin/link/delete", {"ids": ids}, function (data) {
 								if (data.status === 200) {
 									App.refreshTable("#table");
 								}
@@ -196,7 +196,7 @@
 
             function deleteLink(value) {
 				App.confirm({content: "确定删除?"},function () {
-					App.postAjax("/admin/link/delete", {"id": value}, function (data) {
+					App.postAjax("/admin/link/delete", {"ids": [value]}, function (data) {
 						if (data.status == 200) {
 							App.refreshTable("#table");
 						}

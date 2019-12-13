@@ -1,5 +1,6 @@
 package com.nbclass.controller.blog;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nbclass.enums.SliderType;
 import com.nbclass.framework.config.properties.ZbProperties;
@@ -89,7 +90,7 @@ public class BlogPageController {
     }
 
     @GetMapping("/tag/{tagId}")
-    public String test(Model model,@PathVariable("tagId") Integer tagId){
+    public String tag(Model model,@PathVariable("tagId") Integer tagId){
         ArticleVo vo = new ArticleVo();
         vo.setTagId(tagId);
         loadArticle(model, vo, "tag");
@@ -116,6 +117,7 @@ public class BlogPageController {
 
     private void loadArticle(Model model, ArticleVo vo, String pageUrl) {
         vo.setStatus(CoreConst.STATUS_VALID);
+        PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         List<BlogArticle> articleList =  articleService.selectList(vo);
         PageInfo<BlogArticle> pageInfo = new PageInfo<>(articleList);
         PageVo pageVo = new PageVo();

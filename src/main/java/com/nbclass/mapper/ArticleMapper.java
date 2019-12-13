@@ -51,4 +51,10 @@ public interface ArticleMapper extends MyMapper<BlogArticle> {
      */
     int updateNum(Map<String,Object> map);
 
+    /**
+     * 根据ids删除文章
+     * @param ids id集合
+     * @return int
+     */
+    int deleteBatch(Integer[] ids);
 }

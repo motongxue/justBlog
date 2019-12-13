@@ -4,9 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.util.ResponseUtil;
-import com.nbclass.model.BlogLink;
-import com.nbclass.service.LinkService;
-import com.nbclass.vo.LinkVo;
+import com.nbclass.model.BlogArticle;
+import com.nbclass.service.ArticleService;
+import com.nbclass.vo.ArticleVo;
 import com.nbclass.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,36 +14,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/link")
-public class LinkController {
+@RequestMapping("/admin/article")
+public class ArticleController {
     @Autowired
-    private LinkService linkService;
+    private ArticleService articleService;
 
     @PostMapping("/list")
     @AccessToken
-    public ResponseVo loadLinks(LinkVo vo){
+    public ResponseVo list(ArticleVo vo){
         PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
-        List<BlogLink> linkList = linkService.selectList(vo);
-        PageInfo<BlogLink> pageInfo = new PageInfo<>(linkList);
+        List<BlogArticle> blogArticles = articleService.selectList(vo);
+        PageInfo<BlogArticle> pageInfo = new PageInfo<>(blogArticles);
         return ResponseUtil.success(pageInfo);
     }
 
     @PostMapping("/save")
     @AccessToken
-    public ResponseVo add(BlogLink link){
-        linkService.save(link);
-        return ResponseUtil.success("保存友链成功");
+    public ResponseVo add(BlogArticle article){
+        articleService.save(article);
+        return ResponseUtil.success("保存文章成功");
     }
 
     @PostMapping("/delete")
     @AccessToken
     public ResponseVo delete(@RequestParam("ids[]") Integer[]ids){
-        linkService.deleteBatch(ids);
-        return ResponseUtil.success("删除友链成功");
+        articleService.deleteByIds(ids);
+        return ResponseUtil.success("删除文章成功");
     }
-
 }

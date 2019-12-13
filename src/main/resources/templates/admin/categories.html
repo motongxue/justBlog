@@ -1,245 +1,246 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-		<title>栏目管理</title>
-		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
-		<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
-		<link rel="stylesheet" th:href="@{/css/app.css}"/>
-	</head>
-	<body>
-		<div class="z-content">
-            <div class="z-card">
-                <div class="z-card-body">
-					<div class="btn-group z-table-btn-group" role="group">
-						<button id="btn_add" type="button" class="btn btn-primary">新增</button>
-					</div>
-                    <table id="table" data-url="/admin/category/list" data-key="id" data-page="false" data-tree="true" data-tree-open="true" data-tree-field="name" data-response-handler="responseHandler">
-                        <thead>
-                            <tr>
-                                <th data-field="name" data-align="center">栏目名称</th>
-								<th data-field="template" data-align="center">模板名称</th>
-								<th data-field="type" data-align="center" data-formatter="formatType">类型</th>
-								<th data-field="aliasName" data-align="center" data-formatter="formatAliasName">访问路径</th>
-								<th data-field="icon" data-align="center" data-formatter="formatIcon">图标</th>
-								<th data-field="sort" data-align="center">排序</th>
-                                <th data-field="id" data-align="center" data-formatter="formatOpt" data-width="100">操作</th>
-                            </tr>
-                        </thead>
-                    </table>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>栏目管理</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
+</head>
+<body>
+<div class="z-content">
+    <div class="z-card">
+        <div class="z-card-body">
+            <div class="btn-group z-table-btn-group" role="group">
+                <button id="btn_add" type="button" class="btn btn-primary">新增</button>
+            </div>
+            <table id="table" data-url="/admin/category/list" data-key="id" data-page="false" data-tree="true" data-tree-open="true" data-tree-field="name" data-response-handler="responseHandler">
+                <thead>
+                <tr>
+                    <th data-field="name" data-align="center">栏目名称</th>
+                    <th data-field="template" data-align="center">模板名称</th>
+                    <th data-field="type" data-align="center" data-formatter="formatType">类型</th>
+                    <th data-field="aliasName" data-align="center" data-formatter="formatAliasName">访问路径</th>
+                    <th data-field="icon" data-align="center" data-formatter="formatIcon">图标</th>
+                    <th data-field="sort" data-align="center">排序</th>
+                    <th data-field="id" data-align="center" data-formatter="formatOpt" data-width="100">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="category-modal" class="display-none">
+    <form class="form-horizontal" id="categoryForm">
+        <input  name="id" type="hidden"/>
+        <div class="z-card-body">
+
+            <div class="form-group">
+                <label  class="col-sm-3"></label>
+                <div class="col-sm-8">
+                    <div class="z-radio">
+                        <input type="radio" name="type" value="0" require=""/>
+                        <label><i></i>目录</label>
+                    </div>
+                    <div class="z-radio">
+                        <input type="radio" name="type" value="1" checked require="">
+                        <label><i></i>栏目页面</label>
+                    </div>
                 </div>
             </div>
-		</div>
-		<div id="category-modal" class="display-none">
-			<form class="form-horizontal" id="categoryForm">
-				<input  name="id" type="hidden"/>
-				<div class="z-card-body">
-					<div class="form-group">
-						<label  class="col-sm-3"></label>
-						<div class="col-sm-8">
-							<div class="z-radio">
-								<input type="radio" name="type" value="0" require="">
-								<label><i></i>目录</label>
-							</div>
-							<div class="z-radio">
-								<input type="radio" name="type" value="1" checked require="">
-								<label><i></i>栏目页面</label>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label  class="col-sm-3 control-label">上级目录 :</label>
-						<div class="col-sm-8">
-							<input id="pid" name="pid"  class="form-control"/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label  class="col-sm-3 control-label">栏目名称 :</label>
-						<div class="col-sm-8">
-							<input name="name" class="form-control" require=""/>
-						</div>
-					</div>
-					<div class="form-group type-page">
-						<label  class="col-sm-3 control-label">访问路径 :</label>
-						<div class="col-sm-8">
-							<input id="aliasName" name="aliasName" class="form-control"/>
-							<span class="color-999" th:text="${@module.get('sysConfig').SITE_HOST+'/'}"></span><span id="aliasNameAuto" class="text-primary">${auto}</span>
-						</div>
-					</div>
-					<div class="form-group type-page">
-						<label  class="col-sm-3 control-label">模板名称 :</label>
-						<div class="col-sm-8">
-							<input name="template" class="form-control" require=""/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label  class="col-sm-3 control-label">栏目图标 :</label>
-						<div class="col-sm-8">
-							<input name="icon" class="form-control"/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label  class="col-sm-3 control-label">排序 :</label>
-						<div class="col-sm-8">
-							<input name="sort" class="form-control" number="" require="" max="3"/>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-		<script th:src="@{/js/jquery.min.js}"></script>
-		<script th:src="@{/js/bootstrap.min.js}"></script>
-		<script th:src="@{/js/app.js}"></script>
-        <script>
-            var popId;
-            $(function () {
-                App.initSelect("select");
-                App.initTable("#table");
-                loadTreeSelect(1);
+            <div class="form-group">
+                <label  class="col-sm-3 control-label">上级目录 :</label>
+                <div class="col-sm-8">
+                    <input id="pid" type="text" name="pid"  class="form-control" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-3 control-label">栏目名称 :</label>
+                <div class="col-sm-8">
+                    <input type="text" name="name" class="form-control" require="必填项" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group type-page">
+                <label  class="col-sm-3 control-label">访问路径 :</label>
+                <div class="col-sm-8">
+                    <input id="aliasName" name="aliasName" class="form-control" placeholder=""/>
+                    <span class="color-999" th:text="${@module.get('sysConfig').SITE_HOST+'/'}"></span><span id="aliasNameAuto" class="text-primary">${auto}</span>
+                </div>
+            </div>
+            <div class="form-group type-page">
+                <label  class="col-sm-3 control-label">模板名称 :</label>
+                <div class="col-sm-8">
+                    <input name="template" class="form-control" require="" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-3 control-label">栏目图标 :</label>
+                <div class="col-sm-8">
+                    <input name="icon" class="form-control" placeholder=""/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label  class="col-sm-3 control-label">排序 :</label>
+                <div class="col-sm-8">
+                    <input name="sort" class="form-control" number="" require="" max="3" placeholder=""/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script>
+    var popId;
+    $(function () {
+        App.initSelect("select");
+        App.initTable("#table");
+        loadTreeSelect(1);
 
-				$("#btn_query").on('click', function(){
-					App.refreshTable("#table");
-				});
+        $("#btn_query").on('click', function(){
+            App.refreshTable("#table");
+        });
 
-				$("#btn_add").on('click', function(){
-					showPopup(1);
-				});
+        $("#btn_add").on('click', function(){
+            showPopup(1);
+        });
 
-				$("input[name='type']").on("change",function () {
-					if($(this).val()==="0"){
-					    $(".type-page").hide();
-					}else{
-                        $(".type-page").show();
-					}
-                });
-                $("#aliasName").bind("input propertychange",function(event){
-                    var aliasName = $("#aliasName").val();
-                    $("#aliasNameAuto").text(aliasName===""?"${auto}":(aliasName==="/"?"":aliasName));
-                });
-
-            });
-
-            //加载下拉树
-			function  loadTreeSelect(type) {
-                App.postAjax("/admin/category/list",{type:0},function (data) {
-                    var treeSelectOptions = {
-                        placeHolder: "无",
-                        data: data.data,
-                        iconType: 2,
-                        nameField: 'name',
-                        valueField: 'id'
-                    };
-                    if(type===1) {
-                        App.initTreeSelect("#pid", treeSelectOptions);
-                    }else{
-                        App.reloadTreeSelect("#pid", treeSelectOptions);
-					}
-                });
+        $("input[name='type']").on("change",function () {
+            if($(this).val()==="0"){
+                $(".type-page").hide();
+            }else{
+                $(".type-page").show();
             }
+        });
+        $("#aliasName").bind("input propertychange",function(event){
+            var aliasName = $("#aliasName").val();
+            $("#aliasNameAuto").text(aliasName===""?"${auto}":(aliasName==="/"?"":aliasName));
+        });
 
-            function responseHandler(data){
-                return {list:data.data};
-			}
+    });
 
-            function  formatType(index,value) {
-                var typeStr = "";
-                if(value===0){
-                    typeStr='<span class="badge badge-success">目录</span>';
-                }else if(value===1){
-                    typeStr='<span class="badge badge-primary">栏目页面</span>';
+    //加载下拉树
+    function  loadTreeSelect(type) {
+        App.postAjax("/admin/category/list",{type:0},function (data) {
+            var treeSelectOptions = {
+                placeHolder: "无",
+                data: data.data,
+                iconType: 2,
+                nameField: 'name',
+                valueField: 'id'
+            };
+            if(type===1) {
+                App.initTreeSelect("#pid", treeSelectOptions);
+            }else{
+                App.reloadTreeSelect("#pid", treeSelectOptions);
+            }
+        });
+    }
+
+    function responseHandler(data){
+        return {list:data.data};
+    }
+
+    function  formatType(index,value) {
+        var typeStr = "";
+        if(value===0){
+            typeStr='<span class="badge badge-success">目录</span>';
+        }else if(value===1){
+            typeStr='<span class="badge badge-primary">栏目页面</span>';
+        }
+        return typeStr;
+    }
+
+    function formatAliasName(index,value){
+        return value==null||value==='' ? '' : '<a href="'+'/'+(value==='/'?'':value)+'" target="_blank">'+value+'</a>';
+    }
+
+    function  formatIcon(index,value) {
+        return '<i class="'+value+'"></i>';
+    }
+
+    function formatOpt(index,value){
+        var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editCategory('+value+')">编辑</a>';
+        var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteCategory('+value+')">删除</a>';
+        return editBtn + deleteBtn;
+    }
+
+    function editCategory(id) {
+        showPopup(2,id);
+    }
+
+    function deleteCategory(value) {
+        var selectData = App.getTableDataByKey("#table",value);
+        if(selectData.type===0 && selectData.children!=null && selectData.children.length>0){
+            App.msgE("存在子栏目，无法删除！");
+            return;
+        }
+        App.confirm({content: "确定删除?"},function () {
+            App.postAjax("/admin/category/delete", {"id": value}, function (data) {
+                if (data.status === 200) {
+                    App.refreshTable("#table");
+                    loadTreeSelect(2);
+                    App.msgS(data.msg);
+                }else{
+                    App.msgE(data.msg);
                 }
-                return typeStr;
-            }
+            })
+        })
+    }
 
-            function formatAliasName(index,value){
-			    return value==null||value==='' ? '' : '<a href="'+'/'+(value==='/'?'':value)+'" target="_blank">'+value+'</a>';
-			}
-
-            function  formatIcon(index,value) {
-                return '<i class="'+value+'"></i>';
-            }
-
-            function formatOpt(index,value){
-                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editCategory('+value+')">编辑</a>';
-                var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteCategory('+value+')">删除</a>';
-                return editBtn + deleteBtn;
-            }
-
-            function editCategory(id) {
-				showPopup(2,id);
-            }
-
-            function deleteCategory(value) {
-                var selectData = App.getTableDataByKey("#table",value);
-                if(selectData.type===0 && selectData.children!=null && selectData.children.length>0){
-                    App.msgE("存在子栏目，无法删除！");
-                    return;
-                }
-				App.confirm({content: "确定删除?"},function () {
-					App.postAjax("/admin/category/delete", {"id": value}, function (data) {
-						if (data.status === 200) {
-							App.refreshTable("#table");
-                            loadTreeSelect(2);
-                            App.msgS(data.msg);
-						}else{
-                            App.msgE(data.msg);
-						}
-					})
-				})
-            }
-
-            function showPopup(type,v) {
-				popId = App.popup({
-					title: type===2?"分类-编辑":"分类-新增",
-					content: $("#category-modal"),
-					onCancel: closePopup,
-					onShow: function () {
-                        if(type===2){
-                           var selectData = App.getTableDataByKey("#table",v);
-                           App.fillForm("#categoryForm",selectData);
-                            $("input[name='type'][value!='"+selectData.type+"']").attr("disabled","disabled");
-                            $("#pid").parent().addClass("z-select-disabled");
-                            if(selectData.type===0){
-                                $(".type-page").hide();
-                            }
-                           if(selectData.pid!=null){
-                               $("#pid").next().find("input").val(selectData.parent.name);
-						   }
-						   if(selectData.aliasName!=null&&selectData.aliasName!==""){
-						       $("#aliasNameAuto").text(selectData.aliasName);
-                           }
-						}
+    function showPopup(type,v) {
+        popId = App.popup({
+            title: type===2?"分类-编辑":"分类-新增",
+            content: $("#category-modal"),
+            onCancel: closePopup,
+            onShow: function () {
+                if(type===2){
+                    var selectData = App.getTableDataByKey("#table",v);
+                    App.fillForm("#categoryForm",selectData);
+                    $("input[name='type'][value!='"+selectData.type+"']").attr("disabled","disabled");
+                    $("#pid").parent().addClass("z-select-disabled");
+                    if(selectData.type===0){
+                        $(".type-page").hide();
                     }
-				},function(){
-					if(App.validate("#categoryForm")){
-						App.mask("#saveCategory");
-						App.postAjax("/admin/category/save",$("#categoryForm").serialize(),function (data) {
-							App.unmask("#saveCategory");
-							App.msgS(data.msg);
-							if(data.status===200){
-								closePopup();
-                                App.refreshTable("#table");
-                                loadTreeSelect(2);
-							}
-						});
-					}
-				},function(){
-					closePopup(popId);
-				});
-			}
+                    if(selectData.pid!=null){
+                        $("#pid").next().find("input").val(selectData.parent.name);
+                    }
+                    if(selectData.aliasName!=null&&selectData.aliasName!==""){
+                        $("#aliasNameAuto").text(selectData.aliasName);
+                    }
+                }
+            }
+        },function(){
+            if(App.validate("#categoryForm")){
+                App.mask("#saveCategory");
+                App.postAjax("/admin/category/save",$("#categoryForm").serialize(),function (data) {
+                    App.unmask("#saveCategory");
+                    App.msgS(data.msg);
+                    if(data.status===200){
+                        closePopup();
+                        App.refreshTable("#table");
+                        loadTreeSelect(2);
+                    }
+                });
+            }
+        },function(){
+            closePopup(popId);
+        });
+    }
 
-			function closePopup() {
-				App.closePopup(popId,function () {
-					App.resetForm("#categoryForm");
-					$("#categoryForm [name='id']").val("");
-                    $("input[name='type']").removeAttr("disabled");
-                    $("#pid").parent().removeClass("z-select-disabled");
-                    $(".type-page").show();
-                    $("#aliasNameAuto").text("${auto}");
-				});
-			}
-        </script>
+    function closePopup() {
+        App.closePopup(popId,function () {
+            App.resetForm("#categoryForm");
+            $("#categoryForm [name='id']").val("");
+            $("input[name='type']").removeAttr("disabled");
+            $("#pid").parent().removeClass("z-select-disabled");
+            $(".type-page").show();
+            $("#aliasNameAuto").text("${auto}");
+        });
+    }
+</script>
 
-	</body>
+</body>
 </html>

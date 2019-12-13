@@ -79,4 +79,14 @@ public interface ArticleService {
      */
     ResponseVo articleLove(Integer articleId, String ip);
 
+    /**
+     * 保存文章
+     */
+    void save(BlogArticle article);
+
+    /**
+     * 删除文章
+     */
+    void deleteByIds(Integer[] ids);
+
 }
