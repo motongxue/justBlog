@@ -1,12 +1,14 @@
 <th:block th:fragment="menu(menus)">
     <li th:each="menu:${menus}"  th:class="${#lists.isEmpty(menu.children)?'':'dropdown'}">
-        <a  th:class="${#lists.isEmpty(menu.children)?'':'dropdown-toggle'}" th:href="${not #lists.isEmpty(menu.children)? '#': ('/' + menu.aliasName)}">
+        <a  th:class="${#lists.isEmpty(menu.children)?'':'dropdown-toggle'}" th:href="${not #lists.isEmpty(menu.children)? '#': ('/' + (menu.aliasName=='/'?'':menu.aliasName))}">
+            <span th:if="${menu.icon!=''}" class="nav-icon"><i th:class="${menu.icon}"></i></span>
             <span th:text="${menu.name}"></span>
             <b th:if="${not #lists.isEmpty(menu.children)}" class="caret"></b>
         </a>
         <ul class="dropdown-menu" th:if="${not #lists.isEmpty(menu.children)}">
             <li th:each="child:${menu.children}" th:class="${#lists.isEmpty(child.children)?'':'dropdown'}">
-                <a  th:class="${#lists.isEmpty(child.children)?'':'dropdown-toggle'}" th:href="${not #lists.isEmpty(child.children)? '#': ('/' + child.aliasName)}">
+                <a  th:class="${#lists.isEmpty(child.children)?'':'dropdown-toggle'}" th:href="${not #lists.isEmpty(child.children)? '#': ('/' + (child.aliasName=='/'?'':child.aliasName))}">
+                    <span th:if="${child.icon!=''}" class="nav-icon"><i th:class="${child.icon}"></i></span>
                     <span th:text="${child.name}"></span>
                     <b th:if="${not #lists.isEmpty(child.children)}" class="caret"></b>
                 </a>
