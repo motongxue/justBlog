@@ -33,7 +33,7 @@ import java.util.Map;
  * @author nbclass
  */
 @Controller
-public class BlogWebController {
+public class BlogPageController {
 
     @Autowired
     private CategoryService categoryService;
@@ -89,8 +89,11 @@ public class BlogWebController {
     }
 
     @GetMapping("/tag/{tagId}")
-    public String test(@PathVariable("tagId") Integer tagId){
-        return "";
+    public String test(Model model,@PathVariable("tagId") Integer tagId){
+        ArticleVo vo = new ArticleVo();
+        vo.setTagId(tagId);
+        loadArticle(model, vo, "tag");
+        return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
 

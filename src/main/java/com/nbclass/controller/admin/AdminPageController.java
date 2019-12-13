@@ -23,9 +23,6 @@ public class AdminPageController {
     private static final String pathSuffix="admin/";
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
     private ConfigService configService;
 
     @GetMapping(value = {"", "/"})
@@ -49,8 +46,7 @@ public class AdminPageController {
 
     @GetMapping("/categories")
     @AccessToken
-    public String categories(Model model){
-        model.addAttribute("siteHost", configService.selectAll().get("SITE_HOST"));
+    public String categories(){
         return  pathSuffix + "categories";
     }
 
