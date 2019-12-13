@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50642
 File Encoding         : 65001
 
-Date: 2019-12-12 18:39:08
+Date: 2019-12-13 11:50:01
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -100,6 +100,7 @@ CREATE TABLE `blog_category` (
   `pid` int(11) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL COMMENT '分类名称',
   `alias_name` varchar(50) DEFAULT NULL COMMENT '分类别名',
+  `type` tinyint(1) DEFAULT NULL COMMENT '0-目录，1-栏目页面',
   `sort` int(5) DEFAULT NULL COMMENT '排序',
   `icon` varchar(50) DEFAULT NULL COMMENT '图标',
   `template` varchar(50) DEFAULT NULL COMMENT '模板名称',
@@ -108,22 +109,23 @@ CREATE TABLE `blog_category` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of blog_category
 -- ----------------------------
-INSERT INTO `blog_category` VALUES ('24', null, '菜单1', null, '1', '1', '1', '1', '1', '2019-12-10 10:46:06', '2019-12-12 16:11:21');
-INSERT INTO `blog_category` VALUES ('25', null, '一级目录1', null, '11', '0', '', '11', '1', '2019-12-10 10:49:18', '2019-12-12 16:12:01');
-INSERT INTO `blog_category` VALUES ('26', '25', '二级菜单2', null, '22', '0', '22', '22', '1', '2019-12-10 10:49:30', '2019-12-12 16:12:09');
-INSERT INTO `blog_category` VALUES ('27', '25', '二级菜单1', null, '1', '1', '222', '222', '1', '2019-12-10 11:09:27', '2019-12-12 16:11:48');
-INSERT INTO `blog_category` VALUES ('28', '25', '二级目录1', null, '3', '0', '', '3', '1', '2019-12-10 11:09:38', '2019-12-12 16:12:19');
-INSERT INTO `blog_category` VALUES ('29', '28', '三级菜单1', null, '5', '1', '5', '5', '1', '2019-12-10 11:10:02', '2019-12-12 16:12:27');
-INSERT INTO `blog_category` VALUES ('30', '28', '三级目录1', null, '1', '0', '', '111', '1', '2019-12-12 16:55:18', '2019-12-12 16:55:18');
-INSERT INTO `blog_category` VALUES ('31', '28', '三级目录', null, '22', '0', '', '111', '1', '2019-12-12 16:56:40', '2019-12-12 16:56:40');
-INSERT INTO `blog_category` VALUES ('32', '31', '四级菜单', null, '111', '1', '啊哈哈', '啊哈哈', '1', '2019-12-12 16:57:13', '2019-12-12 16:57:13');
-INSERT INTO `blog_category` VALUES ('33', '28', '三级菜单2', null, '12', '1', '222', '222', '1', '2019-12-12 16:58:37', '2019-12-12 16:58:37');
-INSERT INTO `blog_category` VALUES ('34', null, '1', '3', '5', '4', '2', '6', '1', '2019-12-12 18:37:38', '2019-12-12 18:37:38');
+INSERT INTO `blog_category` VALUES ('40', null, '首页', '/', '1', '1', 'fa fa-home', 'index', null, '1', '2019-12-13 10:47:28', '2019-12-13 10:47:28');
+INSERT INTO `blog_category` VALUES ('41', null, 'java', 'java', '1', '2', 'fa fa-thumbs-o-up', 'index', null, '1', '2019-12-13 10:52:04', '2019-12-13 10:52:04');
+INSERT INTO `blog_category` VALUES ('42', null, '多级目录', '', '0', '3', 'fa fa-share', '', null, '1', '2019-12-13 10:54:42', '2019-12-13 10:54:42');
+INSERT INTO `blog_category` VALUES ('43', null, '音乐', 'music', '1', '4', 'fa fa-music', 'index', null, '1', '2019-12-13 10:55:37', '2019-12-13 10:55:37');
+INSERT INTO `blog_category` VALUES ('44', '42', '二级目录1', '', '0', '1', 'fa fa-share', '', null, '1', '2019-12-13 10:56:51', '2019-12-13 10:56:51');
+INSERT INTO `blog_category` VALUES ('45', '42', '二级目录2', '', '0', '2', 'fa fa-share', '', null, '1', '2019-12-13 10:57:23', '2019-12-13 10:57:23');
+INSERT INTO `blog_category` VALUES ('46', '42', '二级菜单1', 'level2-1', '1', '3', 'fa fa-send', 'index', null, '1', '2019-12-13 10:58:27', '2019-12-13 10:58:27');
+INSERT INTO `blog_category` VALUES ('47', '42', '二级菜单2', 'level2-2', '1', '4', 'fa fa-send', 'index', null, '1', '2019-12-13 10:58:59', '2019-12-13 10:58:59');
+INSERT INTO `blog_category` VALUES ('48', '44', '三级菜单1', 'level-3-1', '1', '2', 'fa fa-send', 'index', null, '1', '2019-12-13 11:00:52', '2019-12-13 11:48:37');
+INSERT INTO `blog_category` VALUES ('49', '45', '三级菜单2', 'level-3-2', '1', '1', 'fa fa-send', 'index', null, '1', '2019-12-13 11:01:44', '2019-12-13 11:02:42');
+INSERT INTO `blog_category` VALUES ('50', '44', '三级目录1', '', '0', '1', 'fa fa-share', '', null, '1', '2019-12-13 11:48:30', '2019-12-13 11:48:30');
+INSERT INTO `blog_category` VALUES ('51', '50', '四级菜单1', 'level-4-1', '1', '1', 'fa fa-send', 'index', null, '1', '2019-12-13 11:49:19', '2019-12-13 11:49:19');
 
 -- ----------------------------
 -- Table structure for blog_comment

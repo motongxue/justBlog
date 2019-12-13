@@ -23,7 +23,7 @@ public interface CategoryMapper extends MyMapper<BlogCategory> {
      * @param status 状态
      * @return list
      */
-    List<BlogCategory> selectByStatus(Integer status);
+    List<BlogCategory> selectByType(@Param("type") Integer type);
 
 
     /**

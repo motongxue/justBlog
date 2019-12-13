@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface CategoryService {
 
-    List<BlogCategory> selectAll();
+    List<BlogCategory> selectAll(Integer type);
 
     BlogCategory selectByAlias(String alias);
 

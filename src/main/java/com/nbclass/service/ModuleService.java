@@ -31,7 +31,7 @@ public class ModuleService {
     public Object get(String moduleName) {
         switch (moduleName) {
             case "categoryList":        //分类
-                return categoryService.selectAll();
+                return categoryService.selectAll(null);
             case "tagList":             //标签
                 return tagService.selectAll();
             case "linkList":            //友链

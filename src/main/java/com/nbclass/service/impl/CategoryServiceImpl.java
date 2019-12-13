@@ -1,10 +1,13 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.enums.CategoryType;
 import com.nbclass.framework.util.CoreConst;
+import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.CategoryService;
 import com.nbclass.vo.CategoryVo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +29,9 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public List<BlogCategory> selectAll() {
-        List<BlogCategory> categories = categoryMapper.selectByStatus(CoreConst.STATUS_VALID);
-        return toTree(categories);
+    public List<BlogCategory> selectAll(Integer type) {
+        List<BlogCategory> categories = categoryMapper.selectByType(type);
+        return listToTree(categories);
     }
 
     @Override
@@ -42,6 +45,9 @@ public class CategoryServiceImpl implements CategoryService {
     public void save(BlogCategory category) {
         Date date = new Date();
         category.setUpdateTime(date);
+        if(!category.getType().equals(CategoryType.CATEGORY.getType()) && StringUtils.isEmpty(category.getAliasName())){
+            category.setAliasName(UUIDUtil.generateShortUuid());
+        }
         if(category.getId()==null){
             category.setCreateTime(date);
             categoryMapper.insertSelective(category);
@@ -56,31 +62,27 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-    private static List<BlogCategory> toTree(List<BlogCategory> list) {
+    private static List<BlogCategory> listToTree(List<BlogCategory> list) {
+        //用递归找子。
         List<BlogCategory> treeList = new ArrayList<>();
         for (BlogCategory tree : list) {
-            tree.setOpen(true);
-            if(tree.getPid()==null||tree.getPid() == 0){
-                treeList.add(tree);
+            if (tree.getPid()==null||tree.getPid() == 0) {
+                treeList.add(findChildren(tree, list));
             }
-        }
-        for (BlogCategory tree : list) {
-            toTreeChildren(treeList,tree);
         }
         return treeList;
     }
 
-    private static void toTreeChildren(List<BlogCategory> treeList, BlogCategory tree) {
-        for (BlogCategory node : treeList) {
-            if(tree.getPid()!=null && tree.getPid().equals(node.getId())){
-                if(node.getChildren() == null){
-                    node.setChildren(new ArrayList<>());
+    private static BlogCategory findChildren(BlogCategory tree, List<BlogCategory> list) {
+        for (BlogCategory node : list) {
+            if (node.getPid()!=null && node.getPid().equals(tree.getId())) {
+                if (tree.getChildren() == null) {
+                    tree.setChildren(new ArrayList<>());
                 }
-                node.getChildren().add(tree);
-            }
-            if(node.getChildren() != null){
-                toTreeChildren(node.getChildren(),tree);
+                tree.getChildren().add(findChildren(node, list));
             }
         }
+        return tree;
     }
+
 }

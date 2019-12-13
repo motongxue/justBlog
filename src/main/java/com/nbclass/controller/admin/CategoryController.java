@@ -23,8 +23,8 @@ public class CategoryController {
 
     @PostMapping("/list")
     @AccessToken
-    public ResponseVo list(){
-        List<BlogCategory> categories = categoryService.selectAll();
+    public ResponseVo list(Integer type){
+        List<BlogCategory> categories = categoryService.selectAll(type);
         return ResponseUtil.success(categories);
     }
 

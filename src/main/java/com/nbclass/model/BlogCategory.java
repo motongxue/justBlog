@@ -41,6 +41,11 @@ public class BlogCategory implements Serializable {
     private String description;
 
     /**
+     * type 0-目录, 1-栏目
+     */
+    private Integer type;
+
+    /**
     * pid
     */
     private Integer pid;

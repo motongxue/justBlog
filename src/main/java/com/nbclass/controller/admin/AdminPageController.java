@@ -49,7 +49,8 @@ public class AdminPageController {
 
     @GetMapping("/categories")
     @AccessToken
-    public String categories(){
+    public String categories(Model model){
+        model.addAttribute("siteHost", configService.selectAll().get("SITE_HOST"));
         return  pathSuffix + "categories";
     }
 

@@ -6,6 +6,7 @@
         <result column="name" property="name" />
         <result column="alias_name" property="aliasName" />
         <result column="description" property="description" />
+        <result column="type" property="type" />
         <result column="pid" property="pid" />
         <result column="sort" property="sort" />
         <result column="icon" property="icon" />
@@ -28,9 +29,10 @@
 
     <sql id="Base_Column_List">
         id,
-        name,
+        `name`,
         alias_name,
         description,
+        `type`,
         pid,
         sort,
         template,
@@ -40,7 +42,7 @@
     </sql>
 
 
-    <select id="selectByStatus" resultMap="BaseResultMap" parameterType="int">
+    <select id="selectByType" resultMap="BaseResultMap" parameterType="int">
         SELECT t.*,
         p.id AS p_id,
         p.`pid` AS p_pid,
@@ -53,7 +55,10 @@
         FROM
         blog_category t
         LEFT JOIN blog_category p ON t.pid = p.id
-        where t.status=#{status}
+        where t.status=1
+        <if test="type !=null">
+            AND t.type = #{type}
+        </if>
         ORDER BY t.sort ASC
     </select>
 

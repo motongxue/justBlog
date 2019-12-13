@@ -164,6 +164,7 @@
                     blog_category
                 WHERE
                     STATUS = 1
+                    AND `type` = 1
             ) category,
             (
                 SELECT

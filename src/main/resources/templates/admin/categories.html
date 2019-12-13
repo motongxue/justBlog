@@ -15,14 +15,15 @@
 					<div class="btn-group z-table-btn-group" role="group">
 						<button id="btn_add" type="button" class="btn btn-primary">新增</button>
 					</div>
-                    <table id="table" data-url="/admin/category/list" data-key="id" data-page="false" data-tree="true" data-tree-field="name" data-response-handler="responseHandler">
+                    <table id="table" data-url="/admin/category/list" data-key="id" data-page="false" data-tree="true" data-tree-open="true" data-tree-field="name" data-response-handler="responseHandler">
                         <thead>
                             <tr>
                                 <th data-field="name">栏目名称</th>
 								<th data-field="template">模板名称</th>
+								<th data-field="type" data-formatter="formatType">类型</th>
+								<th data-field="aliasName" data-formatter="formatAliasName">访问路径</th>
 								<th data-field="icon">图标</th>
 								<th data-field="sort">排序</th>
-								<th data-field="description">描述</th>
                                 <th data-field="id" data-formatter="formatOpt" data-align="center" data-width="100">操作</th>
                             </tr>
                         </thead>
@@ -35,6 +36,19 @@
 				<input  name="id" type="hidden"/>
 				<div class="z-card-body">
 					<div class="form-group">
+						<label  class="col-sm-3"></label>
+						<div class="col-sm-8">
+							<div class="z-radio">
+								<input type="radio" name="type" value="0" require="">
+								<label><i></i>目录</label>
+							</div>
+							<div class="z-radio">
+								<input type="radio" name="type" value="1" checked require="">
+								<label><i></i>栏目页面</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
 						<label  class="col-sm-3 control-label">上级目录 :</label>
 						<div class="col-sm-8">
 							<input id="pid" name="pid"  class="form-control"/>
@@ -46,13 +60,13 @@
 							<input name="name" class="form-control" require=""/>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group type-page">
 						<label  class="col-sm-3 control-label">模板名称 :</label>
 						<div class="col-sm-8">
-							<input name="template" class="form-control"/>
+							<input name="template" class="form-control" require=""/>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group type-page">
 						<label  class="col-sm-3 control-label">访问路径 :</label>
 						<div class="col-sm-8">
 							<input id="aliasName" name="aliasName" class="form-control"/>
@@ -69,12 +83,6 @@
 						<label  class="col-sm-3 control-label">排序 :</label>
 						<div class="col-sm-8">
 							<input name="sort" class="form-control" number="" require="" max="3"/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label  class="col-sm-3 control-label">描述 :</label>
-						<div class="col-sm-8">
-							<input name="description" class="form-control"/>
 						</div>
 					</div>
 				</div>
@@ -100,14 +108,14 @@
 
 				$("input[name='type']").on("change",function () {
 					if($(this).val()==="0"){
-					    $("#template-content").hide();
+					    $(".type-page").hide();
 					}else{
-                        $("#template-content").show();
+                        $(".type-page").show();
 					}
                 });
                 $("#aliasName").bind("input propertychange",function(event){
                     var aliasName = $("#aliasName").val();
-                    $("#aliasNameAuto").text(aliasName===""?"${auto}":aliasName);
+                    $("#aliasNameAuto").text(aliasName===""?"${auto}":(aliasName==="/"?"":aliasName));
                 });
 
             });
@@ -132,6 +140,20 @@
 
             function responseHandler(data){
                 return {list:data.data};
+			}
+
+            function  formatType(index,value) {
+                var typeStr = "";
+                if(value===0){
+                    typeStr='<span class="badge badge-success">目录</span>';
+                }else if(value===1){
+                    typeStr='<span class="badge badge-primary">栏目页面</span>';
+                }
+                return typeStr;
+            }
+
+            function formatAliasName(index,value){
+			    return value==null||value==='' ? '' : '<a href="'+'/'+(value==='/'?'':value)+'" target="_blank">'+value+'</a>';
 			}
 
             function formatOpt(index,value){
@@ -172,10 +194,17 @@
                         if(type===2){
                            var selectData = App.getTableDataByKey("#table",v);
                            App.fillForm("#categoryForm",selectData);
-                           $("#pid").parent().addClass("z-select-disabled");
+                            $("input[name='type'][value!='"+selectData.type+"']").attr("disabled","disabled");
+                            $("#pid").parent().addClass("z-select-disabled");
+                            if(selectData.type===0){
+                                $(".type-page").hide();
+                            }
                            if(selectData.pid!=null){
                                $("#pid").next().find("input").val(selectData.parent.name);
 						   }
+						   if(selectData.aliasName!=null&&selectData.aliasName!==""){
+						       $("#aliasNameAuto").text(selectData.aliasName);
+                           }
 						}
                     }
 				},function(){
@@ -200,7 +229,10 @@
 				App.closePopup(popId,function () {
 					App.resetForm("#categoryForm");
 					$("#categoryForm [name='id']").val("");
+                    $("input[name='type']").removeAttr("disabled");
                     $("#pid").parent().removeClass("z-select-disabled");
+                    $(".type-page").show();
+                    $("#aliasNameAuto").text("${auto}");
 				});
 			}
         </script>
