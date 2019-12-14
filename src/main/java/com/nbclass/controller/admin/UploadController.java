@@ -83,17 +83,4 @@ public class UploadController {
 
     }
 
-    @PostMapping(value = "/saveConfig")
-    @AccessToken
-    public ResponseVo saveConfig(CloudStorageConfigVo cloudStorageConfig){
-        Gson gson = new Gson();
-        String value = gson.toJson(cloudStorageConfig);
-        int a = configService.updateByKey(ConfigKey.CLOUD_STORAGE_CONFIG.getValue(),value);
-        if (a > 0) {
-            return ResponseUtil.success("云存储配置保存成功！");
-        } else {
-            return ResponseUtil.error("云存储配置保存失败！");
-        }
-    }
-
 }

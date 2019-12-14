@@ -1,17 +1,17 @@
 package com.nbclass.framework.oss;
 
 import com.nbclass.framework.exception.ZbException;
-import com.nbclass.framework.util.FileUtil;
+import com.nbclass.framework.util.*;
 import com.nbclass.vo.CloudStorageConfigVo;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
+import java.util.Date;
 
 /**
- * 阿里云存储
+ * 本地存储
  */
 public class LocalOssService extends OssService {
 
@@ -26,7 +26,8 @@ public class LocalOssService extends OssService {
     @Override
     public String upload(InputStream is, String path, boolean isPublic) {
         try {
-            FileOutputStream os = new FileOutputStream(path);
+            String realPath = getRealPath(path);
+            FileOutputStream os = new FileOutputStream(realPath);
             byte[] bb = new byte[1024];
             int ch;
             while ((ch = is.read(bb)) > -1) {
@@ -38,7 +39,7 @@ public class LocalOssService extends OssService {
             throw new ZbException("上传本地文件失败", e);
         }
         String localDomain = config.getLocalDomain().endsWith("/")?config.getLocalDomain():config.getLocalDomain()+"/";
-        return localDomain+path;
+        return localDomain + CoreConst.FILE_FOLDER + path;
     }
 
     @Override
@@ -52,17 +53,21 @@ public class LocalOssService extends OssService {
     }
 
     private String getPath(String suffix) {
-        //生成uuid
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-        //文件路径
-        String filePathPrefix = config.getLocalPrefix().endsWith("/")?config.getLocalPrefix():config.getLocalPrefix()+"/";
-        if(!FileUtil.exists(filePathPrefix)){
+        //文件按日期分文件夹
+        String date = DateUtil.getDateString(new Date());
+        String path = date + "/" + UUIDUtil.generateShortUuid() + suffix;
+        String dir = PropertiesUtil.getString(CoreConst.workDirKey) + CoreConst.FILE_FOLDER + date;
+        if(!FileUtil.exists(dir)){
             try {
-                FileUtil.createDir(filePathPrefix);
+                FileUtil.createDir(dir);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return filePathPrefix + uuid + suffix;
+        return path;
+    }
+
+    private String getRealPath(String path){
+        return PropertiesUtil.getString(CoreConst.workDirKey)+ CoreConst.FILE_FOLDER +path;
     }
 }

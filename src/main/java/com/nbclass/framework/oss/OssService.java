@@ -1,6 +1,7 @@
 package com.nbclass.framework.oss;
 
 import com.nbclass.framework.util.DateUtil;
+import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.vo.CloudStorageConfigVo;
 import org.apache.commons.lang.StringUtils;
 
@@ -23,7 +24,7 @@ public abstract class OssService {
      */
     String getPath(String prefix, String suffix) {
         //生成uuid
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        String uuid = UUIDUtil.generateShortUuid();
         //文件路径
         String path = DateUtil.format(new Date(), "yyyyMMdd") + "/" + uuid;
 

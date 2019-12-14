@@ -2,7 +2,9 @@ package com.nbclass.controller.admin;
 
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
+import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.GsonUtil;
+import com.nbclass.framework.util.PropertiesUtil;
 import com.nbclass.service.CategoryService;
 import com.nbclass.service.ConfigService;
 import com.nbclass.vo.CloudStorageConfigVo;
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * blog rest接口控制器
@@ -40,13 +45,6 @@ public class AdminPageController {
         return  pathSuffix + "welcome";
     }
 
-    @GetMapping("/site/info")
-    @AccessToken
-    public String websiteInfo(Model model){
-        model.addAttribute("siteInfo",configService.selectAll());
-        return  pathSuffix + "siteinfo";
-    }
-
     @GetMapping("/categories")
     @AccessToken
     public String categories(){
@@ -74,8 +72,13 @@ public class AdminPageController {
     @GetMapping(value = "/config")
     @AccessToken
     public String config(Model model){
-        String json = configService.selectAll().get(ConfigKey.CLOUD_STORAGE_CONFIG.getValue());
+        Map<String, String> configMap = configService.selectAll();
+        String json = configMap.get(ConfigKey.CLOUD_STORAGE_CONFIG.getValue());
         CloudStorageConfigVo cloudStorageConfig = GsonUtil.fromJson(json, CloudStorageConfigVo.class);
+
+        String workDir = PropertiesUtil.getString(CoreConst.workDirKey);
+        model.addAttribute("workDir", workDir.endsWith(File.separator)?workDir:workDir+File.separator);
+        model.addAttribute("config",configMap);
         model.addAttribute("cloudStorageConfig",cloudStorageConfig);
         return pathSuffix + "config";
     }

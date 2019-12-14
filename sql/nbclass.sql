@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50642
+Source Server Version : 50722
 Source Host           : localhost:3306
 Source Database       : zb-blog
 
 Target Server Type    : MYSQL
-Target Server Version : 50642
+Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2019-12-13 18:46:15
+Date: 2019-12-15 06:13:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -186,17 +186,18 @@ CREATE TABLE `blog_config` (
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`sys_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
 
 -- ----------------------------
 -- Records of blog_config
 -- ----------------------------
-INSERT INTO `blog_config` VALUES ('1', 'CLOUD_STORAGE_CONFIG', '{\"type\":0,\"localDomain\":\"localhost://\",\"localPrefix\":\"d://file/\",\"qiniuDomain\":\"http://cdn.nbclass.com\",\"qiniuPrefix\":\"img/blog\",\"qiniuAccessKey\":\"dGKQzLej_0__Xd9kElc7IK-BXFTs\",\"qiniuSecretKey\":\"8sZZbdmEDS4yVx0DCF_-Das\",\"qiniuBucketName\":\"xxx\",\"aliyunDomain\":\"https://xxx.oss-cn-hangzhou.aliyuncs.com\",\"aliyunPrefix\":\"blog/\",\"aliyunEndPoint\":\"oss-cn-hangzhou.aliyuncs.com\",\"aliyunAccessKeyId\":\"LTAI4FgN4uWUatpHLxxjXmv1\",\"aliyunAccessKeySecret\":\"OJTXOBiLxxpKCAMURVlonFGdHb1n1\",\"aliyunBucketName\":\"xxx-img\",\"qcloudDomain\":\"https://xxx.cos.ap-shanghai.myqcloud.com\",\"qcloudPrefix\":\"blog/\",\"qcloudSecretId\":\"AKIDrxxxgT2fMDNHud5HDtOTJlACx\",\"qcloudSecretKey\":\"iBSZP6WifMn3A1cxxxwULwH\",\"qcloudBucketName\":\"sttbaxxx\",\"qcloudRegion\":\"ap-shanghai\"}', '云存储配置信息', '1', null, '2019-12-13 18:20:06');
-INSERT INTO `blog_config` VALUES ('4', 'SITE_HOST', 'http://www.nbclass.com', '网站域名', '1', null, null);
-INSERT INTO `blog_config` VALUES ('5', 'SITE_NAME', '智博客', '网站名称', '1', null, null);
-INSERT INTO `blog_config` VALUES ('6', 'SITE_KWD', '智博客,zblog,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站关键字', '1', null, null);
-INSERT INTO `blog_config` VALUES ('7', 'SITE_DESC', '智博客,zblog,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站描述', '1', null, null);
-INSERT INTO `blog_config` VALUES ('11', 'BAIDU_PUSH_URL', 'http://data.zz.baidu.com/urls?site=www.nbclass.com&token=s6qWORrXpjdgByTb', '百度推送地址', '1', null, null);
+INSERT INTO `blog_config` VALUES ('1', 'CLOUD_STORAGE_CONFIG', '{\"type\":0,\"localDomain\":\"localhost:8080\",\"localPrefix\":\"d://file/\",\"qiniuDomain\":\"http://cdn.nbclass.com\",\"qiniuPrefix\":\"img/blog\",\"qiniuAccessKey\":\"dGKQzLej_0__Xd9kElc7IK-BXFTs\",\"qiniuSecretKey\":\"8sZZbdmEDS4yVx0DCF_-Das\",\"qiniuBucketName\":\"xxx\",\"aliyunDomain\":\"https://xxx.oss-cn-hangzhou.aliyuncs.com\",\"aliyunPrefix\":\"blog/\",\"aliyunEndPoint\":\"oss-cn-hangzhou.aliyuncs.com\",\"aliyunAccessKeyId\":\"LTAI4FgN4uWUatpHLxxjXmv1\",\"aliyunAccessKeySecret\":\"OJTXOBiLxxpKCAMURVlonFGdHb1n1\",\"aliyunBucketName\":\"xxx-img\",\"qcloudDomain\":\"https://xxx.cos.ap-shanghai.myqcloud.com\",\"qcloudPrefix\":\"blog/\",\"qcloudSecretId\":\"AKIDrxxxgT2fMDNHud5HDtOTJlACx\",\"qcloudSecretKey\":\"iBSZP6WifMn3A1cxxxwULwH\",\"qcloudBucketName\":\"sttbaxxx\",\"qcloudRegion\":\"ap-shanghai\"}', '云存储配置信息', '1', null, '2019-12-15 05:21:41');
+INSERT INTO `blog_config` VALUES ('2', 'SITE_HOST', 'http://localhost:8080', '网站域名', '1', null, '2019-12-15 05:55:16');
+INSERT INTO `blog_config` VALUES ('3', 'SITE_CDN', 'http://localhost:8080', 'CDN域名', '1', null, '2019-12-15 05:50:50');
+INSERT INTO `blog_config` VALUES ('5', 'SITE_NAME', 'nbclass', '网站名称', '1', null, '2019-12-15 05:55:16');
+INSERT INTO `blog_config` VALUES ('6', 'SITE_KWD', 'nbclass,博客模板,zblog,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站关键字', '1', null, '2019-12-15 05:55:16');
+INSERT INTO `blog_config` VALUES ('7', 'SITE_DESC', 'nbclass,博客模板,zblog,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站描述', '1', null, '2019-12-15 05:55:16');
+INSERT INTO `blog_config` VALUES ('8', 'EDITOR_TYPE', '2', '编辑器类型', '1', null, '2019-12-15 05:55:16');
 
 -- ----------------------------
 -- Table structure for blog_file
@@ -240,7 +241,7 @@ CREATE TABLE `blog_link` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '添加时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Records of blog_link

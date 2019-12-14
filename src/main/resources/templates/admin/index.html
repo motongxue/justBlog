@@ -125,10 +125,6 @@
 		                icon: "ri-flag-line",
 		                children: [
 		                    {
-		                        id: "900201",
-		                        name: "网站信息",
-		                        url: "site/info"
-		                    },{
 		                        id: "900202",
 		                        name: "主题管理",
 		                        url: "themes"
@@ -155,19 +151,9 @@
 					},
 		            {
 		                id: "9004",
-		                name: "系统管理",
+		                name: "系统设置",
 		                icon: "ri-settings-3-line",
-		                children: [
-	                        {
-		                        id: "900401",
-		                        name: "用户管理",
-		                        url: "users"
-		                    },{
-								id: "900402",
-								name: "存储配置",
-								url: "config"
-							}
-                        ]
+						url: "config"
 		            }
 		        ];
 				App.menuTree('.sidebar-menu',{data:menus,prefix:"/admin/"});

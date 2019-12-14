@@ -135,7 +135,7 @@ public class FileUtil {
         File file = new File(path);
         deleteIfExists(file);
         File newFile = new File(path);
-        newFile.mkdir();
+        newFile.mkdirs();
         if (System.getProperty("os.name").startsWith("win")) {
             Files.setAttribute(newFile.toPath(), "dos:hidden", isHidden);
         }
