@@ -1,7 +1,7 @@
 package com.nbclass.mapper;
 
 import com.nbclass.framework.util.MyMapper;
-import com.nbclass.model.BlogSlider;
+import com.nbclass.model.BlogArticleTag;
 import com.nbclass.model.BlogTag;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +15,10 @@ import java.util.List;
  * @author nbclass
  */
 @Repository
-public interface TagMapper extends MyMapper<BlogTag> {
+public interface ArticleTagMapper extends MyMapper<BlogArticleTag> {
 
+    int deleteByArticleId(Integer articleId);
 
-    BlogTag selectByName(String name);
+    int insertBatch(List<BlogArticleTag> articleTags);
 
 }

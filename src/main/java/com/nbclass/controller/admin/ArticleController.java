@@ -34,8 +34,7 @@ public class ArticleController {
     @PostMapping("/save")
     @AccessToken
     public ResponseVo add(BlogArticle article){
-        articleService.save(article);
-        return ResponseUtil.success("保存文章成功");
+        return articleService.save(article);
     }
 
     @PostMapping("/delete")

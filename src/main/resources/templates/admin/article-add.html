@@ -7,6 +7,11 @@
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 	<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
 	<link rel="stylesheet" th:href="@{/css/app.css}"/>
+	<style>
+		.w-e-text-container{
+			height: 690px !important;
+		}
+	</style>
 </head>
 <body>
 <div class="z-content">
@@ -14,9 +19,10 @@
 		<div class="z-card-header">写文章</div>
 		<div class="z-card-body">
 			<form id="articleForm" class="form-horizontal">
+				<input id="articleStatus" type="hidden" name="status">
 				<input id="articleContent" type="hidden" name="content">
 				<input id="articleContentMd" type="hidden" name="contentMd">
-				<div class="col-lg-7 pl0">
+				<div class="col-lg-7 article-area">
 					<div class="form-group">
 						<div class="col-xs-12">
 							<input type="text" class="form-control" id="title" name="title" placeholder="请输入文章标题" require="">
@@ -54,11 +60,11 @@
 							<label class="control-label label-four">是否原创:</label>
 							<div class="ml-80 control-label">
 								<div class="z-radio">
-									<input type="radio" name="original" value="1" checked require=""/>
+									<input type="radio" name="origin" value="1" checked require=""/>
 									<label><i></i>原创</label>
 								</div>
 								<div class="z-radio">
-									<input type="radio" name="original" value="0" require=""/>
+									<input type="radio" name="origin" value="0" require=""/>
 									<label><i></i>转载</label>
 								</div>
 							</div>
@@ -68,7 +74,7 @@
 						<div class="col-xs-12">
 							<label class="control-label label-four">文章分类:</label>
 							<div class="ml-80">
-								<input id="categoryId" type="text" name="categoryId"  class="form-control" placeholder="请选择"/>
+								<input id="categoryId" type="text" name="categoryId"  class="form-control" placeholder="请选择" require=""/>
 							</div>
 						</div>
 					</div>
@@ -76,7 +82,7 @@
 						<div class="col-xs-12">
 							<label class="control-label label-four">文章标签:</label>
 							<div class="ml-80">
-								<input id="tags" type="text" name="tags"  class="form-control" placeholder="文章标签,逗号','隔开"/>
+								<input id="tags" type="text" name="tags"  class="form-control" placeholder="多个标签英文逗号隔开"/>
 							</div>
 						</div>
 					</div>
@@ -126,11 +132,11 @@
 							<label class="control-label label-four" >是否置顶:</label>
 							<div class="ml-80 control-label">
 								<div class="z-radio">
-									<input type="radio" name="isTop" value="1" checked require=""/>
+									<input type="radio" name="isTop" value="1" require=""/>
 									<label><i></i>是</label>
 								</div>
 								<div class="z-radio">
-									<input type="radio" name="isTop" value="0" require=""/>
+									<input type="radio" name="isTop" value="0" checked require=""/>
 									<label><i></i>否</label>
 								</div>
 							</div>
@@ -168,17 +174,42 @@
 					</div>
 					<div class="form-group">
 						<div class="col-xs-12">
-							<label class="control-label label-four" >概要:</label>
+							<label class="control-label label-four">访问路径:</label>
 							<div class="ml-80">
-								<textarea type="text" rows="2" class="form-control" name="description"  placeholder="文章概要"></textarea>
+								<input id="aliasName" type="text" name="aliasName"  class="form-control" placeholder="访问路径，默认自动生成"/>
+								<span class="color-999" th:text="${@module.get('sysConfig').SITE_HOST+'/a/'}"></span><span id="aliasNameAuto" class="text-primary">${auto}</span>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-xs-12">
-							<label class="control-label label-four" >关键词:</label>
+							<label class="control-label label-four">模板名称:</label>
 							<div class="ml-80">
-								<textarea type="text" rows="2" class="form-control" name="keywords"  placeholder="文章关键词（SEO优化）"></textarea>
+								<input type="text" name="template"  class="form-control" placeholder="模板名称" require=""/>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-12">
+							<label class="control-label label-four" >文章简介:</label>
+							<div class="ml-80">
+								<textarea type="text" rows="2" class="form-control" name="intro"  placeholder="文章简介"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-12">
+							<label class="control-label label-four" >seo keywords:</label>
+							<div class="ml-80">
+								<textarea type="text" rows="2" class="form-control" name="seoKey"  placeholder="文章关键词（SEO优化）"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-xs-12">
+							<label class="control-label label-four" >seo description:</label>
+							<div class="ml-80">
+								<textarea type="text" rows="2" class="form-control" name="seoDesc"  placeholder="文章描述（SEO优化）"></textarea>
 							</div>
 						</div>
 					</div>
@@ -193,6 +224,7 @@
 <script th:src="@{/js/app.js}"></script>
 <script>
 	$(function () {
+		App.initSelect("select");
         App.initUploader({
             pick: '.upload-cover',
             url:'/upload/upload',
@@ -211,7 +243,6 @@
         App.initUploader({
             pick: '.upload-video',
             url:'/upload/upload',
-            accept:'jpg,png',
             before:function(){
                 App.mask(".upload-video");
             },
@@ -234,6 +265,7 @@
 			App.initTreeSelect("#categoryId", treeSelectOptions);
         });
 
+        //文章类型
         $("input[name='type']").on("change",function () {
             if($(this).val()==="1"){
                 $("#uploadVideoContent").hide();
@@ -241,6 +273,12 @@
                 $("#uploadVideoContent").show();
             }
         });
+
+        //别名
+		$("#aliasName").bind("input propertychange",function(event){
+			var aliasName = $("#aliasName").val();
+			$("#aliasNameAuto").text(aliasName===""?"${auto}":aliasName);
+		});
 
     });
 
@@ -254,41 +292,39 @@
 
 
     function  saveArticle(status) {
-        if(validArticle()){
-            Core.confirm("确认保存文章？",function () {
-                $("#status").val(status);
-                Core.postAjax("/article/add",$("#articleForm").serialize(),function (data) {
+		$("#articleStatus").val(status);
+        if(validateArticleForm()){
+            App.confirm({content:"确认保存文章？"},function () {
+                App.postAjax("/admin/article/save",$("#articleForm").serialize(),function (data) {
                     if(data.status=200){
-                        Core.load("#content","article/add");
-                    }
-                    layer.msg(data.msg)
+                    	window.location.reload();
+						App.msgS(data.msg)
+                    }else{
+						App.msgE(data.msg)
+					}
                 })
             })
         }
     }
 
-    function  validArticle() {
-        if(App.validate("#articleForm")){
-            var articleText = articleEditor.txt.text();
-            var articleHtml = articleEditor.txt.html();
-            if("<p><br></p>"!==articleHtml){
-                $("#articleContentMd").val(articleText);
-                $("#articleContent").val(articleHtml);
-                var tags =[];
-                $('input[name="tag"]:checked').each(function(){
-                    tags.push($(this).val());
-                });
-                if(tags.length>0){
-                    return true;
-                }else{
-                    App.msgE("请选择文章标签！")
-                }
-            }else{
-                layer.msgE("请输入文章内容！")
-            }
-        }
-        return false;
+    function  validateArticleForm() {
+        var flag1 = App.validate("#articleForm");
+        var flag2 = validateArticleContent();
+        return flag1 && flag2;
     }
+
+    function  validateArticleContent() {
+		var articleText = articleEditor.txt.text();
+		var articleHtml = articleEditor.txt.html();
+		if("<p><br></p>"!==articleHtml){
+			$("#articleContentMd").val(articleText);
+			$("#articleContent").val(articleHtml);
+			return true;
+		}else{
+			App.makeError("#article-editor .w-e-text-container","请输入文章内容", true);
+			return false;
+		}
+	}
 </script>
 </body>
 </html>

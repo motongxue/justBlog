@@ -151,8 +151,11 @@ public class BlogArticle implements Serializable {
     private Date updateTime;
 
     @Transient
+    private String tags;
+
+    @Transient
     private BlogCategory category;
 
     @Transient
-    private List<BlogTag> tags;
+    private List<BlogTag> tagList;
 }

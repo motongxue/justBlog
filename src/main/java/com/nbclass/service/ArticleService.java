@@ -82,7 +82,7 @@ public interface ArticleService {
     /**
      * 保存文章
      */
-    void save(BlogArticle article);
+    ResponseVo save(BlogArticle article);
 
     /**
      * 删除文章

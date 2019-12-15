@@ -2,14 +2,22 @@ package com.nbclass.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.ResponseUtil;
+import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.mapper.ArticleMapper;
+import com.nbclass.mapper.ArticleTagMapper;
+import com.nbclass.mapper.TagMapper;
 import com.nbclass.model.BlogArticle;
+import com.nbclass.model.BlogArticleTag;
+import com.nbclass.model.BlogTag;
 import com.nbclass.service.ArticleService;
+import com.nbclass.service.ConfigService;
 import com.nbclass.service.RedisService;
 import com.nbclass.vo.ArticleVo;
 import com.nbclass.vo.ResponseVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +38,13 @@ public class ArticleServiceImpl implements ArticleService
     @Autowired
     private RedisService redisService;
     @Autowired
+    private ConfigService configService;
+    @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private TagMapper tagMapper;
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
     @Override
     public List<BlogArticle> selectList(ArticleVo vo) {
@@ -42,14 +56,14 @@ public class ArticleServiceImpl implements ArticleService
             }
             List<BlogArticle> tagArticles = articleMapper.selectTagsByArticleId(ids);
             Map<Integer, BlogArticle> tagMap = new LinkedHashMap<>(tagArticles.size());
-            for (BlogArticle bizArticle : tagArticles) {
-                tagMap.put(bizArticle.getId(), bizArticle);
+            for (BlogArticle article : tagArticles) {
+                tagMap.put(article.getId(), article);
             }
 
-            for (BlogArticle bizArticle : list) {
-                BlogArticle tagArticle = tagMap.get(bizArticle.getId());
+            for (BlogArticle article : list) {
+                BlogArticle tagArticle = tagMap.get(article.getId());
                 if(null!=tagArticle){
-                    bizArticle.setTags(tagArticle.getTags());
+                    article.setTags(tagArticle.getTags());
                 }
             }
         }
@@ -143,15 +157,47 @@ public class ArticleServiceImpl implements ArticleService
     }
 
     @Override
-    public void save(BlogArticle article) {
+    public ResponseVo save(BlogArticle article) {
         Date date = new Date();
         article.setUpdateTime(date);
+        if(StringUtils.isNotEmpty(article.getAliasName())){
+            BlogArticle blogArticle = articleMapper.selectByAliasName(article.getAliasName());
+            if(blogArticle!=null && article.getId()!=null && !blogArticle.getId().equals(blogArticle.getId())){
+                return ResponseUtil.error("路径别名已存在！");
+            }
+        }else{
+            article.setAliasName(UUIDUtil.generateShortUuid());
+        }
+
         if(article.getId()==null){
+            article.setEditorType(Integer.valueOf(configService.selectAll().get(ConfigKey.EDITOR_TYPE.getValue())));
             article.setCreateTime(date);
             articleMapper.insertSelective(article);
         }else{
             articleMapper.updateByPrimaryKeySelective(article);
+            articleTagMapper.deleteByArticleId(article.getId());
         }
+        //处理tag
+        List<BlogArticleTag> articleTags = new ArrayList<>();
+        for(String tagName : article.getTags().split(",")){
+            BlogTag tag = tagMapper.selectByName(tagName);
+            if(tag==null){
+                tag = new BlogTag();
+                tag.setName(tagName);
+                tag.setStatus(CoreConst.STATUS_VALID);
+                tag.setCreateTime(new Date());
+                tagMapper.insertSelective(tag);
+            }
+            BlogArticleTag articleTag = new BlogArticleTag();
+            articleTag.setArticleId(article.getId());
+            articleTag.setTagId(tag.getId());
+            articleTag.setStatus(CoreConst.STATUS_VALID);
+            articleTags.add(articleTag);
+        }
+        if(!CollectionUtils.isEmpty(articleTags)){
+            articleTagMapper.insertBatch(articleTags);
+        }
+        return ResponseUtil.success("保存文章成功");
     }
 
     @Override

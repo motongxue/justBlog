@@ -13,10 +13,17 @@
 
     <sql id="Base_Column_List">
         id,
-        name,
+        `name`,
         status,
         create_time,
         update_time
     </sql>
+
+    <select id="selectByName" resultMap="BaseResultMap">
+        select *
+        from blog_tag
+        where status=1
+        and `name` = #{name}
+    </select>
 
 </mapper>

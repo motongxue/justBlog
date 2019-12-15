@@ -35,7 +35,7 @@
             <result property="name" jdbcType="VARCHAR" column="b_category_name"/>
             <result property="aliasName" jdbcType="VARCHAR" column="b_category_alias_name"/>
         </association>
-        <collection property="tags" column="tag_id" javaType="ArrayList" ofType="com.nbclass.model.BlogTag">
+        <collection property="tagList" column="tag_id" javaType="ArrayList" ofType="com.nbclass.model.BlogTag">
             <result property="id" jdbcType="INTEGER" column="tag_id"/>
             <result property="name" jdbcType="VARCHAR" column="tag_name"/>
             <result property="createTime" jdbcType="TIMESTAMP" column="tag_create_time"/>

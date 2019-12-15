@@ -12,16 +12,13 @@
 		<div class="z-content">
             <div class="z-card">
                 <div class="z-card-body">
-					<div class="btn-group z-table-btn-group" role="group">
-						<button id="btn_add" type="button" class="btn btn-primary">新增</button>
-					</div>
                     <table id="table" data-url="/admin/article/list" data-key="id" data-response-handler="responseHandler">
                         <thead>
                             <tr>
-                                <th data-field="name" data-align="center">标题</th>
-								<th data-field="lookCount" data-align="center">浏览</th>
-								<th data-field="commentCount" data-align="center">评论</th>
-								<th data-field="loveCount" data-align="center">喜欢</th>
+                                <th data-field="title" data-align="center">标题</th>
+								<th data-field="lookNum" data-align="center">浏览</th>
+								<th data-field="commentNum" data-align="center">评论</th>
+								<th data-field="supportNum" data-align="center">喜欢</th>
                                 <th data-field="id" data-align="center" data-formatter="formatOpt" data-width="100">操作</th>
                             </tr>
                         </thead>
@@ -43,11 +40,10 @@
 					/*showPopup(1);*/
 				});
 
-
             });
 
             function responseHandler(data){
-                return {list:data.data};
+                return data.data;
 			}
 
 

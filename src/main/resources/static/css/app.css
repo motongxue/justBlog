@@ -698,8 +698,11 @@ input,textarea {
     border-radius: 2px 2px 0 0;
 }
 .z-card-body {
-    padding: 10px 15px;
+    padding: 15px;
     line-height: 1.5;
+}
+.z-card-body-tight{
+    padding: 10px 15px;
 }
 .z-card-header:before, .z-card-body:before, .z-card-header:after, .z-card-body:after{
     content: " ";
@@ -919,7 +922,7 @@ input,textarea {
     background-color: #fff;
     font-size: 12px;
     padding: 3px;
-    border: 1px solid #ddd;
+    border: 1px solid #e5e5e5;
     border-radius: 100px;
     width: 20px;
     height: 20px;
@@ -962,11 +965,10 @@ input,textarea {
     opacity: 1;
 }
 .z-radio i:before {
-    font-size: 12px;
     content: "";
-    width: 10px;
-    height: 10px;
-    top: -1px;
+    width: 8px;
+    height: 8px;
+    top: -2px;
 }
 .z-radio>input[type='radio']:checked+label>i:before{
     background-color: #0080FF;
@@ -1577,7 +1579,24 @@ select.form-control{
     line-height: 22px;
 }
 
+.btn-group>.btn.active, .btn-group>.btn:active, .btn-group>.btn:focus, .btn-group>.btn:hover{
+    z-index: auto;
+}
+
 .label-four {
     width: 80px;
     float: left;
+}
+.article-area{
+    padding: 0;
+}
+@media (min-width: 1200px){
+    .article-area{
+        padding-right: 15px;
+    }
+}
+.article-extra{
+    border: 1px solid #e5e5e5;
+    padding: 15px;
+    border-radius: 2px;
 }
