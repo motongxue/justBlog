@@ -95,6 +95,9 @@
         <if test="keyword != null">
             AND	a.title LIKE CONCAT('%',#{keyword},'%')
         </if>
+        <if test="categoryId != null">
+            AND	a.category_id = #{categoryId}
+        </if>
         <if test="category != null and category != ''">
             AND	category.alias_name = #{category}
         </if>
@@ -188,8 +191,8 @@
         FROM
         blog_article a
         INNER JOIN blog_category category ON a.category_id = category.id
-        INNER JOIN blog_article_tag atag ON a.id = atag.article_id
-        INNER JOIN blog_tag t ON atag.tag_id = t.id
+        LEFT JOIN blog_article_tag atag ON a.id = atag.article_id
+        LEFT JOIN blog_tag t ON atag.tag_id = t.id
         WHERE a.alias_name=#{alias}
     </select>
 

@@ -43,4 +43,12 @@ public class ArticleController {
         articleService.deleteByIds(ids);
         return ResponseUtil.success("删除文章成功");
     }
+
+    @PostMapping("/exist/aliasName")
+    @AccessToken
+    public boolean isExistAliasName(Integer id, String aliasName){
+        BlogArticle article = articleService.selectByAliasName(aliasName);
+        return article!=null && (id==null || !id.equals(article.getId()));
+    }
+
 }

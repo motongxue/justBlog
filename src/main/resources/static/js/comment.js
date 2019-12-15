@@ -87,7 +87,6 @@ $(function () {
                         $("#reply-comment-form").remove();
                         $(this).parent().after($replyForm);
                         $("#reply-comment-form").show();
-                        console.log($(".reply[style='display: none;']"));
                         $(".reply[style='display: none;']").next().hide();
                         $(".reply[style='display: none;']").show();
                         $("#replyId").val(replyId);

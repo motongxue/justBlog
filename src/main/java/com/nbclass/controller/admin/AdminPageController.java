@@ -5,13 +5,14 @@ import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.framework.util.PropertiesUtil;
-import com.nbclass.service.CategoryService;
+import com.nbclass.service.ArticleService;
 import com.nbclass.service.ConfigService;
 import com.nbclass.vo.CloudStorageConfigVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
@@ -32,6 +33,8 @@ public class AdminPageController {
 
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private ArticleService articleService;
 
     @GetMapping(value = {"", "/"})
     @AccessToken
@@ -61,6 +64,13 @@ public class AdminPageController {
     @AccessToken
     public String articleAdd(){
         return  pathSuffix + "article-add";
+    }
+
+    @GetMapping("/article/edit/{aliasName}")
+    @AccessToken
+    public String articleEdit(Model model, @PathVariable("aliasName") String aliasName){
+        model.addAttribute("article", articleService.selectByAliasName(aliasName));
+        return  pathSuffix + "article-edit";
     }
 
     @GetMapping("/links")

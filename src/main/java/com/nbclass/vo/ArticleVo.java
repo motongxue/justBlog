@@ -23,6 +23,7 @@ public class ArticleVo extends PageVo{
     private Integer origin;
     private String keyword;
     private String category;
+    private Integer categoryId;
     private Integer tagId;
 
     public ArticleVo withIsTop(Integer isTop) {

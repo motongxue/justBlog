@@ -1600,3 +1600,9 @@ select.form-control{
     padding: 15px;
     border-radius: 2px;
 }
+.badge-tag{
+    background-color: #e6e6e6;
+    border: 1px solid #e6e6e6;
+    color: #555;
+    margin: 0 2px;
+}

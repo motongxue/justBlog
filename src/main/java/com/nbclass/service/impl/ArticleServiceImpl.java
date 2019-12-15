@@ -63,7 +63,7 @@ public class ArticleServiceImpl implements ArticleService
             for (BlogArticle article : list) {
                 BlogArticle tagArticle = tagMap.get(article.getId());
                 if(null!=tagArticle){
-                    article.setTags(tagArticle.getTags());
+                    article.setTagList(tagArticle.getTagList());
                 }
             }
         }
@@ -160,15 +160,10 @@ public class ArticleServiceImpl implements ArticleService
     public ResponseVo save(BlogArticle article) {
         Date date = new Date();
         article.setUpdateTime(date);
-        if(StringUtils.isNotEmpty(article.getAliasName())){
-            BlogArticle blogArticle = articleMapper.selectByAliasName(article.getAliasName());
-            if(blogArticle!=null && article.getId()!=null && !blogArticle.getId().equals(blogArticle.getId())){
-                return ResponseUtil.error("路径别名已存在！");
-            }
-        }else{
+        article.setAliasName(article.getAliasName().trim());
+        if(StringUtils.isEmpty(article.getAliasName())){
             article.setAliasName(UUIDUtil.generateShortUuid());
         }
-
         if(article.getId()==null){
             article.setEditorType(Integer.valueOf(configService.selectAll().get(ConfigKey.EDITOR_TYPE.getValue())));
             article.setCreateTime(date);
