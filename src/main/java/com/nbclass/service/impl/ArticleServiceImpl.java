@@ -33,8 +33,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-10-21
  */
 @Service
-public class ArticleServiceImpl implements ArticleService
-{
+public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private RedisService redisService;
     @Autowired
@@ -117,6 +116,21 @@ public class ArticleServiceImpl implements ArticleService
     @Override
     public BlogArticle selectByAliasName(String aliasName) {
         return articleMapper.selectByAliasName(aliasName);
+    }
+
+    @Override
+    public BlogArticle selectById(Integer id) {
+        BlogArticle article = articleMapper.selectById(id);
+        if(article!=null && !CollectionUtils.isEmpty(article.getTagList())){
+            StringBuilder tags = new StringBuilder();
+            for(BlogTag tag : article.getTagList()){
+                tags.append(tag.getName()).append(",");
+            };
+            if(StringUtils.isNotEmpty(tags.toString())){
+                article.setTags(tags.substring(0,tags.length()-1));
+            }
+        }
+        return article;
     }
 
     @Override

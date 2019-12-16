@@ -30,6 +30,7 @@
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
+        <result column="tags" property="tags" />
         <association property="category" javaType="com.nbclass.model.BlogCategory">
             <result property="id" jdbcType="INTEGER" column="b_category_id"/>
             <result property="name" jdbcType="VARCHAR" column="b_category_name"/>
@@ -57,7 +58,7 @@
                 is_rec,
                 is_public,
                 is_comment,
-                type,
+                `type`,
                 video,
                 origin,
                 look_num,
@@ -194,6 +195,24 @@
         LEFT JOIN blog_article_tag atag ON a.id = atag.article_id
         LEFT JOIN blog_tag t ON atag.tag_id = t.id
         WHERE a.alias_name=#{alias}
+    </select>
+
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        a.*,
+        category.id AS b_category_id,
+        category.`name` AS b_category_name,
+        category.alias_name AS b_category_alias_name,
+        t.id AS tag_id,
+        t.`name` AS tag_name,
+        t.create_time AS tag_create_time
+        FROM
+        blog_article a
+        INNER JOIN blog_category category ON a.category_id = category.id
+        LEFT JOIN blog_article_tag atag ON a.id = atag.article_id
+        LEFT JOIN blog_tag t ON atag.tag_id = t.id
+        WHERE a.id=#{id}
     </select>
 
     <update id="updateNum" parameterType="map">

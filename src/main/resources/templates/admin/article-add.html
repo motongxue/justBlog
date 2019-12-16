@@ -224,7 +224,6 @@
 <script th:src="@{/js/app.js}"></script>
 <script>
 	$(function () {
-		App.initSelect("select");
         App.initUploader({
             pick: '.upload-cover',
             url:'/upload/upload',
@@ -299,16 +298,17 @@
 					App.confirm({content:"确认保存文章？"},function () {
 						App.postAjax("/admin/article/save",$("#articleForm").serialize(),function (data) {
 							if(data.status===200){
-								window.location.reload();
-								App.msgS(data.msg)
+                                App.msgS(data.msg,function () {
+                                    window.location.reload();
+                                });
 							}else{
-								App.msgE(data.msg)
+								App.msgE(data.msg);
 							}
 						})
 					})
 				}else{
 					App.msgE("路径别名已存在！");
-					App.makeError("#aliasName");
+                    App.makeError("#aliasName","路径别名已存在");
 				}
 			});
 

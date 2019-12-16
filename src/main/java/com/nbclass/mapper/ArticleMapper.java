@@ -46,6 +46,12 @@ public interface ArticleMapper extends MyMapper<BlogArticle> {
     BlogArticle selectByAliasName(String alias);
 
     /**
+     * 根据文章id查询文章
+     * @return article
+     */
+    BlogArticle selectById(Integer id);
+
+    /**
      * 更新文章相关数量
      * @return int
      */

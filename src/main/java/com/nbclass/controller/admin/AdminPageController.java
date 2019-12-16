@@ -2,9 +2,11 @@ package com.nbclass.controller.admin;
 
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
+import com.nbclass.framework.exception.ResourceNotFoundException;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.framework.util.PropertiesUtil;
+import com.nbclass.model.BlogArticle;
 import com.nbclass.service.ArticleService;
 import com.nbclass.service.ConfigService;
 import com.nbclass.vo.CloudStorageConfigVo;
@@ -66,10 +68,14 @@ public class AdminPageController {
         return  pathSuffix + "article-add";
     }
 
-    @GetMapping("/article/edit/{aliasName}")
+    @GetMapping("/article/edit/{id}")
     @AccessToken
-    public String articleEdit(Model model, @PathVariable("aliasName") String aliasName){
-        model.addAttribute("article", articleService.selectByAliasName(aliasName));
+    public String articleEdit(Model model, @PathVariable("id") Integer id){
+        BlogArticle article = articleService.selectById(id);
+        if (article == null) {
+            throw new ResourceNotFoundException();
+        }
+        model.addAttribute("article", article);
         return  pathSuffix + "article-edit";
     }
 
@@ -85,7 +91,6 @@ public class AdminPageController {
         Map<String, String> configMap = configService.selectAll();
         String json = configMap.get(ConfigKey.CLOUD_STORAGE_CONFIG.getValue());
         CloudStorageConfigVo cloudStorageConfig = GsonUtil.fromJson(json, CloudStorageConfigVo.class);
-
         String workDir = PropertiesUtil.getString(CoreConst.workDirKey);
         model.addAttribute("workDir", workDir.endsWith(File.separator)?workDir:workDir+File.separator);
         model.addAttribute("config",configMap);

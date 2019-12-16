@@ -61,6 +61,14 @@ public interface ArticleService {
      */
     BlogArticle selectByAliasName(String aliasName);
 
+
+    /**
+     * 根据id获取文章
+     * @param id id
+     * @return article
+     */
+    BlogArticle selectById(Integer id);
+
     /**
      * 网站信息统计
      * @return map

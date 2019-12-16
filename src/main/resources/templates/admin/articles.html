@@ -94,6 +94,8 @@
 								<th data-field="lookNum" data-align="center">浏览</th>
 								<th data-field="commentNum" data-align="center">评论</th>
 								<th data-field="supportNum" data-align="center">喜欢</th>
+								<th data-field="aliasName" data-align="center">路径别名</th>
+								<th data-field="template" data-align="center">模板名称</th>
 								<th data-field="status" data-align="center" data-formatter="formatStatus">状态</th>
 								<th data-field="createTime" data-align="center">创建时间</th>
                                 <th data-field="id" data-align="center" data-formatter="formatOpt" data-width="100">操作</th>
@@ -168,16 +170,17 @@
 			}
 
             function formatOpt(index,value,row){
-                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editArticle(\''+row.aliasName+'\')">编辑</a>';
+                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editArticle('+value+')">编辑</a>';
                 var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteArticle('+value+')">删除</a>';
                 return editBtn + deleteBtn;
             }
 
-            function editArticle(aliasName) {
+            function editArticle(articleId) {
 				parent.addTabs({
-					id:"article-"+aliasName,
-					title:"编辑文章-"+aliasName,
-					url:"article/edit/"+aliasName
+					id:"article-"+articleId,
+					title:"编辑文章-"+articleId,
+					url:"article/edit/"+articleId,
+                    close: true
 				});
             }
 
