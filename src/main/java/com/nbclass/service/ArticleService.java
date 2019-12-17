@@ -97,4 +97,18 @@ public interface ArticleService {
      */
     void deleteByIds(Integer[] ids);
 
+    /**
+     * 根据分类id查询文章id集合
+     * @param categoryId 分类id
+     * @return list
+     */
+    List<Integer> selectArticleIdsByCategoryId(Integer categoryId);
+
+    /**
+     * 根据标签id集合查询文章id集合
+     * @param tagIds 标签ids
+     * @return list
+     */
+    List<Integer> selectArticleIdsByTagIds(Integer [] tagIds);
+
 }

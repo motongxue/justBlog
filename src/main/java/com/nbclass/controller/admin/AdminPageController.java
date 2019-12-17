@@ -79,6 +79,13 @@ public class AdminPageController {
         return  pathSuffix + "article-edit";
     }
 
+    @GetMapping("/tags")
+    @AccessToken
+    public String tags(){
+        return  pathSuffix + "tags";
+    }
+
+
     @GetMapping("/links")
     @AccessToken
     public String links(){

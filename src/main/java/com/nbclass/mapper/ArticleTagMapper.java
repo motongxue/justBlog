@@ -21,4 +21,8 @@ public interface ArticleTagMapper extends MyMapper<BlogArticleTag> {
 
     int insertBatch(List<BlogArticleTag> articleTags);
 
+    int deleteBatchByArticleIds(Integer[] articleIds);
+
+    List<Integer> selectArticleIdsByTagIds(Integer[] tagIds);
+
 }

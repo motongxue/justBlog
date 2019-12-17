@@ -63,4 +63,11 @@ public interface ArticleMapper extends MyMapper<BlogArticle> {
      * @return int
      */
     int deleteBatch(Integer[] ids);
+
+    /**
+     * 根据分类id查询文章id集合
+     * @param categoryId 分类id
+     * @return int
+     */
+    List<Integer> selectArticleIdsByCategoryId(Integer categoryId);
 }

@@ -6,6 +6,7 @@ import com.nbclass.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +25,28 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<BlogTag> selectAll() {
-        return tagMapper.selectAll();
+        return tagMapper.selectList(null);
+    }
+
+    @Override
+    public List<BlogTag> selectList(String name) {
+        return tagMapper.selectList(name);
+    }
+
+    @Override
+    public void save(BlogTag tag) {
+        Date date = new Date();
+        tag.setUpdateTime(date);
+        if(tag.getId()==null){
+            tag.setCreateTime(date);
+            tagMapper.insertSelective(tag);
+        }else{
+            tagMapper.updateByPrimaryKeySelective(tag);
+        }
+    }
+
+    @Override
+    public void deleteBatch(Integer[] ids) {
+        tagMapper.deleteBatch(ids);
     }
 }

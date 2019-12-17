@@ -212,14 +212,14 @@
 					onCancel: closePopup,
 					onShow: function () {
                         if(type===2){
-                            App.fillForm("#linkForm",App.getDataByKey("#table",v));
+                            App.fillForm("#linkForm",App.getTableDataByKey("#table",v));
 						}
                     }
-				},function(){
+				},function(e){
+				    App.mask(e);
 					if(App.validate("#linkForm")){
-						App.mask("#saveLink");
+                        App.unmask(e);
 						App.postAjax("/admin/link/save",$("#linkForm").serialize(),function (data) {
-							App.unmask("#saveLink");
 							App.msgS(data.msg);
 							if(data.status===200){
 								App.refreshTable("#table");

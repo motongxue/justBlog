@@ -40,4 +40,24 @@
         </foreach>
     </insert>
 
+    <delete id="deleteBatchByArticleIds" parameterType="map">
+        delete from
+        blog_article_tag
+        where
+        id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectArticleIdsByTagIds" resultType="integer">
+        select distinct article_id
+        from blog_article_tag
+        where
+        tag_id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

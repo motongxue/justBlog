@@ -14,4 +14,11 @@ import java.util.List;
 public interface TagService {
 
     List<BlogTag> selectAll();
+
+    List<BlogTag> selectList(String name);
+
+    void save(BlogTag tag);
+
+    void deleteBatch(Integer[] ids);
+
 }

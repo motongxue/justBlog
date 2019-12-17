@@ -37,4 +37,11 @@ public interface CommentMapper extends MyMapper<BlogComment> {
      */
     int selectMaxFloorBySid(Integer sid);
 
+    /**
+     * 根据文章id集合删除评论
+     * @param articleIds 文章id集合
+     * @return int
+     */
+    int deleteBatchByArticleIds(Integer[] articleIds);
+
 }

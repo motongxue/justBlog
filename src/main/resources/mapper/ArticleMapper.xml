@@ -93,7 +93,7 @@
         <if test="status != null">
             AND	a.status = #{status}
         </if>
-        <if test="keyword != null">
+        <if test="keyword != null and keyword != ''">
             AND	a.title LIKE CONCAT('%',#{keyword},'%')
         </if>
         <if test="categoryId != null">
@@ -235,5 +235,12 @@
             #{item}
         </foreach>
     </delete>
+
+    <select id="selectArticleIdsByCategoryId" resultType="integer">
+        select id
+        from blog_article
+        where
+        category_id = #{categoryId}
+    </select>
 
 </mapper>

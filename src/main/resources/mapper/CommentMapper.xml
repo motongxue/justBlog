@@ -107,4 +107,14 @@
         from blog_comment
         where sid = #{sid}
     </select>
+
+    <delete id="deleteBatchByArticleIds">
+        delete from
+        blog_comment
+        where
+        sid in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

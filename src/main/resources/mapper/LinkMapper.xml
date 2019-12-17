@@ -46,7 +46,7 @@
         </if>
     </select>
 
-    <delete id="deleteBatch" parameterType="map">
+    <delete id="deleteBatch">
         DELETE FROM
         blog_link
         where

@@ -26,4 +26,23 @@
         and `name` = #{name}
     </select>
 
+    <select id="selectList" resultMap="BaseResultMap">
+        select *
+        from blog_tag
+        where status=1
+        <if test="name != null and name != ''">
+            and `name` = #{name}
+        </if>
+        order by id desc
+    </select>
+
+    <delete id="deleteBatch">
+        delete from
+        blog_tag
+        where
+        id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

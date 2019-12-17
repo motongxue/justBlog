@@ -8,6 +8,7 @@ import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.mapper.ArticleMapper;
 import com.nbclass.mapper.ArticleTagMapper;
+import com.nbclass.mapper.CommentMapper;
 import com.nbclass.mapper.TagMapper;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogArticleTag;
@@ -44,6 +45,8 @@ public class ArticleServiceImpl implements ArticleService {
     private TagMapper tagMapper;
     @Autowired
     private ArticleTagMapper articleTagMapper;
+    @Autowired
+    private CommentMapper commentMapper;
 
     @Override
     public List<BlogArticle> selectList(ArticleVo vo) {
@@ -212,6 +215,18 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void deleteByIds(Integer[] ids) {
         articleMapper.deleteBatch(ids);
+        articleTagMapper.deleteBatchByArticleIds(ids);
+        commentMapper.deleteBatchByArticleIds(ids);
+    }
+
+    @Override
+    public List<Integer> selectArticleIdsByCategoryId(Integer categoryId) {
+        return articleMapper.selectArticleIdsByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Integer> selectArticleIdsByTagIds(Integer[] tagIds) {
+        return articleTagMapper.selectArticleIdsByTagIds(tagIds);
     }
 
 
