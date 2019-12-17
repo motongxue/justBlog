@@ -41,8 +41,7 @@ public class TagController {
     @PostMapping("/save")
     @AccessToken
     public ResponseVo add(BlogTag tag){
-        tagService.save(tag);
-        return ResponseUtil.success("保存标签成功");
+        return tagService.save(tag);
     }
 
     @PostMapping("/delete")

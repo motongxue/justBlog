@@ -1,8 +1,10 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.mapper.TagMapper;
 import com.nbclass.model.BlogTag;
 import com.nbclass.service.TagService;
+import com.nbclass.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +36,20 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void save(BlogTag tag) {
+    public ResponseVo save(BlogTag tag) {
         Date date = new Date();
         tag.setUpdateTime(date);
+        BlogTag blogTag = tagMapper.selectByName(tag.getName(),tag.getId());
+        if(blogTag!=null){
+            return ResponseUtil.error(String.format("标签名【%s】已存在！",tag.getName()));
+        }
         if(tag.getId()==null){
             tag.setCreateTime(date);
             tagMapper.insertSelective(tag);
         }else{
             tagMapper.updateByPrimaryKeySelective(tag);
         }
+        return ResponseUtil.success("保存标签成功");
     }
 
     @Override

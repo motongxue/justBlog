@@ -192,7 +192,7 @@ public class ArticleServiceImpl implements ArticleService {
         //处理tag
         List<BlogArticleTag> articleTags = new ArrayList<>();
         for(String tagName : article.getTags().split(",")){
-            BlogTag tag = tagMapper.selectByName(tagName);
+            BlogTag tag = tagMapper.selectByName(tagName,null);
             if(tag==null){
                 tag = new BlogTag();
                 tag.setName(tagName);

@@ -1,6 +1,7 @@
 package com.nbclass.service;
 
 import com.nbclass.model.BlogTag;
+import com.nbclass.vo.ResponseVo;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface TagService {
 
     List<BlogTag> selectList(String name);
 
-    void save(BlogTag tag);
+    ResponseVo save(BlogTag tag);
 
     void deleteBatch(Integer[] ids);
 

@@ -19,7 +19,7 @@ import java.util.List;
 public interface TagMapper extends MyMapper<BlogTag> {
 
 
-    BlogTag selectByName(String name);
+    BlogTag selectByName(@Param("name") String name, @Param("id") Integer id);
 
     List<BlogTag> selectList(@Param("name") String name);
 

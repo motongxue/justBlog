@@ -24,6 +24,9 @@
         from blog_tag
         where status=1
         and `name` = #{name}
+        <if test="id != null">
+            and id != #{id}
+        </if>
     </select>
 
     <select id="selectList" resultMap="BaseResultMap">
@@ -31,7 +34,7 @@
         from blog_tag
         where status=1
         <if test="name != null and name != ''">
-            and `name` = #{name}
+            AND `name` like concat('%', #{name}, '%')
         </if>
         order by id desc
     </select>
