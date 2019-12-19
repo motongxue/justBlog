@@ -25,9 +25,23 @@
         update_time
     </sql>
 
-    <select id="selectByType" resultMap="BaseResultMap" parameterType="integer">
-        select * from blog_slider where `type` = #{type}
+    <select id="selectList" resultMap="BaseResultMap" parameterType="integer">
+        select *
+        from blog_slider
+        where `type` = #{type}
+        <if test="title !=null and title != ''">
+            and title like concat('%', #{title}, '%')
+        </if>
     </select>
 
+    <delete id="deleteBatch">
+        DELETE FROM
+        blog_slider
+        where
+        id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 
 </mapper>

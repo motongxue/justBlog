@@ -1,6 +1,7 @@
 package com.nbclass.service;
 
 import com.nbclass.model.BlogSlider;
+import javafx.scene.control.Slider;
 
 import java.util.List;
 
@@ -13,5 +14,11 @@ import java.util.List;
  */
 public interface SliderService {
 
+    List<BlogSlider> selectList(Integer type, String name);
+
     List<BlogSlider> selectByType(Integer type);
+
+    void save(BlogSlider slider);
+
+    void deleteBatch(Integer[] ids);
 }

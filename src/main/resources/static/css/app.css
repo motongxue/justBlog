@@ -1504,6 +1504,9 @@ select.form-control{
     margin-top: 5px;
     margin-bottom: 5px;
 }
+.form-search.form-horizontal .control-label{
+    padding-top: 7px;
+}
 
 
 .z-tree{

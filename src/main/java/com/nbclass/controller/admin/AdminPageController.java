@@ -92,6 +92,14 @@ public class AdminPageController {
         return  pathSuffix + "links";
     }
 
+    @GetMapping("/notifies")
+    @AccessToken
+    public String notifies(){
+        return  pathSuffix + "notifies";
+    }
+
+
+
     @GetMapping(value = "/config")
     @AccessToken
     public String config(Model model){

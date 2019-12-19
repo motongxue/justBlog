@@ -9,6 +9,7 @@ import com.nbclass.service.SliderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +26,30 @@ public class SliderServiceImpl implements SliderService {
     private SliderMapper sliderMapper;
 
     @Override
-    public List<BlogSlider> selectByType(Integer type) {
-        return sliderMapper.selectByType(type);
+    public List<BlogSlider> selectList(Integer type, String name) {
+        return sliderMapper.selectList(type,name);
     }
+
+    @Override
+    public List<BlogSlider> selectByType(Integer type) {
+        return sliderMapper.selectList(type,null);
+    }
+
+    @Override
+    public void save(BlogSlider slider) {
+        Date date = new Date();
+        slider.setUpdateTime(date);
+        if(slider.getId()==null){
+            slider.setCreateTime(date);
+            sliderMapper.insertSelective(slider);
+        }else{
+            sliderMapper.updateByPrimaryKeySelective(slider);
+        }
+    }
+
+    @Override
+    public void deleteBatch(Integer[] ids) {
+        sliderMapper.deleteBatch(ids);
+    }
+
 }

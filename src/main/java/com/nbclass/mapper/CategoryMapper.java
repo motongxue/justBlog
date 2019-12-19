@@ -2,8 +2,6 @@ package com.nbclass.mapper;
 
 import com.nbclass.framework.util.MyMapper;
 import com.nbclass.model.BlogCategory;
-import com.nbclass.model.BlogUser;
-import com.nbclass.vo.CategoryVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

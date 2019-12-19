@@ -4,22 +4,22 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
-* @author nbclass 2019-10-18
+* @author nbclass 2019-12-18
 */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CategoryVo extends PageVo{
+public class SliderVo extends PageVo{
     private static final long serialVersionUID = 1L;
 
 
     /**
-    * 分类名称
+    * 标题
     */
-    private String name;
+    private String title;
 
 
     /**
-     * 0-目录，1-文章栏目，2-页面
+     * 1,网站公告，2-其他轮播
      */
     private Integer type;
 

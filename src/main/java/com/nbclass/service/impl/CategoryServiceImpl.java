@@ -1,12 +1,10 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.enums.CategoryType;
-import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.CategoryService;
-import com.nbclass.vo.CategoryVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
