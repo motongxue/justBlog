@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title>轮播管理</title>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+		<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+		<link rel="stylesheet" th:href="@{/css/app.css}"/>
+	</head>
+	<body>
+		<div class="z-content">
+			<div class="z-card">
+                <div class="z-card-body z-card-body-tight">
+                    <form id="formSearch" class="form-horizontal form-search">
+						<div class="form-group col-md-4 col-sm-6 col-xs-9">
+							<label class="control-label col-md-2  col-xs-4">标题:</label>
+							<div class="col-md-9 col-xs-7">
+								<input id="title" type="text" class="form-control" placeholder="请输入公告标题"/>
+							</div>
+						</div>
+						<div class="form-group col-md-1 col-sm-6  col-xs-3 text-left">
+							<button type="button" id="btn_query" class="btn btn-primary">查询</button>
+						</div>
+					</form>
+				</div>
+			</div>
+            <div class="z-card">
+                <div class="z-card-body">
+					<div class="btn-group z-table-btn-group" role="group">
+						<button id="btn_add" type="button" class="btn btn-primary">新增</button>
+						<button id="btn_batch_delete" type="button" class="btn btn-danger">批量删除</button>
+					</div>
+                    <table id="table" data-url="/admin/slider/list" data-query-params="queryParams" data-key="id" data-response-handler="responseHandler">
+                        <thead>
+                            <tr>
+                                <th data-checkbox="true"></th>
+                                <th data-field="title" data-formatter="formatName">标题</th>
+                                <th data-field="url">url</th>
+								<th data-field="img" data-formatter="formatImg">图片</th>
+                                <th data-field="id" data-formatter="formatOpt" data-align="center" data-width="100">操作</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+		</div>
+		<div id="notify-modal" class="display-none">
+			<form class="form-horizontal" id="notifyForm">
+				<input  name="id" type="hidden"/>
+				<input  name="type" type="hidden" value="2"/>
+				<div class="z-card-body">
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">标题 <span class="red">*</span>:</label>
+						<div class="col-sm-8">
+							<input name="title" class="form-control" require=""/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">url:</label>
+						<div class="col-sm-8">
+							<input name="url" class="form-control" require=""/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="col-sm-3 control-label">图片:</label>
+						<div class="col-sm-8">
+							<div class="input-group">
+								<input id="sliderImg" type="text" name="img" class="form-control" require="">
+								<span class="input-group-btn">
+									  <button type="button" class="btn btn-success btn-flat upload-cover">上传</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/app.js}"></script>
+        <script>
+            var popId;
+            $(function () {
+                App.initUploader({
+                    pick: '.upload-cover',
+                    url:'/upload/upload',
+                    accept:'jpg,png',
+                    before:function(){
+                        App.mask(".upload-cover");
+                    },
+                    onSuccess:function(data){
+                        App.unmask(".upload-cover");
+                        if(data.status===200){
+                            $("#sliderImg").val(data.url);
+                        }
+                    }
+                });
+                App.initTable("#table");
+
+				$("#btn_query").on('click', function(){
+					App.refreshTable("#table");
+				});
+
+				$("#btn_add").on('click', function(){
+					showPopup(1);
+				});
+
+				$("#btn_batch_delete").on('click', function(){
+					var checkedRows= App.getTableSelections("#table");
+					if(checkedRows.length>0){
+						App.confirm({content: "确定删除选中的"+checkedRows.length+"条记录？"},function () {
+							var ids=[];
+							$.each(checkedRows, function (i, item) {
+								ids.push(item.id);
+							});
+							App.postAjax("/admin/slider/delete", {"ids": ids}, function (data) {
+								if (data.status === 200) {
+									App.refreshTable("#table");
+								}
+								App.msgS(data.msg);
+							})
+						})
+					}else{
+						App.msgE("请选择至少一条记录");
+					}
+				});
+            });
+
+            function  queryParams() {
+                return {
+                    title: $("#title").val(),
+                    type: 2
+                }
+            }
+
+            function responseHandler(data){
+                return data.data;
+			}
+
+            function formatName(index,value,row){
+                return row.url===undefined||""?'':'<a href="'+row.url+'" target="_blank">'+value+'</a>'
+            }
+
+            function formatImg(index,value){
+                return value===undefined||""?'':'<img src="'+value+'" class="table-img"/>';
+            }
+
+            function formatOpt(index,value){
+                var editBtn = '<a class="btn btn-xs btn-outline-primary mr-5" onclick="editNotify('+value+')">编辑</a>';
+                var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteNotify('+value+')">删除</a>';
+                return editBtn + deleteBtn;
+            }
+            
+            function editNotify(value) {
+				showPopup(2,value);
+            }
+
+            function deleteNotify(value) {
+				App.confirm({content: "确定删除?"},function () {
+					App.postAjax("/admin/slider/delete", {"ids": [value]}, function (data) {
+						if (data.status == 200) {
+							App.refreshTable("#table");
+						}
+						App.msgS(data.msg);
+					})
+				})
+            }
+
+            function showPopup(type,v) {
+				popId = App.popup({
+					title: type===2?"轮播-编辑":"轮播-新增",
+					content: $("#notify-modal"),
+					onCancel: closePopup,
+					onShow: function () {
+                        if(type===2){
+                            App.fillForm("#notifyForm",App.getTableDataByKey("#table",v));
+						}
+                    }
+				},function(e){
+				    App.mask(e);
+					if(App.validate("#notifyForm")){
+                        App.unmask(e);
+						App.postAjax("/admin/slider/save",$("#notifyForm").serialize(),function (data) {
+							App.msgS(data.msg);
+							if(data.status===200){
+								App.refreshTable("#table");
+								closePopup();
+							}
+						});
+					}
+				},function(){
+					closePopup(popId);
+				});
+			}
+			
+			function closePopup() {
+				App.closePopup(popId,function () {
+					App.resetForm("#notifyForm");
+					$("#notifyForm [name='id']").val("");
+				});
+			}
+        </script>
+
+	</body>
+</html>

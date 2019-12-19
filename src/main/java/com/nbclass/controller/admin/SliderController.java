@@ -38,14 +38,14 @@ public class SliderController {
     @AccessToken
     public ResponseVo add(BlogSlider slider){
         sliderService.save(slider);
-        return ResponseUtil.success("保存公告成功");
+        return ResponseUtil.success("保存成功");
     }
 
     @PostMapping("/delete")
     @AccessToken
     public ResponseVo delete(@RequestParam("ids[]") Integer[]ids){
         sliderService.deleteBatch(ids);
-        return ResponseUtil.success("删除公告成功");
+        return ResponseUtil.success("删除成功");
     }
 
 }

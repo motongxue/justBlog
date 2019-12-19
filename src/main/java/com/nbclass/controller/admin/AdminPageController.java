@@ -98,6 +98,12 @@ public class AdminPageController {
         return  pathSuffix + "notifies";
     }
 
+    @GetMapping("/sliders")
+    @AccessToken
+    public String sliders(){
+        return  pathSuffix + "sliders";
+    }
+
 
 
     @GetMapping(value = "/config")

@@ -1609,3 +1609,7 @@ select.form-control{
     color: #555;
     margin: 0 2px;
 }
+.table-img{
+    max-height: 120px;
+    max-width: 200px;
+}
