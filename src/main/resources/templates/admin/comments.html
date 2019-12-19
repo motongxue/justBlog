@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title>评论管理</title>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+		<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+		<link rel="stylesheet" th:href="@{/css/app.css}"/>
+	</head>
+	<body>
+		<div class="z-content">
+			<div class="z-card">
+                <div class="z-card-body z-card-body-tight">
+                    <form id="formSearch" class="form-horizontal form-search">
+						<div class="form-group col-md-3 col-sm-6">
+							<label class="control-label  col-xs-4">状态:</label>
+							<div class="col-xs-8">
+								<select id="status" class="form-control">
+									<option value="">请选择</option>
+									<option value="0">待审核</option>
+									<option value="1">审核通过</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-md-1 col-sm-6 text-left">
+							<button type="button" id="btn_query" class="btn btn-primary">查询</button>
+						</div>
+					</form>
+				</div>
+			</div>
+            <div class="z-card">
+                <div class="z-card-body">
+					<div class="btn-group z-table-btn-group" role="group">
+						<button id="btn_batch_delete" type="button" class="btn btn-danger">批量删除</button>
+					</div>
+                    <table id="table" data-url="/admin/comment/list" data-query-params="queryParams" data-key="id" data-response-handler="responseHandler">
+                        <thead>
+                            <tr>
+                                <th data-checkbox="true"></th>
+                                <th data-field="nickname">作者</th>
+                                <th data-field="qq" data-align="center">QQ</th>
+                                <th data-field="email" data-align="center">邮箱</th>
+								<th data-field="ip" data-align="center">ip</th>
+                                <th data-field="sid" data-formatter="formatArticle" data-align="center">文章标题/留言板</th>
+                                <th data-field="content" data-formatter="formatContent">内容</th>
+                                <th data-field="supportNum" data-formatter="formatSupport" data-align="center">赞/踩</th>
+                                <th data-field="status" data-formatter="formatStatus" data-align="center">状态</th>
+                                <th data-field="id" data-formatter="formatOpt" data-align="center" data-width="100">操作</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+		</div>
+		<div id="comment-modal" class="display-none">
+			<form id="comment-form" class="form-horizontal">
+				<input id="commentId" name="id" type="hidden"/>
+				<div class="z-card-body">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">回复内容 :</label>
+						<div class="col-sm-8">
+							<input id="replyContent" name="replyContent" class="form-control"/>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/app.js}"></script>
+        <script>
+            var popId;
+            $(function () {
+                App.initSelect("select");
+                App.initTable("#table");
+
+				$("#btn_query").on('click', function(){
+					App.refreshTable("#table");
+				});
+
+				$("#btn_batch_delete").on('click', function(){
+					var checkedRows= App.getTableSelections("#table");
+					if(checkedRows.length>0){
+						App.confirm({content: "确定删除选中的"+checkedRows.length+"条记录？"},function () {
+							var ids=[];
+							$.each(checkedRows, function (i, item) {
+								ids.push(item.id);
+							});
+							App.postAjax("/admin/comment/delete", {"ids": ids}, function (data) {
+								if (data.status === 200) {
+									App.refreshTable("#table");
+								}
+								App.msgS(data.msg);
+							})
+						})
+					}else{
+						App.msgE("请选择至少一条记录");
+					}
+				});
+            });
+
+            function  queryParams() {
+                return {
+                    name: $("#name").val(),
+                    url: $("#url").val(),
+                    status: $("#status").val()
+                }
+            }
+
+            function responseHandler(data){
+                return data.data;
+			}
+
+			function formatArticle(index,value,row) {
+            	return value===-1?'<span>留言板</span>':'<a href="/a/'+row.article.aliasName+'" target="_blank">'+row.article.title+'</a>';
+			}
+
+			function formatContent(index,value,row) {
+				if(row.parent!=null){
+					value+='<div class="table-comment-parent">原评：'+row.parent.content+'</div>'
+				}
+				return value;
+			}
+
+			function formatSupport(index,value,row) {
+				return value+"/"+row.opposeNum;
+			}
+
+            function formatStatus(index,value) {
+                if(value===0){
+                    return '<span class="badge badge-primary">待审核</span>';
+                }else if(value===1){
+					return '<span class="badge badge-success">审核通过</span>';
+				}else{
+                    return '<span class="badge badge-default">unknown</span>';
+                }
+            }
+
+            function formatOpt(index,value,row){
+                var auditBtn = row.status===0?'<a class="btn btn-xs btn-outline-success mr-5" onclick="auditComment('+value+')">审核</a>':'';
+				var replyBtn = row.status!==0?'<a class="btn btn-xs btn-outline-primary mr-5" onclick="replyComment('+value+')">回复</a>':'';
+                var deleteBtn = '<a class="btn btn-xs btn-outline-danger" onclick="deleteComment('+value+')">删除</a>';
+                return auditBtn + replyBtn + deleteBtn;
+            }
+            
+            function auditComment(value) {
+				showPopup(1,value);
+            }
+
+			function replyComment(value) {
+				showPopup(2,value);
+			}
+
+            function deleteComment(value) {
+				App.confirm({content: "确定删除?"},function () {
+					App.postAjax("/admin/comment/delete", {"ids": [value]}, function (data) {
+						if (data.status == 200) {
+							App.refreshTable("#table");
+						}
+						App.msgS(data.msg);
+					})
+				})
+            }
+
+            function showPopup(type,v) {
+            	$("#commentId").val(v);
+				popId = App.popup({
+					title: type===1?"审核":"回复",
+					content: $("#comment-modal"),
+					onCancel: closePopup
+				},function(e){
+				    App.mask(e);
+					var url = type===1 ? "/admin/comment/audit" : "/admin/comment/reply";
+					App.postAjax(url,$("#comment-form").serialize(),function (data) {
+;						App.unmask(e);
+						App.msgS(data.msg);
+						if(data.status===200){
+							App.refreshTable("#table");
+							closePopup();
+						}
+					});
+				},function(){
+					closePopup(popId);
+				});
+			}
+			
+			function closePopup() {
+				App.closePopup(popId,function () {
+					$("#replyContent").val("");
+				});
+			}
+        </script>
+
+	</body>
+</html>
