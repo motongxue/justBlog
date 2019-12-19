@@ -3,6 +3,7 @@ package com.nbclass.mapper;
 import com.nbclass.framework.util.MyMapper;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogComment;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +18,14 @@ import java.util.Map;
  */
 @Repository
 public interface CommentMapper extends MyMapper<BlogComment> {
+
+    /**
+     * 根据状态查询评论列表
+     * @param status 状态
+     * @return list
+     */
+    List<BlogComment> selectList(@Param("status") Integer status);
+
     /**
      * 根据sid查询评论列表
      * @param sid 评论主体id
@@ -43,5 +52,13 @@ public interface CommentMapper extends MyMapper<BlogComment> {
      * @return int
      */
     int deleteBatchByArticleIds(Integer[] articleIds);
+
+
+    /**
+     * 批量删除
+     *
+     * @param ids ids
+     */
+    int deleteBatch(Integer[] ids);
 
 }

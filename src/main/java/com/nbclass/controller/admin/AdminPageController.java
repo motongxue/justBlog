@@ -85,6 +85,11 @@ public class AdminPageController {
         return  pathSuffix + "tags";
     }
 
+    @GetMapping("/comments")
+    @AccessToken
+    public String comments(){
+        return  pathSuffix + "comments";
+    }
 
     @GetMapping("/links")
     @AccessToken
@@ -103,8 +108,6 @@ public class AdminPageController {
     public String sliders(){
         return  pathSuffix + "sliders";
     }
-
-
 
     @GetMapping(value = "/config")
     @AccessToken

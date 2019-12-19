@@ -33,6 +33,13 @@ public interface ArticleMapper extends MyMapper<BlogArticle> {
      */
     List<BlogArticle> selectTagsByArticleId(List<Integer> articleIds);
 
+
+    /**
+     * 根据articleIds查询评论数量
+     * @return int
+     */
+    List<BlogArticle> selectCommentNumsBySids(List<Integer> articleIds);
+
     /**
      * 网站信息统计
      * @return map

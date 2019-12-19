@@ -64,7 +64,6 @@
                 look_num,
                 support_num,
                 oppose_num,
-                comment_num,
                 template,
                 seo_key,
                 seo_desc,
@@ -74,7 +73,7 @@
     </sql>
     <select id="selectList" parameterType="com.nbclass.vo.ArticleVo" resultMap="BaseResultMap">
         SELECT a.id, a.title, a.intro, a.cover, a.editor_type, a.alias_name, a.category_id, a.is_top, a.is_rec, a.is_public, a.is_comment,
-                a.type, a.video, a.origin, a.look_num, a.support_num, a.oppose_num, a.comment_num, a.template, a.seo_key, a.seo_desc, a.status, a.create_time,
+                a.type, a.video, a.origin, a.look_num, a.support_num, a.oppose_num, a.template, a.seo_key, a.seo_desc, a.status, a.create_time,
                 category.id AS b_category_id, category.`name` AS b_category_name, category.alias_name AS b_category_alias_name
         FROM blog_article a
         INNER JOIN blog_category category ON a.category_id = category.id
@@ -137,6 +136,23 @@
             #{id}
         </foreach>
         )
+    </select>
+
+    <select id="selectCommentNumsBySids" parameterType="List" resultMap="BaseResultMap">
+        SELECT
+        sid as id,
+        IFNULL(count(1), 0) AS comment_num
+        FROM
+        blog_comment
+        WHERE
+        status=1
+        AND sid IN (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+        GROUP BY
+        sid
     </select>
 
     <select id="siteInfoStatistics" resultType="map">
@@ -221,7 +237,6 @@
             <if test="lookNum != null">look_num = look_num+1, </if>
             <if test="supportNum != null">support_num = support_num+1, </if>
             <if test="opposeNum != null">oppose_num = oppose_num+1, </if>
-            <if test="commentNum != null">comment_num = comment_num+1, </if>
         </set>
         where id=#{articleId}
     </update>
@@ -242,5 +257,7 @@
         where
         category_id = #{categoryId}
     </select>
+
+
 
 </mapper>

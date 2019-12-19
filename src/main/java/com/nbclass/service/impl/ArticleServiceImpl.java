@@ -56,17 +56,21 @@ public class ArticleServiceImpl implements ArticleService {
             for (BlogArticle article : list) {
                 ids.add(article.getId());
             }
+            //tags
             List<BlogArticle> tagArticles = articleMapper.selectTagsByArticleId(ids);
             Map<Integer, BlogArticle> tagMap = new LinkedHashMap<>(tagArticles.size());
             for (BlogArticle article : tagArticles) {
                 tagMap.put(article.getId(), article);
             }
-
+            //commentNum
+            Map<Integer, Integer> commentNumMap = commentNumMapByArticleIds(ids);
             for (BlogArticle article : list) {
                 BlogArticle tagArticle = tagMap.get(article.getId());
                 if(null!=tagArticle){
                     article.setTagList(tagArticle.getTagList());
                 }
+                Integer commentNum = commentNumMap.get(article.getId());
+                article.setCommentNum(commentNum!=null?commentNum:0);
             }
         }
         return list;
@@ -118,7 +122,15 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public BlogArticle selectByAliasName(String aliasName) {
-        return articleMapper.selectByAliasName(aliasName);
+        BlogArticle article = articleMapper.selectByAliasName(aliasName);
+        if(article!=null){
+            List<Integer> ids = new ArrayList<>();
+            ids.add(article.getId());
+            Map<Integer, Integer> commentNumMap = commentNumMapByArticleIds(ids);
+            Integer commentNum = commentNumMap.get(article.getId());
+            article.setCommentNum(commentNum!=null?commentNum:0);
+        }
+        return article;
     }
 
     @Override
@@ -128,7 +140,7 @@ public class ArticleServiceImpl implements ArticleService {
             StringBuilder tags = new StringBuilder();
             for(BlogTag tag : article.getTagList()){
                 tags.append(tag.getName()).append(",");
-            };
+            }
             if(StringUtils.isNotEmpty(tags.toString())){
                 article.setTags(tags.substring(0,tags.length()-1));
             }
@@ -229,5 +241,15 @@ public class ArticleServiceImpl implements ArticleService {
         return articleTagMapper.selectArticleIdsByTagIds(tagIds);
     }
 
+
+    private Map<Integer,Integer> commentNumMapByArticleIds(List<Integer> ids){
+        List<BlogArticle> commentNumArticles = articleMapper.selectCommentNumsBySids(ids);
+        Map<Integer, Integer> commentNumMap = new LinkedHashMap<>(commentNumArticles.size());
+        for (BlogArticle article : commentNumArticles) {
+            commentNumMap.put(article.getId(), article.getCommentNum());
+        }
+        return commentNumMap;
+
+    }
 
 }

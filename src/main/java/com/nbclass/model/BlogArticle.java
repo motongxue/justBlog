@@ -116,11 +116,6 @@ public class BlogArticle implements Serializable {
     private Integer opposeNum;
 
     /**
-    * _num int(10)
-    */
-    private Integer commentNum;
-
-    /**
      * 文章模板
      */
     private String template;
@@ -149,6 +144,9 @@ public class BlogArticle implements Serializable {
     * 更新时间
     */
     private Date updateTime;
+
+    @Transient
+    private Integer commentNum;
 
     @Transient
     private String tags;

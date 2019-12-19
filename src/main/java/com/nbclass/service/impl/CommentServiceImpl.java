@@ -3,6 +3,7 @@ package com.nbclass.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.MD5;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.mapper.CommentMapper;
@@ -39,6 +40,11 @@ public class CommentServiceImpl implements CommentService {
     private RedisService redisService;
     @Autowired
     private CommentMapper commentMapper;
+
+    @Override
+    public List<BlogComment> selectList(Integer status) {
+        return commentMapper.selectList(status);
+    }
 
     @Override
     public ResponseVo selectBySid(CommentVo vo) {
@@ -88,5 +94,23 @@ public class CommentServiceImpl implements CommentService {
             return ResponseUtil.error();
         }
 
+    }
+
+    @Override
+    public void audit(Integer id) {
+        BlogComment comment = new BlogComment();
+        comment.setId(id);
+        comment.setStatus(CoreConst.STATUS_VALID);
+        commentMapper.updateByPrimaryKeySelective(comment);
+    }
+
+    @Override
+    public void reply(Integer id, String replyContent) {
+        //todo
+    }
+
+    @Override
+    public void deleteBatch(Integer[] ids) {
+        commentMapper.deleteBatch(ids);
     }
 }

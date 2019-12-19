@@ -23,6 +23,16 @@
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
+        <association property="article" javaType="com.nbclass.model.BlogArticle">
+            <result property="id" jdbcType="INTEGER" column="article_id"/>
+            <result property="title" jdbcType="VARCHAR" column="article_title"/>
+            <result property="aliasName" jdbcType="VARCHAR" column="article_alias_name"/>
+        </association>
+        <association property="parent" javaType="com.nbclass.model.BlogComment">
+            <result property="id" jdbcType="INTEGER" column="parent_id"/>
+            <result property="nickname" jdbcType="VARCHAR" column="parent_nickname"/>
+            <result property="content" jdbcType="VARCHAR" column="parent_content"/>
+        </association>
         <collection property="nodes" column="n_id" javaType="ArrayList" ofType="com.nbclass.model.BlogComment">
             <result column="n_id" property="id"/>
             <result column="n_mid" property="mid" />
@@ -58,22 +68,57 @@
         update_time
     </sql>
 
+    <select id="selectList" parameterType="integer" resultMap="BaseResultMap">
+        SELECT
+            t.id,
+            t.sid,
+            t.qq,
+            t.nickname,
+            t.avatar,
+            t.email,
+            t.ip,
+            t.os,
+            t.browser,
+            t.content,
+            t.floor,
+            t.support_num,
+            t.oppose_num,
+            t.create_time,
+            t.status,
+            p.id AS parent_id,
+            p.nickname AS parent_nickname,
+            p.content AS parent_content,
+            a.id as article_id,
+            a.title as article_title,
+            a.alias_name as article_alias_name
+        FROM
+            blog_comment t
+        LEFT JOIN blog_comment p ON t.parent_id = p.id
+        LEFT JOIN blog_article a ON  t.sid = a.id
+        WHERE 1=1
+        <if test="status !=null">
+            t.status = #{status}
+        </if>
+        ORDER BY t.id DESC
+    </select>
+
+
     <select id="selectBySid" parameterType="integer" resultMap="BaseResultMap">
        SELECT
-            a.id,
-            a.sid,
-            a.qq,
-            a.nickname,
-            a.avatar,
-            a.email,
-            a.ip,
-            a.os,
-            a.browser,
-            a.content,
-            a.floor,
-            a.support_num,
-            a.oppose_num,
-            a.create_time,
+            t.id,
+            t.sid,
+            t.qq,
+            t.nickname,
+            t.avatar,
+            t.email,
+            t.ip,
+            t.os,
+            t.browser,
+            t.content,
+            t.floor,
+            t.support_num,
+            t.oppose_num,
+            t.create_time,
             n.id AS n_id,
             n.mid AS n_mid,
             n.nickname AS n_nickname,
@@ -84,13 +129,13 @@
             n.parent_id AS n_p_parent_id,
             n.parent_nickname AS n_p_parent_nickname
         FROM
-            blog_comment a
-        LEFT JOIN blog_comment n ON a.id = n.mid AND n.status = 1
+            blog_comment t
+        LEFT JOIN blog_comment n ON t.id = n.mid AND n.status = 1
         WHERE
-            a.status = 1
-        AND a.sid = #{sid}
-        AND a.mid IS NULL
-        ORDER BY a.create_time DESC, n.create_time ASC
+            t.status = 1
+        AND t.status = #{status}
+        AND t.mid IS NULL
+        ORDER BY t.create_time DESC, n.create_time ASC
     </select>
 
     <update id="updateNum" parameterType="map">
@@ -117,4 +162,19 @@
             #{item}
         </foreach>
     </delete>
+
+    <delete id="deleteBatch" parameterType="map">
+        delete from
+        blog_comment
+        where
+        id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        or parent_id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
 </mapper>

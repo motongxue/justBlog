@@ -224,8 +224,8 @@
 				},function(e){
 				    App.mask(e);
 					if(App.validate("#linkForm")){
-                        App.unmask(e);
 						App.postAjax("/admin/link/save",$("#linkForm").serialize(),function (data) {
+							App.unmask(e);
 							App.msgS(data.msg);
 							if(data.status===200){
 								App.refreshTable("#table");

@@ -5,6 +5,7 @@ import com.nbclass.vo.CommentVo;
 import com.nbclass.vo.ResponseVo;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * CommentService
@@ -14,6 +15,12 @@ import java.io.UnsupportedEncodingException;
  * @date 2019-10-22
  */
 public interface CommentService {
+
+    /**
+     * 根据状态查询所有评论
+     * @return ResponseVo
+     */
+    List<BlogComment> selectList(Integer status);
 
     /**
      * 根据sid查询所有评论
@@ -32,4 +39,19 @@ public interface CommentService {
      * @return ResponseVo
      */
     ResponseVo save(BlogComment comment);
+
+    /**
+     * 审核comment
+     * @return ResponseVo
+     */
+    void audit(Integer id);
+
+    /**
+     * 回复comment
+     */
+    void reply(Integer id, String replyContent);
+    /**
+     * 删除
+     */
+    void deleteBatch(Integer[] ids);
 }
