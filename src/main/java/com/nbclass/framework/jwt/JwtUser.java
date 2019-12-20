@@ -18,7 +18,6 @@ public class JwtUser implements Serializable {
 
     private String userId;
     private String username;
-    private String avatar;
     private Date IssuedAt;
     private Date Expiration;
 

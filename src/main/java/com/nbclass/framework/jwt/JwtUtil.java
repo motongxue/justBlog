@@ -6,13 +6,25 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.framework.util.CookieUtil;
+import com.nbclass.framework.util.CopyUtil;
+import com.nbclass.framework.util.CoreConst;
 import com.nbclass.model.BlogUser;
 import com.nbclass.framework.util.DateUtil;
+import com.nbclass.service.RedisService;
+import com.nbclass.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 
 /**
@@ -23,6 +35,10 @@ public class JwtUtil {
 
     @Autowired
     private JwtProp jwtProp;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 生成token
@@ -41,8 +57,7 @@ public class JwtUtil {
                     .withIssuedAt(date)  //发行时间
                     .withExpiresAt(DateUtil.addDays(date, jwtProp.getExpire())) //过期时间点
                     .withClaim("userId", user.getUserId())
-                    .withClaim("username", user.getUsername())
-                    .withClaim("avatar", user.getAvatar());
+                    .withClaim("username", user.getUsername());
             //传入参数
             //签名加密
             return builder.sign(algorithm);
@@ -73,11 +88,35 @@ public class JwtUtil {
         JwtUser jwtUser = new JwtUser();
         jwtUser.setUserId(map.get("userId").asString());
         jwtUser.setUsername(map.get("username").asString());
-        jwtUser.setAvatar(map.get("avatar")!=null ? map.get("avatar").asString() : null);
         jwtUser.setIssuedAt(new Date(map.get("iat").asInt()*1000L));
         jwtUser.setExpiration(new Date(map.get("exp").asInt()*1000L));
         return jwtUser;
     }
+
+    public String getUserId(){
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        String access_token = Optional.ofNullable(CookieUtil.getCookieByName(request, CoreConst.ACCESS_TOKEN)).orElse(request.getHeader(CoreConst.ACCESS_TOKEN));
+        return verifyToken(access_token).getUserId();
+    }
+
+    public UserInfo getUserInfo(){
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        String access_token = Optional.ofNullable(CookieUtil.getCookieByName(request, CoreConst.ACCESS_TOKEN)).orElse(request.getHeader(CoreConst.ACCESS_TOKEN));
+        String userId = verifyToken(access_token).getUserId();
+        if(StringUtils.isEmpty(userId)){
+            return null;
+        }
+        String cacheKey = CacheKeyPrefix.SYS_USER.getPrefix()+userId;
+        UserInfo userInfo = redisService.get(cacheKey);
+        if(userInfo==null){
+            userInfo = CopyUtil.getCopy(userService.selectByUserId(userId),UserInfo.class);
+            redisService.set(cacheKey,userInfo);
+        }
+        return userInfo;
+    }
+
+
+
 
 
 }

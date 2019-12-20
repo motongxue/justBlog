@@ -1,5 +1,6 @@
 package com.nbclass.service.impl;
 
+import com.google.gson.reflect.TypeToken;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.theme.ZbTheme;
@@ -12,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -47,6 +50,17 @@ public class ThemeServiceImpl implements ThemeService {
             CoreConst.currentTheme=currentTheme.getId();
             thymeleafViewResolver.setStaticVariables(vars);
         }
+    }
+
+    @Override
+    public List<ZbTheme> selectAll() {
+        String json = redisService.get(CacheKeyPrefix.THEMES.getPrefix());
+        Map<String, ZbTheme> map = GsonUtil.fromJson(json,new TypeToken<Map<String, ZbTheme>>(){}.getType());
+        List<ZbTheme> list = new ArrayList<>();
+        map.forEach((k,v)->{
+            list.add(v);
+        });
+        return list;
     }
 
     @Override

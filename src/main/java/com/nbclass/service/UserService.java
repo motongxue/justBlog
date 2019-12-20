@@ -5,7 +5,9 @@ import com.nbclass.vo.ResponseVo;
 
 public interface UserService {
 
-    ResponseVo add(BlogUser user);
+    ResponseVo save(BlogUser user);
 
     ResponseVo login(BlogUser user);
+
+    BlogUser selectByUserId(String userId);
 }

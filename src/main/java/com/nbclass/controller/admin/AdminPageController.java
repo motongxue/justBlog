@@ -3,6 +3,7 @@ package com.nbclass.controller.admin;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.exception.ResourceNotFoundException;
+import com.nbclass.framework.jwt.JwtUtil;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.framework.util.PropertiesUtil;
@@ -29,10 +30,12 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/admin")
-public class AdminPageController {
+public class AdminPageController{
 
     private static final String pathSuffix="admin/";
 
+    @Autowired
+    private JwtUtil jwtUtil;
     @Autowired
     private ConfigService configService;
     @Autowired
@@ -40,7 +43,8 @@ public class AdminPageController {
 
     @GetMapping(value = {"", "/"})
     @AccessToken
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("userInfo", jwtUtil.getUserInfo());
         return  pathSuffix + "index";
     }
 
@@ -89,6 +93,12 @@ public class AdminPageController {
     @AccessToken
     public String comments(){
         return  pathSuffix + "comments";
+    }
+
+    @GetMapping("/themes")
+    @AccessToken
+    public String themes(){
+        return  pathSuffix + "themes";
     }
 
     @GetMapping("/links")

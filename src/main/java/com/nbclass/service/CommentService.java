@@ -49,7 +49,7 @@ public interface CommentService {
     /**
      * 回复comment
      */
-    void reply(Integer id, String replyContent);
+    void adminReply(Integer id, String replyContent);
     /**
      * 删除
      */

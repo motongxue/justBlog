@@ -34,6 +34,13 @@ public interface CommentMapper extends MyMapper<BlogComment> {
     List<BlogComment> selectBySid(Integer sid);
 
     /**
+     * 根据midList查询评论
+     * @param midList 主评论id
+     * @return list
+     */
+    List<BlogComment> selectByMids(List<Integer> midList);
+
+    /**
      * 更新评论相关数量
      * @return int
      */
@@ -44,7 +51,7 @@ public interface CommentMapper extends MyMapper<BlogComment> {
      * @param sid 评论主体id
      * @return int
      */
-    int selectMaxFloorBySid(Integer sid);
+    Integer selectMaxFloorBySid(Integer sid);
 
     /**
      * 根据文章id集合删除评论

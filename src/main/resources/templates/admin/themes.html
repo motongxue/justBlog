@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title>主题管理</title>
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+		<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+		<link rel="stylesheet" th:href="@{/css/app.css}"/>
+	</head>
+	<body>
+		<div class="z-content">
+			<div class="z-card">
+                <div class="z-card-body z-card-body-tight">
+					<div id="themes">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="theme-modal" class="display-none">
+			<form class="form-horizontal" id="themeForm">
+			</form>
+		</div>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/app.js}"></script>
+        <script>
+            var popId;
+            $(function () {
+                App.postAjax("/admin/theme/list",{},function (data) {
+					if(data.status===200 && data.data!=null){
+					    $(data.data).each(function (index,theme) {
+							alert("下班了，待处理");
+                        })
+					}
+                })
+            });
+            function showPopup(type,v) {
+				popId = App.popup({
+					title: "主题设置",
+					content: $("#link-modal"),
+					onCancel: closePopup,
+					onShow: function () {
+                        /*处理数据*/
+                    }
+				},function(e){
+				    App.mask(e);
+				},function(){
+					closePopup(popId);
+				});
+			}
+			
+			function closePopup() {
+				App.closePopup(popId,function () {
+					$("#themeForm").html("");
+				});
+			}
+        </script>
+
+	</body>
+</html>

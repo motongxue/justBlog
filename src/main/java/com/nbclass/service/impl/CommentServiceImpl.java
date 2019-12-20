@@ -3,26 +3,27 @@ package com.nbclass.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nbclass.enums.CacheKeyPrefix;
-import com.nbclass.framework.util.CoreConst;
-import com.nbclass.framework.util.MD5;
-import com.nbclass.framework.util.ResponseUtil;
+import com.nbclass.framework.jwt.JwtUtil;
+import com.nbclass.framework.jwt.UserInfo;
+import com.nbclass.framework.util.*;
 import com.nbclass.mapper.CommentMapper;
 import com.nbclass.model.BlogComment;
 import com.nbclass.service.CommentService;
 import com.nbclass.service.RedisService;
 import com.nbclass.vo.CommentVo;
 import com.nbclass.vo.ResponseVo;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,6 +38,8 @@ public class CommentServiceImpl implements CommentService {
     private static Logger logger = LoggerFactory.getLogger(CommentService.class);
 
     @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
     private RedisService redisService;
     @Autowired
     private CommentMapper commentMapper;
@@ -50,6 +53,23 @@ public class CommentServiceImpl implements CommentService {
     public ResponseVo selectBySid(CommentVo vo) {
         PageHelper.startPage(vo.getPageNum(), vo.getPageSize());
         List<BlogComment> comments = commentMapper.selectBySid(vo.getSid());
+        //java处理nodes
+        List<Integer> mids = new ArrayList<>();
+        for(BlogComment comment : comments){
+            mids.add(comment.getId());
+        }
+        List<BlogComment> nodeComments = commentMapper.selectByMids(mids);
+        if(nodeComments.size()>0){
+            for(BlogComment comment : comments){
+                List<BlogComment> nodes = new ArrayList<>();
+                for(BlogComment nodeComment : nodeComments){
+                    if(nodeComment.getMid().equals(comment.getId())){
+                        nodes.add(nodeComment);
+                    }
+                }
+                comment.setNodes(nodes);
+            }
+        }
         PageInfo<BlogComment> pageInfo = new PageInfo<>(comments);
         return ResponseUtil.success("success", pageInfo);
     }
@@ -75,10 +95,13 @@ public class CommentServiceImpl implements CommentService {
     public ResponseVo save(BlogComment comment){
         try{
             if(null==comment.getMid()){
-                String cacheKey = CacheKeyPrefix.COMMENT_LOVE.getPrefix()+comment.getSid();
+                String cacheKey = CacheKeyPrefix.COMMENT_FLOOR.getPrefix()+comment.getSid();
                 Integer floor = redisService.get(cacheKey);
                 if(floor==null){
                     floor = commentMapper.selectMaxFloorBySid(comment.getSid());
+                    if (floor==null){
+                        floor=0;
+                    }
                     redisService.set(cacheKey, floor + 1);
                 }
                 comment.setFloor(floor+1);
@@ -105,8 +128,33 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void reply(Integer id, String replyContent) {
-        //todo
+    public void adminReply(Integer id, String replyContent) {
+        if(StringUtils.isNotBlank(replyContent)){
+            BlogComment comment = new BlogComment();
+            comment.setId(id);
+            comment = commentMapper.selectByPrimaryKey(comment);
+            if(comment!=null){
+                BlogComment reply = new BlogComment();
+                reply.setSid(comment.getSid());
+                reply.setMid(comment.getMid()==null?comment.getId():comment.getMid());
+                reply.setParentId(comment.getId());
+                reply.setParentNickname(comment.getNickname());
+                HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+                reply.setIp(IpUtil.getIpAddr(request));
+                UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+                reply.setBrowser(userAgent.getBrowser().getName());
+                reply.setOs(userAgent.getOperatingSystem().getName());
+                UserInfo userInfo = jwtUtil.getUserInfo();
+                if(userInfo!=null){
+                    CopyUtil.copy(userInfo,reply);
+                }
+                reply.setContent(replyContent);
+                reply.setStatus(CoreConst.STATUS_VALID);
+                reply.setCreateTime(new Date());
+                reply.setId(null);
+                commentMapper.insertSelective(reply);
+            }
+        }
     }
 
     @Override

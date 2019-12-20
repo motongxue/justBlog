@@ -43,14 +43,14 @@ public class BlogComment implements Serializable {
     private String parentNickname;
 
     /**
-    * 评论人的qq（未登录用户）
-    */
-    private String qq;
-
-    /**
     * 评论人的昵称（未登录用户）
     */
     private String nickname;
+
+    /**
+     * 评论人的qq（未登录用户）
+     */
+    private String qq;
 
     /**
     * 评论人的头像地址

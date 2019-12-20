@@ -57,6 +57,11 @@ public class BlogUser {
     private String phone;
 
     /**
+     * qq
+     */
+    private String qq;
+
+    /**
      * 头像
      */
     private String avatar;

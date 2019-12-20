@@ -21,6 +21,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -44,13 +45,13 @@ import java.util.Map;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class StartedListener implements ApplicationListener<ApplicationStartedEvent> {
 
-    @Autowired
+    @Resource
     Environment environment;
-    @Autowired
+    @Resource
     private ZbProperties zbProperties;
-    @Autowired
+    @Resource
     private RedisService redisService;
-    @Autowired
+    @Resource
     private ThemeService themeService;
 
     @Override
@@ -85,20 +86,28 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             //用户自定义主题目录和系统主题目录处理
             if (CollectionUtils.isEmpty(userThemeMap)) {
                 FileUtil.copyFolder(sysSource, userSource);
+                sysThemeMap.forEach((k,v)->{
+                    handleThemeSetting(v);
+                });
                 redisService.set(CacheKeyPrefix.THEMES.getPrefix(), GsonUtil.toJson(sysThemeMap));
             } else {
                 sysThemeMap.forEach((k,v)->{
-                    if(userThemeMap.get(k)==null){
+                    ZbTheme userTheme = userThemeMap.get(k);
+                    if(userTheme == null){
+                        //系统主题不在用户自定义目录，则copy进用户自定义目录
                         try {
-                            //系统主题不在用户自定义目录，则copy进用户自定义目录
                             Path systemThemePath = isJarEnv? fileSystem.getPath("/BOOT-INF/classes/" + CoreConst.THEME_FOLDER + k) : Paths.get(ResourceUtils.getURL(themeClassPath + k).toURI());
                             FileUtil.copyFolder(systemThemePath, Paths.get(workThemeDir+k));
+                            handleThemeSetting(v);
                             userThemeMap.put(k,v);
                         } catch (IOException e) {
                             throw new RuntimeException("copy theme to user folder error:{}", e);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
+                    }else{
+                        //系统主题在用户自定义目录
+                        handleThemeSetting(userTheme);
                     }
                 });
                 FileUtil.copyFolder(userSource, sysSource);
@@ -109,21 +118,27 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             if (null == currentThemeJson) {
                 //第一次启动，初始化当前系统主题
                 ZbTheme zbTheme = sysThemeMap.entrySet().iterator().next().getValue();;
-                if(zbTheme.getSetFlag().equals(CoreConst.STATUS_VALID)){ //支持配置
-                    //载入配置的form
-                    ZbThemeSetting themeSetting = GsonUtil.fromJson(GsonUtil.toJson(zbTheme.getSettings()), ZbThemeSetting.class);
-                    Map<String,Object> formMap = new LinkedHashMap<>();
-                    for(ZbThemeForm themeForm:themeSetting.getForm()){
-                        themeForm.setValue(themeForm.getDefaultValue());
-                        formMap.put(themeForm.getName(),themeForm);
-                    }
-                    zbTheme.setForm(formMap);
-                }
                 redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), GsonUtil.toJson(zbTheme));
             }
-            log.info("Blog themes init success");
         }catch (Exception e){
             throw new RuntimeException("Blog themes init error", e);
+        }
+    }
+
+
+    private void handleThemeSetting(ZbTheme theme){
+        if(theme.getSetFlag().equals(CoreConst.STATUS_VALID)) {
+            ZbThemeSetting themeSetting = redisService.get(CacheKeyPrefix.THEME + theme.getId());
+            if (themeSetting == null) {
+                themeSetting = GsonUtil.fromJson(GsonUtil.toJson(theme.getSettings()), ZbThemeSetting.class);
+                redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), themeSetting);
+            }
+            Map<String, Object> formMap = new LinkedHashMap<>();
+            for (ZbThemeForm themeForm : themeSetting.getForm()) {
+                themeForm.setValue(themeForm.getDefaultValue());
+                formMap.put(themeForm.getName(), themeForm);
+            }
+            theme.setForm(formMap);
         }
     }
 

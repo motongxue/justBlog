@@ -39,7 +39,6 @@ public class LoginController {
     @PostMapping("/logout")
     @ResponseBody
     public ResponseVo logout(){
-        /*如有需求退出后token失效，jwtId可以做进redis*/
         return ResponseUtil.success("退出成功");
     }
 

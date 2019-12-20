@@ -8,6 +8,7 @@ import com.nbclass.model.BlogComment;
 import com.nbclass.service.CommentService;
 import com.nbclass.vo.CommentVo;
 import com.nbclass.vo.ResponseVo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,15 +34,15 @@ public class CommentController {
 
     @PostMapping("/audit")
     @AccessToken
-    public ResponseVo add(Integer id, String replyContent){
+    public ResponseVo audit(Integer id, String replyContent){
         commentService.audit(id);
-        commentService.reply(id,replyContent);
+        commentService.adminReply(id,replyContent);
         return ResponseUtil.success("审核成功");
     }
     @PostMapping("/reply")
     @AccessToken
     public ResponseVo reply(Integer id, String replyContent){
-        commentService.reply(id,replyContent);
+        commentService.adminReply(id,replyContent);
         return ResponseUtil.success("回复成功");
     }
 

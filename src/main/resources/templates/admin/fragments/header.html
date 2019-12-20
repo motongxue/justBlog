@@ -1,0 +1,137 @@
+<header th:fragment="header" class="main-header">
+    <a href="/" class="logo">
+        <img src="/img/logo-white.png">
+    </a>
+    <nav class="navbar navbar-static-top">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">切换导航</span>
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#">[[${userInfo.username}]]<i class="fa fa-caret-down ml-5"></i></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a id="myInfo" href="#">个人信息</a>
+                        </li>
+                        <li>
+                            <a id="updatePassword" href="#">修改密码</a>
+                        </li>
+                        <hr>
+                        <li>
+                            <a id="logout" href="#">退出系统</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="myInfoModal" class="display-none">
+        <form class="form-horizontal" id="myInfoForm">
+            <input  name="id" type="hidden" th:value="${userInfo.id}"/>
+            <input  name="userId" type="hidden" th:value="${userInfo.userId}"/>
+            <input id="avatar"  type="hidden" name="avatar" th:value="${userInfo.avatar}" >
+            <div class="z-card-body">
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-3">
+                        <img id="avatarImg" class="avatar-img-rounded mr-20" th:src="${userInfo.avatar==''?'/img/user-default.png':userInfo.avatar}"/>
+                        <button id="uploadAvatar" type="button" class="btn btn-success btn-flat">上传头像</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">昵称 <span class="red">*</span>:</label>
+                    <div class="col-sm-8">
+                        <input name="nickname" th:value="${userInfo.nickname}" class="form-control" require="" max="50"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">qq :</label>
+                    <div class="col-sm-8">
+                        <input name="qq" th:value="${userInfo.qq}" class="form-control" max="20"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">邮箱 :</label>
+                    <div class="col-sm-8">
+                        <input name="email" th:value="${userInfo.email}" class="form-control" max="50" email=""/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">电话 :</label>
+                    <div class="col-sm-8">
+                        <input name="phone" th:value="${userInfo.phone}" class="form-control" max="20"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        var userPopId;
+        var userInfo={
+            nickname:'[[${userInfo.nickname}]]',
+            avatar:'[[${userInfo.avatar}]]',
+            qq:'[[${userInfo.qq}]]',
+            email:'[[${userInfo.email}]]',
+            phone:'[[${userInfo.phone}]]'
+        };
+
+        App.initUploader({
+            pick: '#uploadAvatar',
+            url:'/upload/upload',
+            accept:'jpg,png',
+            before:function(){
+                App.mask("#uploadAvatar");
+            },
+            onSuccess:function(data){
+                App.unmask("#uploadAvatar");
+                if(data.status===200){
+                    $("#avatar").val(data.url);
+                    $("#avatarImg").attr("src",data.url);
+                }
+            }
+        });
+
+        $("#myInfo").click(function () {
+            userPopId = App.popup({
+                title: "个人信息",
+                content: $("#myInfoModal"),
+                onCancel:fillMyInfoForm
+            },function(e){
+                App.mask(e);
+                if(App.validate("#myInfoForm")){
+                    App.postAjax("/admin/user/save",$("#myInfoForm").serialize(),function (data) {
+                        App.unmask(e);
+                        if(data.status===200){
+                            userInfo=data.data;
+
+                            App.msgS(data.msg);
+                            App.closePopup(userPopId);
+                            fillMyInfoForm();
+                        }else{
+                            App.msgE(data.msg);
+                        }
+                    });
+                }
+            },function(){
+                App.closePopup(userPopId);
+                fillMyInfoForm();
+            });
+        });
+
+        $("#updatePassword").click(function () {
+
+        });
+
+        $("#logout").click(function () {
+
+        });
+
+        function fillMyInfoForm() {
+            App.fillForm("#myInfoForm",userInfo);
+            $("#avatarImg").attr("src",userInfo.avatar!==""?userInfo.avatar:"/img/user-default.png");
+        }
+    </script>
+</header>

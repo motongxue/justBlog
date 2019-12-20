@@ -33,17 +33,6 @@
             <result property="nickname" jdbcType="VARCHAR" column="parent_nickname"/>
             <result property="content" jdbcType="VARCHAR" column="parent_content"/>
         </association>
-        <collection property="nodes" column="n_id" javaType="ArrayList" ofType="com.nbclass.model.BlogComment">
-            <result column="n_id" property="id"/>
-            <result column="n_mid" property="mid" />
-            <result column="n_nickname" property="nickname"/>
-            <result column="n_content" property="content"/>
-            <result column="n_support_num" property="supportNum" />
-            <result column="n_oppose_num" property="opposeNum" />
-            <result column="n_create_time" property="createTime"/>
-            <result column="n_p_parent_id" property="parentId"/>
-            <result column="n_p_parent_nickname" property="parentNickname"/>
-        </collection>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -95,9 +84,8 @@
             blog_comment t
         LEFT JOIN blog_comment p ON t.parent_id = p.id
         LEFT JOIN blog_article a ON  t.sid = a.id
-        WHERE 1=1
         <if test="status !=null">
-            t.status = #{status}
+            WHERE t.status = #{status}
         </if>
         ORDER BY t.id DESC
     </select>
@@ -118,24 +106,43 @@
             t.floor,
             t.support_num,
             t.oppose_num,
-            t.create_time,
-            n.id AS n_id,
-            n.mid AS n_mid,
-            n.nickname AS n_nickname,
-            n.content AS n_content,
-            n.support_num AS n_support_num,
-            n.oppose_num AS n_oppose_num,
-            n.create_time AS n_create_time,
-            n.parent_id AS n_p_parent_id,
-            n.parent_nickname AS n_p_parent_nickname
+            t.create_time
         FROM
             blog_comment t
-        LEFT JOIN blog_comment n ON t.id = n.mid AND n.status = 1
         WHERE
             t.status = 1
-        AND t.status = #{status}
+        AND t.sid = #{sid}
         AND t.mid IS NULL
-        ORDER BY t.create_time DESC, n.create_time ASC
+        ORDER BY t.id DESC
+    </select>
+
+    <select id="selectByMids" resultMap="BaseResultMap">
+        SELECT
+        t.id,
+        t.mid,
+        t.qq,
+        t.nickname,
+        t.avatar,
+        t.email,
+        t.ip,
+        t.os,
+        t.browser,
+        t.content,
+        t.floor,
+        t.support_num,
+        t.oppose_num,
+        t.parent_id,
+        t.parent_nickname,
+        t.create_time
+        FROM blog_comment t
+        WHERE t.status = 1
+        AND
+        t.mid
+        IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY t.id ASC
     </select>
 
     <update id="updateNum" parameterType="map">
@@ -147,7 +154,7 @@
         where id=#{commentId}
     </update>
 
-    <select id="selectMaxFloorBySid" resultType="int">
+    <select id="selectMaxFloorBySid" resultType="integer">
         select max(floor)
         from blog_comment
         where sid = #{sid}
