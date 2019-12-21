@@ -86,9 +86,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             //用户自定义主题目录和系统主题目录处理
             if (CollectionUtils.isEmpty(userThemeMap)) {
                 FileUtil.copyFolder(sysSource, userSource);
-                sysThemeMap.forEach((k,v)->{
-                    handleThemeSetting(v);
-                });
+                sysThemeMap.forEach((k,v)-> handleThemeSetting(v));
                 redisService.set(CacheKeyPrefix.THEMES.getPrefix(), GsonUtil.toJson(sysThemeMap));
             } else {
                 sysThemeMap.forEach((k,v)->{
@@ -114,11 +112,11 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
                 redisService.set(CacheKeyPrefix.THEMES.getPrefix(),  GsonUtil.toJson(userThemeMap));
             }
             //当前主题处理
-            String currentThemeJson = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
-            if (null == currentThemeJson) {
+            ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
+            if (null == currentTheme) {
                 //第一次启动，初始化当前系统主题
-                ZbTheme zbTheme = sysThemeMap.entrySet().iterator().next().getValue();;
-                redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), GsonUtil.toJson(zbTheme));
+                ZbTheme zbTheme = sysThemeMap.entrySet().iterator().next().getValue();
+                redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), zbTheme);
             }
         }catch (Exception e){
             throw new RuntimeException("Blog themes init error", e);
@@ -127,18 +125,11 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
 
 
     private void handleThemeSetting(ZbTheme theme){
-        if(theme.getSetFlag().equals(CoreConst.STATUS_VALID)) {
-            ZbThemeSetting themeSetting = redisService.get(CacheKeyPrefix.THEME + theme.getId());
-            if (themeSetting == null) {
-                themeSetting = GsonUtil.fromJson(GsonUtil.toJson(theme.getSettings()), ZbThemeSetting.class);
-                redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), themeSetting);
-            }
-            Map<String, Object> formMap = new LinkedHashMap<>();
-            for (ZbThemeForm themeForm : themeSetting.getForm()) {
-                themeForm.setValue(themeForm.getDefaultValue());
-                formMap.put(themeForm.getName(), themeForm);
-            }
-            theme.setForm(formMap);
+        ZbThemeSetting themeSetting = redisService.get(CacheKeyPrefix.THEME + theme.getId());
+        if (themeSetting == null) {
+            themeSetting = GsonUtil.fromJson(GsonUtil.toJson(theme.getSettings()), ZbThemeSetting.class);
+            themeSetting.getForm().forEach(item->item.setValue(item.getDefaultValue()));
+            redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), themeSetting);
         }
     }
 

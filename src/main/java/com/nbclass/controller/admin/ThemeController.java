@@ -1,6 +1,7 @@
 package com.nbclass.controller.admin;
 
 import com.nbclass.framework.annotation.AccessToken;
+import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ThemeService;
 import com.nbclass.vo.ResponseVo;
@@ -19,6 +20,13 @@ public class ThemeController {
     @AccessToken
     public ResponseVo loadTags(){
         return ResponseUtil.success(themeService.selectAll());
+    }
+
+    @PostMapping("/use")
+    @AccessToken
+    public ResponseVo use(String themeId){
+        themeService.useTheme(themeId);
+        return ResponseUtil.success(String.format("主题[%s]启用成功",themeId));
     }
 
 }

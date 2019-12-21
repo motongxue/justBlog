@@ -12,7 +12,23 @@
 		<div class="z-content">
 			<div class="z-card">
                 <div class="z-card-body z-card-body-tight">
-					<div id="themes">
+					<div id="themes" class="themes-content">
+						<div th:each="theme:${themes}" class="theme-item">
+							<div class="theme-box">
+								<div class="theme-title">[[${theme.id}]]</div>
+								<div class="theme-content">
+									<img th:src="${theme.img}" />
+								</div>
+								<div class="theme-footer">
+									<a th:class="${curThemeId==theme.id?'theme-use theme-checked':'theme-use'}" th:theme-id="${theme.id}">
+										<i th:class="${curThemeId==theme.id?'ri-check-line':'ri-close-line'}"></i >
+										<span th:text="${curThemeId==theme.id?'已启用':'未启用'}"></span>
+									</a>
+									<a th:class="${theme.setFlag==1?'':'disabled'}"><i class="ri-settings-3-line"></i>设置</a>
+									<a><i class="ri-more-fill"></i>更多</a>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -27,18 +43,30 @@
         <script>
             var popId;
             $(function () {
-                App.postAjax("/admin/theme/list",{},function (data) {
-					if(data.status===200 && data.data!=null){
-					    $(data.data).each(function (index,theme) {
-							alert("下班了，待处理");
-                        })
+            	$(".theme-use").on("click",function () {
+            		var $this = $(this);
+            		if(!$this.hasClass("theme-checked")){
+						App.postAjax("/admin/theme/use",{"themeId":$(this).attr("theme-id")},function (data) {
+							if(data.status===200){
+								App.msgS(data.msg);
+								var $themeChecked = $(".theme-checked");
+								$themeChecked.removeClass("theme-checked");
+								$themeChecked.find("i").attr("class","ri-close-line");
+								$themeChecked.find("span").text("未启用");
+								$this.addClass("theme-checked");
+								$this.find("i").attr("class","ri-check-line");
+								$this.find("span").text("已启用");
+							}else{
+								App.msgE(data.msg);
+							}
+						})
 					}
-                })
+				})
             });
             function showPopup(type,v) {
 				popId = App.popup({
 					title: "主题设置",
-					content: $("#link-modal"),
+					content: $("#theme-modal"),
 					onCancel: closePopup,
 					onShow: function () {
                         /*处理数据*/

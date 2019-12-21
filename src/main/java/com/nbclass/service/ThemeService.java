@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ThemeService {
 
-    void useTheme(ZbTheme theme);
+    void useTheme(String themeId);
 
     ZbTheme selectCurrent();
 

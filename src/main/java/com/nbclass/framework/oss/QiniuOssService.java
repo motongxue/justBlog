@@ -2,7 +2,7 @@ package com.nbclass.framework.oss;
 
 import com.nbclass.framework.exception.ZbException;
 import com.nbclass.vo.CloudStorageConfigVo;
-import com.qiniu.common.Zone;
+import com.qiniu.common.Region;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
@@ -27,7 +27,7 @@ public class QiniuOssService extends OssService {
     }
 
     private void init(){
-        uploadManager = new UploadManager(new Configuration(Zone.autoZone()));
+        uploadManager = new UploadManager(new Configuration(Region.autoRegion()));
         token = Auth.create(config.getQiniuAccessKey(), config.getQiniuSecretKey()).
                 uploadToken(config.getQiniuBucketName());
     }

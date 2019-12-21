@@ -10,6 +10,7 @@ import com.nbclass.framework.util.PropertiesUtil;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.service.ArticleService;
 import com.nbclass.service.ConfigService;
+import com.nbclass.service.ThemeService;
 import com.nbclass.vo.CloudStorageConfigVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,8 @@ public class AdminPageController{
     private ConfigService configService;
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private ThemeService themeService;
 
     @GetMapping(value = {"", "/"})
     @AccessToken
@@ -97,7 +100,9 @@ public class AdminPageController{
 
     @GetMapping("/themes")
     @AccessToken
-    public String themes(){
+    public String themes(Model model){
+        model.addAttribute("curThemeId",themeService.selectCurrent().getId());
+        model.addAttribute("themes",themeService.selectAll());
         return  pathSuffix + "themes";
     }
 

@@ -1,8 +1,8 @@
 {
-	"name": "zblog",
+	"name": "nbclass",
 	"desc": "初始化主题",
 	"img": "https://cdn.nbclass.com/img/blog/a7e5d14fc9d746319e32ec3cf24a61fd.jpg",
-	"setFlag": 1,
+	"setFlag": 0,
 	"settings": {
 		"form": [{
 			"name": "sitePersonName",

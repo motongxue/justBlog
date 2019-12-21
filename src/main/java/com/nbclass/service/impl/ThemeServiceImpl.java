@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.theme.ZbTheme;
+import com.nbclass.framework.theme.ZbThemeSetting;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.service.ConfigService;
@@ -13,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ThemeServiceImpl implements ThemeService {
@@ -28,14 +26,25 @@ public class ThemeServiceImpl implements ThemeService {
     private RedisService redisService;
 
     @Override
-    public void useTheme(ZbTheme theme) {
-        redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), theme);;
+    public void useTheme(String themeId) {
+        CoreConst.currentTheme=themeId;
+        this.selectAll().forEach(item->{
+            if(item.getId().equals(themeId)){
+                Map<String,Object> map = new HashMap<>();
+                ZbThemeSetting themeSetting = redisService.get(CacheKeyPrefix.THEME.getPrefix()+themeId);
+                if(themeSetting!=null){
+                    themeSetting.getForm().forEach(formItem->map.put(formItem.getName(),formItem));
+                }
+                item.setForm(map);
+                redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), item);
+                initThymeleafVars();
+            }
+        });
     }
 
     @Override
     public ZbTheme selectCurrent() {
-        String settings = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
-        return GsonUtil.fromJson(settings, ZbTheme.class);
+        return redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
     }
 
     @Override
@@ -57,9 +66,7 @@ public class ThemeServiceImpl implements ThemeService {
         String json = redisService.get(CacheKeyPrefix.THEMES.getPrefix());
         Map<String, ZbTheme> map = GsonUtil.fromJson(json,new TypeToken<Map<String, ZbTheme>>(){}.getType());
         List<ZbTheme> list = new ArrayList<>();
-        map.forEach((k,v)->{
-            list.add(v);
-        });
+        map.forEach((k,v)-> list.add(v));
         return list;
     }
 

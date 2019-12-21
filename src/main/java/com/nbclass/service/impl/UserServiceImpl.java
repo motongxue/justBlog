@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         }else{
             user.setUpdateTime(new Date());
             userMapper.updateByPrimaryKeySelective(user);
-            redisService.del(CacheKeyPrefix.SYS_USER+user.getUserId());
+            redisService.del(CacheKeyPrefix.SYS_USER.getPrefix()+user.getUserId());
             return ResponseUtil.success("保存成功", CopyUtil.getCopy(user,UserInfo.class));
         }
     }
