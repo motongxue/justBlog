@@ -30,10 +30,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * StartedListener
@@ -129,7 +126,13 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     private void handleThemeSetting(ZbTheme theme){
         ZbTheme themeCache = redisService.get(CacheKeyPrefix.THEME + theme.getId());
         if (themeCache == null) {
-            theme.getSettings().forEach(setting-> setting.getForm().forEach(formItem->formItem.setValue(formItem.getDefaultValue())));
+            List<ZbThemeSetting> settingList = theme.getSettings();
+            Map<String,String> map= new HashMap<>();
+            settingList.forEach(setting-> setting.getForm().forEach(formItem->{
+                formItem.setValue(formItem.getDefaultValue());
+                map.put(formItem.getName(),formItem.getValue());
+            }));
+            theme.setSetting(map);
             redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
         }
     }
