@@ -85,7 +85,7 @@
             before:function(){
                 App.mask("#uploadAvatar");
             },
-            onSuccess:function(data){
+            onSuccess:function(picker,data){
                 App.unmask("#uploadAvatar");
                 if(data.status===200){
                     $("#avatar").val(data.url);

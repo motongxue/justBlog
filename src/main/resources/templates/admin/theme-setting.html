@@ -70,7 +70,7 @@
         </div>
         <script th:src="@{/js/jquery.min.js}"></script>
         <script th:src="@{/js/bootstrap.min.js}"></script>
-        <script th:src="@{/js/app.js}"></script>
+        <script th:src="@{/js/app-manage.js}"></script>
         <script>
             $(function () {
                 App.initSelect("select");
@@ -87,7 +87,7 @@
                             App.unmask($this);
                             $this.parent().prev().val(data.url);
                         },
-                        onError:function(data){
+                        onError:function(){
                             App.msgE("上传失败");
                         }
                     });
@@ -96,7 +96,7 @@
                 $("#btn-save").click(function () {
                     App.postAjax("/admin/theme/save",$("#theme-form").serialize(),function (data) {
                         console.log(data);
-                    })
+                    },"POST","application/json")
                 })
 
 

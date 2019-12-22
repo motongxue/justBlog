@@ -232,7 +232,7 @@
             before:function(){
                 App.mask(".upload-cover");
             },
-            onSuccess:function(data){
+            onSuccess:function(picker,data){
                 App.unmask(".upload-cover");
                 if(data.status===200){
                     $("#cover").val(data.url);
@@ -246,7 +246,7 @@
             before:function(){
                 App.mask(".upload-video");
             },
-            onSuccess:function(data){
+            onSuccess:function(picker,data){
                 App.unmask(".upload-video");
                 if(data.status===200){
                     $("#video").val(data.url);
