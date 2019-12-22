@@ -66,4 +66,18 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByUserId(userId);
     }
 
+    @Override
+    public ResponseVo changePassword(BlogUser user, String newPassword) {
+        BlogUser blogUser = userMapper.selectByPrimaryKey(user);
+        user.setSalt(blogUser.getSalt());
+        PasswordHelper.encryptPassword(user);
+        if(!blogUser.getPassword().equals(user.getPassword())){
+            return ResponseUtil.error("密码不正确");
+        }
+        user.setPassword(newPassword);
+        PasswordHelper.encryptPassword(user);
+        userMapper.updateByPrimaryKeySelective(user);
+        return ResponseUtil.success("修改密码成功");
+    }
+
 }

@@ -15,7 +15,7 @@
 					<div id="themes" class="themes-content">
 						<div th:each="theme:${themes}" class="theme-item">
 							<div class="theme-box">
-								<div class="theme-title">[[${theme.id}]]</div>
+								<div class="theme-title">[[${theme.name}]]</div>
 								<div class="theme-content">
 									<img th:src="${theme.img}" />
 								</div>

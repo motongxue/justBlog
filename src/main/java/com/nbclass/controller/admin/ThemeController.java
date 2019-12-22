@@ -1,7 +1,6 @@
 package com.nbclass.controller.admin;
 
 import com.nbclass.framework.annotation.AccessToken;
-import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ThemeService;
 import com.nbclass.vo.ResponseVo;
@@ -31,7 +30,8 @@ public class ThemeController {
 
     @PostMapping("/save")
     @AccessToken
-    public ResponseVo save(String json){
+    public ResponseVo save(String themeId, String settingJson){
+        themeService.updateSettings(themeId, settingJson);
         return ResponseUtil.success(String.format("主题设置保存成功"));
     }
 

@@ -10,13 +10,11 @@ public interface ThemeService {
 
     ZbTheme selectCurrent();
 
-    void initThymeleafVars();
-
     List<ZbTheme> selectAll();
 
     ZbTheme selectByThemeId(String themeId);
 
-    void updateSettings(String settingsJson);
+    void updateSettings(String themeId, String settingJson);
 
 
 }

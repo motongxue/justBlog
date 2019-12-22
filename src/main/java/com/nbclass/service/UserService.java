@@ -10,4 +10,6 @@ public interface UserService {
     ResponseVo login(BlogUser user);
 
     BlogUser selectByUserId(String userId);
+
+    ResponseVo changePassword(BlogUser user, String newPassword);
 }

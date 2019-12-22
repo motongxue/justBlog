@@ -68,8 +68,34 @@
             </div>
         </form>
     </div>
+    <div id="passwordModal" class="display-none">
+        <form class="form-horizontal" id="passwordForm">
+            <input  name="id" type="hidden" th:value="${userInfo.id}"/>
+            <div class="z-card-body">
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">旧密码 <span class="red">*</span>:</label>
+                    <div class="col-sm-8">
+                        <input id="oldPassword" name="password"class="form-control" require="" max="50"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">新密码 <span class="red">*</span>:</label>
+                    <div class="col-sm-8">
+                        <input id="newPassword" name="newPassword" class="form-control" require="" max="50"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">确认新密码 <span class="red">*</span>:</label>
+                    <div class="col-sm-8">
+                        <input id="confirmNewPassword" class="form-control" require="" max="50"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
     <script>
         var userPopId;
+        var passwordPopId;
         var userInfo={
             nickname:'[[${userInfo.nickname}]]',
             avatar:'[[${userInfo.avatar}]]',
@@ -121,11 +147,47 @@
         });
 
         $("#updatePassword").click(function () {
-
+            passwordPopId = App.popup({
+                title: "修改密码",
+                content: $("#passwordModal"),
+                onCancel: App.resetForm("#passwordForm")
+            },function(e){
+                App.mask(e);
+                if(App.validate("#passwordForm")){
+                    if($("#newPassword").val()!==$("#confirmNewPassword").val()){
+                        App.msgE("两次输入密码不匹配");
+                        App.makeError("#newPassword","两次输入密码不匹配");
+                        App.makeError("#confirmNewPassword","两次输入密码不匹配");
+                        return;
+                    }
+                    App.postAjax("/admin/user/changePassword",$("#passwordForm").serialize(),function (data) {
+                        App.unmask(e);
+                        if(data.status===200){
+                            App.msgS(data.msg);
+                            App.closePopup(passwordPopId);
+                            App.resetForm("#passwordForm");
+                        }else{
+                            App.msgE(data.msg);
+                        }
+                    });
+                }
+            },function(){
+                App.closePopup(passwordPopId);
+                App.resetForm("#passwordForm");
+            });
         });
 
         $("#logout").click(function () {
-
+            App.postAjax("/logout",{},function (data) {
+                if(data.status===200){
+                    App.removeCookie("access_token");
+                    App.msg({"content":data.msg,"icon":2,time:800}, function () {
+                        window.location.href="/login";
+                    });
+                }else{
+                    App.msgE(data.msg);
+                }
+            })
         });
 
         function fillMyInfoForm() {

@@ -5,7 +5,6 @@ import com.nbclass.model.BlogUser;
 import com.nbclass.service.UserService;
 import com.nbclass.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,10 +29,10 @@ public class UserController {
         return userService.save(user);
     }
 
-    @PostMapping("/detail/{userId}")
+    @PostMapping("/changePassword")
     @AccessToken
-    public BlogUser detail(@PathVariable("userId")String userId){
-        return userService.selectByUserId(userId);
+    public ResponseVo changePassword(BlogUser user,String newPassword){
+        return userService.changePassword(user,newPassword);
     }
 
 }

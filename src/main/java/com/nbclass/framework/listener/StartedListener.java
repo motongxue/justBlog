@@ -11,6 +11,7 @@ import com.nbclass.framework.util.FileUtil;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.service.RedisService;
 import com.nbclass.service.ThemeService;
+import com.nbclass.service.ThymeleafService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
@@ -52,13 +53,15 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     private RedisService redisService;
     @Resource
     private ThemeService themeService;
+    @Resource
+    private ThymeleafService thymeleafService;
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         //初始化主题
         this.initThemes();
-        //初始化模板常量
-        themeService.initThymeleafVars();
+        //初始化模板引擎
+        thymeleafService.init();
         //打印信息
         this.printStartInfo();
     }
@@ -114,9 +117,10 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
             if (null == currentTheme) {
                 //第一次启动，初始化当前系统主题
-                ZbTheme zbTheme = sysThemeMap.entrySet().iterator().next().getValue();
-                redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), zbTheme);
+                currentTheme = sysThemeMap.entrySet().iterator().next().getValue();
+                redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), currentTheme);
             }
+            CoreConst.currentTheme=currentTheme.getId();
         }catch (Exception e){
             throw new RuntimeException("Blog themes init error", e);
         }

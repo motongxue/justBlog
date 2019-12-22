@@ -12,6 +12,12 @@
                 max-width: 100%;
                 margin-bottom: 20px;
             }
+            .theme-bottom{
+                text-align: right;
+                margin-top: 20px;
+                padding: 10px 0;
+                border-top: 1px solid #eee;
+            }
         </style>
     </head>
     <body>
@@ -38,18 +44,18 @@
                                 <div th:each="item,temp:${theme.settings}" th:id="${'theme-tab-'+temp.index}" th:class="${temp.index==0?'tab-pane active':'tab-pane'}">
                                     <form id="theme-form">
                                         <div th:each="formItem:${item.form}" class="form-group">
-                                            <label class="control-label" th:text="${formItem.name}"></label>
+                                            <label class="control-label" th:text="${formItem.label+'：'}"></label>
                                             <input th:if="${formItem.type=='text'}" type="text" th:name="${formItem.name}" class="form-control" th:value="${formItem.value}" th:placeholder="${formItem.placeholder}"/>
-                                            <select th:if="${formItem.type=='select'}" name="status" class="form-control">
-                                                <option th:each="option:${formItem.options}" th:value="${option.value}" th:selected="${option.value}==${formItem.defaultValue}" th:text="${option.label}"></option>
+                                            <select th:if="${formItem.type=='select'}" th:name="${formItem.name}" class="form-control">
+                                                <option th:each="option:${formItem.options}" th:value="${option.value}" th:selected="${option.value}==${formItem.value}" th:text="${option.label}"></option>
                                             </select>
                                             <div th:if="${formItem.type=='radio'}" th:each="option:${formItem.options}"  class="z-radio">
-                                                <input type="radio" th:name="${formItem.name}"  th:value="${option.value}" th:checked="${option.value}==${formItem.defaultValue}"/>
+                                                <input type="radio" th:name="${formItem.name}"  th:value="${option.value}" th:checked="${option.value}==${formItem.value}"/>
                                                 <label><i></i>[[${option.label}]]</label>
                                             </div>
                                             <textarea th:if="${formItem.type=='textarea'}" type="text" th:name="${formItem.name}" class="form-control" th:text="${formItem.value}" th:placeholder="${formItem.placeholder}"></textarea>
                                             <div th:if="${formItem.type=='file'}" class="input-group">
-                                                <input type="text" class="form-control" th:value="${formItem.value}" th:placeholder="${formItem.placeholder}"/>
+                                                <input type="text" th:name="${formItem.name}" th:value="${formItem.value}" class="form-control" th:placeholder="${formItem.placeholder}"/>
                                                 <span class="input-group-btn">
                                                   <button type="button" name="upload1" class="btn btn-success btn-flat z-uploader">上传</button>
                                                 </span>
@@ -60,8 +66,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="theme-bottom col-md-12">
-                        <div class="text-right">
+                    <div class="col-md-12">
+                        <div class="theme-bottom">
                             <button id="btn-save" class="btn btn-primary">保存</button>
                         </div>
                     </div>
@@ -86,17 +92,18 @@
                         onSuccess:function(picker,data){
                             App.unmask($this);
                             $this.parent().prev().val(data.url);
-                        },
-                        onError:function(){
-                            App.msgE("上传失败");
                         }
                     });
                 });
                 
                 $("#btn-save").click(function () {
-                    App.postAjax("/admin/theme/save",$("#theme-form").serialize(),function (data) {
-                        console.log(data);
-                    },"POST","application/json")
+                    App.postAjax("/admin/theme/save",{themeId:'[[${theme.id}]]', settingJson: JSON.stringify($("#theme-form").serializeArray()) },function (data) {
+                        if(data.status===200){
+                            App.msgS(data.msg);
+                        }else{
+                            App.msgE(data.msg);
+                        }
+                    })
                 })
 
 

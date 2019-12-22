@@ -1,45 +1,34 @@
 package com.nbclass.service.impl;
 
 import com.google.gson.reflect.TypeToken;
-import com.nbclass.enums.ConfigKey;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.theme.ZbTheme;
-import com.nbclass.framework.theme.ZbThemeSetting;
+import com.nbclass.framework.theme.ZbThemeForm;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.GsonUtil;
-import com.nbclass.service.ConfigService;
 import com.nbclass.service.RedisService;
 import com.nbclass.service.ThemeService;
+import com.nbclass.service.ThymeleafService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ThemeServiceImpl implements ThemeService {
     @Autowired
-    private ThymeleafViewResolver thymeleafViewResolver;
-    @Autowired
-    private ConfigService configService;
+    private ThymeleafService thymeleafService;
     @Autowired
     private RedisService redisService;
 
     @Override
     public void useTheme(String themeId) {
         CoreConst.currentTheme=themeId;
-        this.selectAll().forEach(item->{
-            if(item.getId().equals(themeId)){
-                Map<String,String> map = new HashMap<>();
-                List<ZbThemeSetting> settingList = redisService.get(CacheKeyPrefix.THEME.getPrefix()+themeId);
-                if(settingList!=null){
-                    settingList.forEach(setting-> setting.getForm().forEach(formItem->map.put(formItem.getName(),formItem.getValue())));
-                }
-                item.setSetting(map);
-                redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), item);
-                initThymeleafVars();
-            }
-        });
+        ZbTheme theme = this.selectByThemeId(themeId);
+        redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), theme);
+        thymeleafService.init();
     }
 
     @Override
@@ -47,19 +36,6 @@ public class ThemeServiceImpl implements ThemeService {
         return redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
     }
 
-    @Override
-    public void initThymeleafVars() {
-        if (thymeleafViewResolver != null) {
-            ZbTheme currentTheme = selectCurrent();
-            Map<String, Object> vars = new HashMap<>();
-            String cdn = configService.selectAll().get(ConfigKey.SITE_CDN.getValue());
-            String staticPath = String.format("%s/theme/%s/static",cdn!=null ? cdn : "",currentTheme.getId());
-            vars.put("static", staticPath);
-            vars.put("currentTheme", currentTheme);
-            CoreConst.currentTheme=currentTheme.getId();
-            thymeleafViewResolver.setStaticVariables(vars);
-        }
-    }
 
     @Override
     public List<ZbTheme> selectAll() {
@@ -76,11 +52,34 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void updateSettings(String settingsJson) {
-        //TODO:修改主题设置时，需要检查当前主题CURRENT_THEME，和缓存中的主题THEME_XXX,赋值form属性;
+    public void updateSettings(String themeId, String settingJson) {
+        boolean isCurrent = false;
+        if(this.selectCurrent().getId().equals(themeId)){
+            isCurrent=true;
+        }
+        ZbTheme theme = this.selectByThemeId(themeId);
+        if(theme!=null){
+            List<ZbThemeForm> list = GsonUtil.fromJson(settingJson,new TypeToken<List<ZbThemeForm>>(){}.getType());
+            list.forEach(item->{
+                theme.getSettings().forEach(setting -> setting.getForm().forEach(formItem->{
+                    if(item.getName().equals(formItem.getName())){
+                        formItem.setValue(item.getValue());
+                    }
+                }));
+                Map<String, String> settingMap = theme.getSetting();
+                for(String key : settingMap.keySet()){
+                    if(key.equals(item.getName())){
+                        settingMap.put(key,item.getValue());
+                    }
+                }
+            });
+            redisService.set(CacheKeyPrefix.THEME.getPrefix()+themeId,theme);
+            if(isCurrent){
+                redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(),theme);
+                thymeleafService.initCurrentTheme(theme);
+            }
+        }
 
-        //重新初始化模板常量
-        initThymeleafVars();
     }
 
 }

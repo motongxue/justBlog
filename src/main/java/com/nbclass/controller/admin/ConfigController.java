@@ -5,6 +5,7 @@ import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ConfigService;
+import com.nbclass.service.ThymeleafService;
 import com.nbclass.vo.CloudStorageConfigVo;
 import com.nbclass.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class ConfigController {
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private ThymeleafService thymeleafService;
 
     @PostMapping("/save")
     @AccessToken
@@ -28,6 +31,7 @@ public class ConfigController {
             for (String key : map.keySet()) {
                 configService.updateByKey(key,map.get(key));
             }
+            thymeleafService.initStaticPath();
             return ResponseUtil.success("基础设置成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,4 +51,5 @@ public class ConfigController {
             return ResponseUtil.error("存储设置失败！");
         }
     }
+
 }
