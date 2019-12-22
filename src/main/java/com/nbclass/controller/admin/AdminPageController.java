@@ -3,7 +3,9 @@ package com.nbclass.controller.admin;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.exception.ResourceNotFoundException;
+import com.nbclass.framework.exception.ZbException;
 import com.nbclass.framework.jwt.JwtUtil;
+import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.framework.util.PropertiesUtil;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 /**
@@ -104,6 +107,17 @@ public class AdminPageController{
         model.addAttribute("curThemeId",themeService.selectCurrent().getId());
         model.addAttribute("themes",themeService.selectAll());
         return  pathSuffix + "themes";
+    }
+
+    @GetMapping("/theme/{themeId}")
+    @AccessToken
+    public String theme(Model model,@PathVariable("themeId")String themeId){
+        ZbTheme theme = themeService.selectByThemeId(themeId);
+        if(theme.getSetFlag()==null||theme.getSetFlag()==0){
+            throw new ZbException("该主题不支持设置！");
+        }
+        model.addAttribute("theme", theme);
+        return  pathSuffix + "theme-setting";
     }
 
     @GetMapping("/links")

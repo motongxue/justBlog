@@ -24,7 +24,7 @@
 										<i th:class="${curThemeId==theme.id?'ri-check-line':'ri-close-line'}"></i >
 										<span th:text="${curThemeId==theme.id?'已启用':'未启用'}"></span>
 									</a>
-									<a th:class="${theme.setFlag==1?'':'disabled'}"><i class="ri-settings-3-line"></i>设置</a>
+									<a th:class="${theme.setFlag==1?'theme-set':'theme-set disabled'}" th:theme-id="${theme.id}"><i class="ri-settings-3-line"></i>设置</a>
 									<a><i class="ri-more-fill"></i>更多</a>
 								</div>
 							</div>
@@ -43,6 +43,7 @@
         <script>
             var popId;
             $(function () {
+            	//主题启用
             	$(".theme-use").on("click",function () {
             		var $this = $(this);
             		if(!$this.hasClass("theme-checked")){
@@ -60,6 +61,20 @@
 								App.msgE(data.msg);
 							}
 						})
+					}
+				});
+
+            	//主题设置
+				$(".theme-set").on("click",function () {
+					var $this = $(this);
+					var themeId = $(this).attr("theme-id");
+					if(!$this.hasClass("disabled")){
+						parent.addTabs({
+							id:"theme-set-"+themeId,
+							title:"主题-"+themeId,
+							url:"theme/"+themeId,
+							close: true
+						});
 					}
 				})
             });

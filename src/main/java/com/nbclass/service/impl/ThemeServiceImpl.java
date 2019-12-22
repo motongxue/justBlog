@@ -30,12 +30,12 @@ public class ThemeServiceImpl implements ThemeService {
         CoreConst.currentTheme=themeId;
         this.selectAll().forEach(item->{
             if(item.getId().equals(themeId)){
-                Map<String,Object> map = new HashMap<>();
-                ZbThemeSetting themeSetting = redisService.get(CacheKeyPrefix.THEME.getPrefix()+themeId);
-                if(themeSetting!=null){
-                    themeSetting.getForm().forEach(formItem->map.put(formItem.getName(),formItem));
+                Map<String,String> map = new HashMap<>();
+                List<ZbThemeSetting> settingList = redisService.get(CacheKeyPrefix.THEME.getPrefix()+themeId);
+                if(settingList!=null){
+                    settingList.forEach(setting-> setting.getForm().forEach(formItem->map.put(formItem.getName(),formItem.getValue())));
                 }
-                item.setForm(map);
+                item.setSetting(map);
                 redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), item);
                 initThymeleafVars();
             }
@@ -68,6 +68,11 @@ public class ThemeServiceImpl implements ThemeService {
         List<ZbTheme> list = new ArrayList<>();
         map.forEach((k,v)-> list.add(v));
         return list;
+    }
+
+    @Override
+    public ZbTheme selectByThemeId(String themeId) {
+        return redisService.get(CacheKeyPrefix.THEME.getPrefix()+themeId);
     }
 
     @Override

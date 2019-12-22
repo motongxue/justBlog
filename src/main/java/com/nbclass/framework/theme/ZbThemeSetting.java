@@ -8,6 +8,11 @@ import java.util.List;
 public class ZbThemeSetting {
 
     /**
+     * 表单名称
+     */
+    private String label;
+
+    /**
      * 配置中的form
      */
     private List<ZbThemeForm> form;

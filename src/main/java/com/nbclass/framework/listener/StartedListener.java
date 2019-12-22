@@ -1,5 +1,6 @@
 package com.nbclass.framework.listener;
 
+import com.google.gson.reflect.TypeToken;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.theme.ZbThemeForm;
@@ -31,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -125,11 +127,10 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
 
 
     private void handleThemeSetting(ZbTheme theme){
-        ZbThemeSetting themeSetting = redisService.get(CacheKeyPrefix.THEME + theme.getId());
-        if (themeSetting == null) {
-            themeSetting = GsonUtil.fromJson(GsonUtil.toJson(theme.getSettings()), ZbThemeSetting.class);
-            themeSetting.getForm().forEach(item->item.setValue(item.getDefaultValue()));
-            redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), themeSetting);
+        ZbTheme themeCache = redisService.get(CacheKeyPrefix.THEME + theme.getId());
+        if (themeCache == null) {
+            theme.getSettings().forEach(setting-> setting.getForm().forEach(formItem->formItem.setValue(formItem.getDefaultValue())));
+            redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
         }
     }
 

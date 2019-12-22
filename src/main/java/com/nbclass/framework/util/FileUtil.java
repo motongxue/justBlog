@@ -178,11 +178,7 @@ public class FileUtil {
         try (Stream<Path> pathStream = Files.list(topPath)) {
             List<ZbFile> themeFiles = new LinkedList<>();
             pathStream.forEach(path -> {
-                ZbFile themeFile = new ZbFile();
-                themeFile.setName(path.getFileName().toString());
-                themeFile.setPath(path.toString());
-                themeFile.setIsFile(Files.isRegularFile(path));
-                themeFile.setIsEdit(isEditable(path));
+                ZbFile themeFile = pathToZbFile(path);
                 if (Files.isDirectory(path)) {
                     themeFile.setChildren(listFileTree(path));
                 }
@@ -206,9 +202,7 @@ public class FileUtil {
                     String s = readFile(Paths.get(path.toString()+"/setting.json"));
                     if(StringUtils.isNotEmpty(s)){
                         ZbTheme zbTheme=GsonUtil.fromJson(s,ZbTheme.class);
-                        String id=path.getFileName().toString();
-                        zbTheme.setId(id);
-                        resMap.put(id,zbTheme);
+                        resMap.put(zbTheme.getId(),zbTheme);
                     }
 
                 }
@@ -230,12 +224,7 @@ public class FileUtil {
                         listFiles(list,path,true);
                     }
                 }else{
-                    ZbFile themeFile = new ZbFile();
-                    themeFile.setName(path.getFileName().toString());
-                    themeFile.setPath(path.toString());
-                    themeFile.setIsFile(Files.isRegularFile(path));
-                    themeFile.setIsEdit(isEditable(path));
-                    list.add(themeFile);
+                    list.add(pathToZbFile(path));
                 }
 
             });
@@ -266,9 +255,18 @@ public class FileUtil {
             return null;
         }
     }
+
+    private static ZbFile pathToZbFile(Path path){
+        ZbFile file = new ZbFile();
+        file.setName(path.getFileName().toString());
+        file.setPath(path.toString());
+        file.setIsFile(Files.isRegularFile(path));
+        file.setIsEdit(isEditable(path));
+        return file;
+    }
     public static void main(String[] args) {
         try {
-             String filePath = ResourceUtils.getFile("classpath:templates/theme/zblog/").getPath();
+             String filePath = ResourceUtils.getFile("classpath:templates/theme/nbclass/").getPath();
             List<ZbFile> files = FileUtil.listFiles(Paths.get(filePath), true);
             List<ZbFile> files1  = FileUtil.listFiles(Paths.get(filePath), false);
             List<ZbFile> files2 = FileUtil.listFileTree(Paths.get(filePath));

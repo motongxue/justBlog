@@ -1,33 +1,109 @@
 {
+	"id": "nbclass",
 	"name": "nbclass",
-	"desc": "初始化主题",
-	"img": "https://cdn.nbclass.com/img/blog/a7e5d14fc9d746319e32ec3cf24a61fd.jpg",
-	"setFlag": 0,
-	"settings": {
+	"description": "系统默认主题",
+	"img": "/theme/nbclass/static/img/theme-preview.png",
+	"setFlag": 1,
+	"settings": [{
+		"label":"基本设置",
 		"form": [{
 			"name": "sitePersonName",
 			"label": "站长名称",
 			"type": "text",
-			"placeholder": "",
+			"placeholder": "请输入名称",
 			"defaultValue":"nbclass"
 		},{
 			"name": "sitePersonDesc",
 			"label": "站长描述",
 			"type": "text",
-			"placeholder":  "",
+			"placeholder":  "请输入描述",
 			"defaultValue":"nbclass is very nb"
 		},{
 			"name": "sitePersonPic",
 			"label": "站长头像",
 			"type": "text",
+			"placeholder": "头像地址",
+			"defaultValue":"/theme/nbclass/static/img/person.jpg"
+		},{
+			"name": "testTextarea",
+			"label": "测试文本域",
+			"type": "textarea",
+			"placeholder": "请输入内容...",
+			"defaultValue":""
+		},{
+			"name": "sitePersonSex",
+			"label": "性别",
+			"type": "select",
 			"placeholder": "",
-			"defaultValue":"/theme/zblog/static/img/person.jpg"
+			"defaultValue":"",
+			"options":[
+				{
+					"label":"请选择",
+					"value":""
+				},
+				{
+					"label":"男",
+					"value":"1"
+				},
+				{
+					"label":"女",
+					"value":"2"
+				}
+			]
+		},{
+			"name": "sitePersonRole",
+			"label": "测试默认选择",
+			"type": "select",
+			"placeholder": "",
+			"defaultValue":"1",
+			"options":[
+				{
+					"label":"请选择",
+					"value":""
+				},
+				{
+					"label":"是",
+					"value":"1"
+				},
+				{
+					"label":"否",
+					"value":"2"
+				}
+			]
+		},{
+			"name": "testUpload1",
+			"label": "上传1",
+			"type": "file",
+			"placeholder":  "请上传1",
+			"defaultValue":""
+		},{
+			"name": "testUpload2",
+			"label": "上传2",
+			"type": "file",
+			"placeholder":  "请上传2",
+			"defaultValue":"1111111111111111111111111"
 		},{
 			"name": "testRadio",
 			"label": "测试Radio",
 			"type": "radio",
 			"placeholder": "",
-			"defaultValue":"0",
+			"defaultValue":"",
+			"options":[
+				{
+					"label":"是",
+					"value":"1"
+				},
+				{
+					"label":"否",
+					"value":"2"
+				}
+			]
+		},{
+			"name": "testRadio2",
+			"label": "测试Radio2",
+			"type": "radio",
+			"placeholder": "",
+			"defaultValue":"1",
 			"options":[
 				{
 					"label":"是",
@@ -39,7 +115,22 @@
 				}
 			]
 		}]
-	},
+	},{
+		"label":"样式设置",
+		"form": [{
+			"name": "style1",
+			"label": "样式1",
+			"type": "text",
+			"placeholder": "",
+			"defaultValue":"style1"
+		},{
+			"name": "style2",
+			"label": "样式2",
+			"type": "text",
+			"placeholder":  "",
+			"defaultValue":"style2"
+		}]
+	}],
 	"createTime": "2019-10-24 09:00:00",
 	"version": "1.0"
 }

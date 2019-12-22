@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -35,15 +36,18 @@ public class ZbTheme implements Comparator<ZbTheme> {
     private Integer setFlag;
 
     /**
-     * 设置的配置
+     * 系统默认设置的配置信息
      */
-    private Object settings;
+    private List<ZbThemeSetting> settings;
 
     /**
-     * 设置的配置的form
+     * 用户设置的配置map
      */
-    private Map<String,Object> form;
+    private Map<String,String> setting;
 
+    /**
+     * 版本号
+     */
     private String version;
 
     /**

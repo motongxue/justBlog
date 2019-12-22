@@ -29,4 +29,10 @@ public class ThemeController {
         return ResponseUtil.success(String.format("主题[%s]启用成功",themeId));
     }
 
+    @PostMapping("/save")
+    @AccessToken
+    public ResponseVo save(String json){
+        return ResponseUtil.success(String.format("主题设置保存成功"));
+    }
+
 }

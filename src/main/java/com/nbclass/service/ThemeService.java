@@ -14,6 +14,8 @@ public interface ThemeService {
 
     List<ZbTheme> selectAll();
 
+    ZbTheme selectByThemeId(String themeId);
+
     void updateSettings(String settingsJson);
 
 
