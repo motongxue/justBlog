@@ -8,18 +8,12 @@ li {
     display: list-item;
     text-align: -webkit-match-parent;
 }
-a{
-    color: #0080FF;
-}
 a:hover, a:focus{
+    outline: none !important;
     -webkit-transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
-    outline: none;
     text-decoration: none;
-}
-.color-999{
-    color: #999;
 }
 .disabled{
     opacity: 0.6;
@@ -73,9 +67,6 @@ a:hover, a:focus{
 .mt-20{
     margin-top: 20px;
 }
-.ml-80{
-    margin-left: 80px;
-}
 .mb-0{
     margin-bottom: 0px;
 }
@@ -109,6 +100,16 @@ a:hover, a:focus{
 }
 input,textarea {
     /* -webkit-appearance: none;*/
+}
+.z-admin-shade{
+    position: fixed;
+    display: none;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.3);
+    z-index: 1008;
 }
 .wrapper {
     min-height: 100%;
@@ -245,11 +246,9 @@ input,textarea {
     background-color: #F6F8FA;
     margin-left: 250px;
     z-index: 1020;
-    padding: 0;
     -webkit-transition: margin-left 0.3s ease-in-out;
     -o-transition: margin-left 0.3s ease-in-out;
     transition: margin-left 0.3s ease-in-out, transform .3s ease-in-out;
-    padding-top: 55px;
 }
 .sidebar {
     width: 250px;
@@ -400,6 +399,10 @@ input,textarea {
         -ms-transform: translate(250px, 0);
         transform: translate(250px, 0);
     }
+    .sidebar-open .z-admin-shade{
+        display: block;
+    }
+
 }
 
 
@@ -450,6 +453,7 @@ input,textarea {
 .content-tabs {
     position: fixed;
     height: 40px;
+    top: 56px;
     right: 0;
     left: 250px;
     line-height: 40px;
@@ -1511,10 +1515,10 @@ select.form-control{
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
 .form-search.form-horizontal .control-label{
     padding-top: 7px;
 }
-
 
 .z-tree{
     line-height: 22px;
@@ -1588,6 +1592,8 @@ select.form-control{
     padding: 6px 12px;
     line-height: 22px;
 }
+
+/*---------------------------------------------------------*/
 
 .btn-group>.btn.active, .btn-group>.btn:active, .btn-group>.btn:focus, .btn-group>.btn:hover{
     z-index: auto;

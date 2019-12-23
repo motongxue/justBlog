@@ -406,7 +406,12 @@ img {
 }
 
 .copyright-section a {
-    color: #0bb8ca
+    color: #999;
+    transition: color 0.15s;
+}
+
+.copyright-section a :hover{
+    color: #0bb8ca;
 }
 
 .copyright-dark.copyright-section {
