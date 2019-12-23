@@ -109,9 +109,9 @@ public class AdminPageController{
         return  pathSuffix + "themes";
     }
 
-    @GetMapping("/theme/{themeId}")
+    @GetMapping("/theme/{themeId}/setting")
     @AccessToken
-    public String theme(Model model,@PathVariable("themeId")String themeId){
+    public String themeSetting(Model model,@PathVariable("themeId")String themeId){
         ZbTheme theme = themeService.selectByThemeId(themeId);
         if(theme.getSetFlag()==null||theme.getSetFlag()==0){
             throw new ZbException("该主题不支持设置！");
@@ -119,6 +119,15 @@ public class AdminPageController{
         model.addAttribute("theme", theme);
         return  pathSuffix + "theme-setting";
     }
+
+    @GetMapping("/theme/{themeId}/edit")
+    @AccessToken
+    public String themeEdit(Model model,@PathVariable("themeId")String themeId){
+        ZbTheme theme = themeService.selectByThemeId(themeId);
+        model.addAttribute("theme", theme);
+        return  pathSuffix + "theme-edit";
+    }
+
 
     @GetMapping("/links")
     @AccessToken

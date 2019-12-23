@@ -16,5 +16,9 @@ public interface ThemeService {
 
     void updateSettings(String themeId, String settingJson);
 
+    String getFileContent(String absolutePath);
+
+    void saveFileContent(String absolutePath, String content);
+
 
 }

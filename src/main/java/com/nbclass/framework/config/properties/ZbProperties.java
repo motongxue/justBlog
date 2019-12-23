@@ -26,7 +26,4 @@ public class ZbProperties{
         return  workDir.startsWith("/") ? workDir : (workDir+"/");
     }
 
-    public String getUploadFolder(){
-        return  getWorkDir()+ CoreConst.FILE_FOLDER;
-    }
 }

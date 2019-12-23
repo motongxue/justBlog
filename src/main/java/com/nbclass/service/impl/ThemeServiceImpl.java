@@ -2,6 +2,7 @@ package com.nbclass.service.impl;
 
 import com.google.gson.reflect.TypeToken;
 import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.framework.exception.ZbException;
 import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.theme.ZbThemeForm;
 import com.nbclass.framework.util.CoreConst;
@@ -12,6 +13,11 @@ import com.nbclass.service.ThymeleafService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +85,26 @@ public class ThemeServiceImpl implements ThemeService {
                 thymeleafService.initCurrentTheme(theme);
             }
         }
+    }
 
+    @Override
+    public String getFileContent(String absolutePath) {
+        Path path = Paths.get(absolutePath);
+        try {
+             return  new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new ZbException("读取内容失败 " + absolutePath, e);
+        }
+    }
+
+    @Override
+    public void saveFileContent(String absolutePath, String content) {
+        Path path = Paths.get(absolutePath);
+        try {
+            Files.write(path, content.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new ZbException("保存文件失败 " + absolutePath, e);
+        }
     }
 
 }

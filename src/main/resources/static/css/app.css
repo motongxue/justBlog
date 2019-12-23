@@ -242,10 +242,12 @@ input,textarea {
     overflow-x: hidden;
 }
 .content-wrapper {
+    position: relative;
     min-height: calc(100vh);
     background-color: #F6F8FA;
     margin-left: 250px;
     z-index: 1020;
+    padding: 0;
     -webkit-transition: margin-left 0.3s ease-in-out;
     -o-transition: margin-left 0.3s ease-in-out;
     transition: margin-left 0.3s ease-in-out, transform .3s ease-in-out;
@@ -470,6 +472,14 @@ input,textarea {
 @media (max-width: 767px){
     .content-tabs{
         left: 0;
+        -webkit-transition: transform .3s ease-in-out;
+        -o-transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
+    }
+    .sidebar-open .content-tabs, .sidebar-open .content-iframe .tab-content{
+        -webkit-transform: translate(250px, 0);
+        -ms-transform: translate(-250px, 0);
+        transform: translate(250px, 0);
     }
 }
 .content-tabs .roll-left {
@@ -632,7 +642,6 @@ input,textarea {
     line-height: 20px;
     vertical-align: middle
 }
-
 .content-iframe .tab-content{
     right: 0;
     z-index: 1000;
@@ -644,7 +653,9 @@ input,textarea {
     top: 95px;
     bottom: 0;
     left: 0;
-    transition: left 0.3s ease-in-out;
+    -webkit-transition: left 0.3s ease-in-out,transform .3s ease-in-out;
+    -o-transition: left 0.3s ease-in-out,transform .3s ease-in-out;
+    transition: left 0.3s ease-in-out,transform .3s ease-in-out;
 }
 
 .content-iframe .tab-pane{
@@ -1667,7 +1678,8 @@ select.form-control{
     border-bottom: 1px solid #eee;
 }
 .theme-item .theme-footer{
-    padding: 8px 12px;
+    margin-bottom: 0;
+    padding: 0 12px;
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
@@ -1675,8 +1687,19 @@ select.form-control{
     flex-wrap: wrap;
     border-top: 1px solid #eee;
 }
+.theme-footer li{
+    list-style: none;
+}
+.theme-footer>li{
+    line-height: 36px;
+}
 .theme-footer a{
     cursor: pointer;
+    color: #555;
+}
+.theme-footer>li>a{
+    padding: 12px 0;
+    height: 100%;
     color: #555;
 }
 .theme-footer a.theme-checked{
@@ -1687,6 +1710,21 @@ select.form-control{
     vertical-align: bottom;
     margin-right: 3px;
 }
+.theme-footer .dropdown-menu{
+    right: -14px;
+    left: auto;
+    min-width: 100px;
+    text-align: right;
+    margin: 0;
+}
+.theme-footer .dropdown-menu>li>a{
+    color: #555;
+    padding: 3px 15px 3px 12px;
+}
+.theme-footer .dropdown:hover>ul{
+    display: block;
+}
+
 
 @media (min-width: 640px){
     .theme-item{

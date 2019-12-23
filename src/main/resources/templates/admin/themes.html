@@ -19,14 +19,25 @@
 								<div class="theme-content">
 									<img th:src="${theme.img}" />
 								</div>
-								<div class="theme-footer">
-									<a th:class="${curThemeId==theme.id?'theme-use theme-checked':'theme-use'}" th:theme-id="${theme.id}">
-										<i th:class="${curThemeId==theme.id?'ri-check-line':'ri-close-line'}"></i >
-										<span th:text="${curThemeId==theme.id?'已启用':'未启用'}"></span>
-									</a>
-									<a th:class="${theme.setFlag==1?'theme-set':'theme-set disabled'}" th:theme-id="${theme.id}"><i class="ri-settings-3-line"></i>设置</a>
-									<a><i class="ri-more-fill"></i>更多</a>
-								</div>
+								<ul class="theme-footer">
+									<li>
+										<a th:class="${curThemeId==theme.id?'theme-use theme-checked':'theme-use'}" th:theme-id="${theme.id}">
+											<i th:class="${curThemeId==theme.id?'ri-check-line':'ri-close-line'}"></i >
+											<span th:text="${curThemeId==theme.id?'已启用':'未启用'}"></span>
+										</a>
+									</li>
+									<li>
+										<a th:class="${theme.setFlag==1?'theme-set':'theme-set disabled'}" th:theme-id="${theme.id}"><i class="ri-settings-3-line"></i>设置</a>
+									</li>
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="ri-more-fill"></i>更多</a>
+										<ul class="dropdown-menu">
+											<li><a class="theme-edit" th:theme-id="${theme.id}"><i class="ri-pencil-line"></i>编辑模板</a></li>
+											<li><a class="theme-update" th:theme-id="${theme.id}"><i class="ri-upload-2-line"></i>更新模板</a></li>
+											<li><a class="theme-delete" th:theme-id="${theme.id}"><i class="ri-close-line"></i>删除模板</a></li>
+										</ul>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
@@ -39,7 +50,7 @@
 		</div>
 		<script th:src="@{/js/jquery.min.js}"></script>
 		<script th:src="@{/js/bootstrap.min.js}"></script>
-		<script th:src="@{/js/app.js}"></script>
+		<script th:src="@{/js/app-manage.js}"></script>
         <script>
             var popId;
             $(function () {
@@ -71,13 +82,25 @@
 					if(!$this.hasClass("disabled")){
 						parent.addTabs({
 							id:"theme-set-"+themeId,
-							title:"主题-"+themeId,
-							url:"theme/"+themeId,
+							title:"主题设置-"+themeId,
+							url:"theme/"+themeId+"/setting",
 							close: true
 						});
 					}
 				})
+
+                $(".theme-edit").on("click",function () {
+                    var $this = $(this);
+                    var themeId = $(this).attr("theme-id");
+                    parent.addTabs({
+                        id:"theme-edit-"+themeId,
+                        title:"主题编辑-"+themeId,
+                        url:"theme/"+themeId+"/edit",
+                        close: true
+                    });
+                })
             });
+
             function showPopup(type,v) {
 				popId = App.popup({
 					title: "主题设置",
