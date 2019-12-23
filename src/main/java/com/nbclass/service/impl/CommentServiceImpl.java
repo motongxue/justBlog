@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -58,16 +59,18 @@ public class CommentServiceImpl implements CommentService {
         for(BlogComment comment : comments){
             mids.add(comment.getId());
         }
-        List<BlogComment> nodeComments = commentMapper.selectByMids(mids);
-        if(nodeComments.size()>0){
-            for(BlogComment comment : comments){
-                List<BlogComment> nodes = new ArrayList<>();
-                for(BlogComment nodeComment : nodeComments){
-                    if(nodeComment.getMid().equals(comment.getId())){
-                        nodes.add(nodeComment);
+        if(!CollectionUtils.isEmpty(mids)){
+            List<BlogComment> nodeComments = commentMapper.selectByMids(mids);
+            if(nodeComments.size()>0){
+                for(BlogComment comment : comments){
+                    List<BlogComment> nodes = new ArrayList<>();
+                    for(BlogComment nodeComment : nodeComments){
+                        if(nodeComment.getMid().equals(comment.getId())){
+                            nodes.add(nodeComment);
+                        }
                     }
+                    comment.setNodes(nodes);
                 }
-                comment.setNodes(nodes);
             }
         }
         PageInfo<BlogComment> pageInfo = new PageInfo<>(comments);

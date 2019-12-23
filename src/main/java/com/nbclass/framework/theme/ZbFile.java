@@ -23,8 +23,6 @@ public class ZbFile implements Comparator<ZbFile> {
 
     private Boolean isEdit;
 
-    private Boolean disabled;
-
     private List<ZbFile> children;
 
     @Override

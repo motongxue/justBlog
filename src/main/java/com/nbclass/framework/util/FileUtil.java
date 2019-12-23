@@ -262,7 +262,6 @@ public class FileUtil {
         file.setPath(path.toString());
         file.setIsFile(Files.isRegularFile(path));
         file.setIsEdit(isEditable(path));
-        file.setDisabled(file.getIsFile()&&!file.getIsEdit());
         return file;
     }
     public static void main(String[] args) {
