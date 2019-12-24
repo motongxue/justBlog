@@ -92,6 +92,7 @@ a:hover, a:focus{
 .pr-0{
     padding-right: 0;
 }
+
 .clear{
     clear: both;
 }
@@ -1568,6 +1569,7 @@ select.form-control{
     display: inline-block;
     vertical-align: middle;
     color: #555;
+    padding: 0 3px;
     -webkit-user-select:none;
     -moz-user-select:none;
     -o-user-select:none;
@@ -1601,11 +1603,29 @@ select.form-control{
 .z-tree .z-tree-disabled .z-tree-icon, .z-tree .z-tree-disabled .z-tree-node-a,.z-tree .z-tree-disabled .z-tree-checkbox{
     pointer-events: none;
 }
-
+.z-tree-current-selected .z-tree-node-name{
+    background-color: #f0f0f0;
+}
 .z-select-tree .z-tree{
     padding: 6px 12px;
     line-height: 22px;
 }
+
+.fz-70{
+    font-size: 70px;
+}
+.upload-item{position: relative; min-width: 120px;text-align:center;border: 1px solid #f3f3f3;}
+.upload-item img{max-height: 100%;  max-width: 100%;}
+.upload-item .remove-item{position:absolute ;right:0;top:0;display: none;height:30px;padding-right: 4px;padding-top:8px;width:100%;opacity:0.8;background: #FF6666;}
+.upload-item .remove-item i{float:right;font-size:16px;color: #fff;}
+.upload-item .remove-item:hover{text-decoration: none;color:#C12E2A}
+.upload-item:hover .remove-item{display: block;}
+.upload-title{ text-align: center; background: #ebf2f9;color: #3280fc; line-height: 20px; padding: 6px 0;}
+.upload-item .upload-file{max-height:100px;height:100px;}
+.upload-item .upload-file a,.upload-item .upload-file a:hover{ text-decoration: none;}
+.upload-item .upload-file i{ line-height: 100px;color:#ccc;}
+.upload-item .upload-btns{margin-bottom: 0;}
+.upload-item .upload-btns .btn{padding:5px 8px;}
 
 /*---------------------------------------------------------*/
 

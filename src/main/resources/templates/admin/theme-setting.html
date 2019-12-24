@@ -8,20 +8,30 @@
         <link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
         <link rel="stylesheet" th:href="@{/css/app.css}"/>
         <style>
-            .theme-img img{
+            .z-theme-set-content .z-card{
+                min-height: calc(100vh - 30px);
+                margin-bottom: 0;
+                padding-bottom: 40px;
+            }
+            .z-theme-set-content .theme-img img{
                 max-width: 100%;
                 margin-bottom: 20px;
             }
-            .theme-bottom{
+            .z-theme-set-content .theme-bottom{
+                position: fixed;
+                bottom: 0;
+                right: 15px;
+                left: 15px;
+                z-index: 2;
                 text-align: right;
-                margin-top: 20px;
-                padding: 10px 0;
+                padding: 10px 30px;
+                background: #fff;
                 border-top: 1px solid #eee;
             }
         </style>
     </head>
     <body>
-        <div class="z-content">
+        <div class="z-content z-theme-set-content">
             <div class="z-card">
                 <div class="z-card-header">[[${theme.name}]]</div>
                 <div class="z-card-body">

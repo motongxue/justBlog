@@ -3,15 +3,23 @@ package com.nbclass.framework.util;
 import com.nbclass.framework.theme.ZbFile;
 import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.exception.ZbException;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ResourceUtils;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 /**
@@ -21,7 +29,9 @@ import java.util.stream.Stream;
  * @date 2019/10/11
  * @author nbclass
  */
+@Slf4j
 public class FileUtil {
+
 
     private static final String[] CAN_EDIT_SUFFIX = {".html", ".css", ".js", ".yaml", ".yml", ".properties"};
 
@@ -142,6 +152,112 @@ public class FileUtil {
         return file;
     }
 
+    public static void checkDirectoryTraversal(Path parentPath, Path pathToCheck) {
+        if (pathToCheck.startsWith(parentPath.normalize())) {
+            return;
+        }
+
+        throw new ZbException("无权限访问 " + pathToCheck);
+    }
+
+
+    public static Path createTempDirectory() throws IOException {
+        return Files.createTempDirectory("nbclass");
+    }
+
+    public static boolean isEmpty(Path path) throws IOException {
+        if (!Files.isDirectory(path) || Files.notExists(path)) {
+            return true;
+        }
+
+        try (Stream<Path> pathStream = Files.list(path)) {
+            return pathStream.count() == 0;
+        }
+    }
+
+    public static void unzip(ZipInputStream zis, Path targetPath) throws IOException {
+        if (Files.notExists(targetPath)) {
+            Files.createDirectories(targetPath);
+        }
+        if (!isEmpty(targetPath)) {
+            throw new DirectoryNotEmptyException("Target directory: " + targetPath + " was not empty");
+        }
+
+        ZipEntry zipEntry = zis.getNextEntry();
+
+        while (zipEntry != null) {
+            Path entryPath = targetPath.resolve(zipEntry.getName());
+            FileUtil.checkDirectoryTraversal(targetPath, entryPath);
+            if (zipEntry.isDirectory()) {
+                Files.createDirectories(entryPath);
+            } else {
+                Files.copy(zis, entryPath);
+            }
+            zipEntry = zis.getNextEntry();
+        }
+    }
+
+    public static void delete(Path deletingPath) {
+        try {
+            if (Files.isDirectory(deletingPath)) {
+                Files.walk(deletingPath).sorted(Comparator.reverseOrder()).map(Path::toFile)
+                        .forEach(File::delete);
+            } else {
+                Files.delete(deletingPath);
+            }
+        } catch (IOException e) {
+            log.warn("Failed to delete:{},{}",deletingPath,e);
+        }
+    }
+
+    public static String getBaseName(String filename) {
+        int separatorLastIndex = StringUtils.lastIndexOf(filename, File.separatorChar);
+        if (separatorLastIndex == filename.length() - 1) {
+            return "";
+        }
+        if (separatorLastIndex >= 0 && separatorLastIndex < filename.length() - 1) {
+            filename = filename.substring(separatorLastIndex + 1);
+        }
+        int dotLastIndex = StringUtils.lastIndexOf(filename, '.');
+
+        if (dotLastIndex < 0) {
+            return filename;
+        }
+        return filename.substring(0, dotLastIndex);
+    }
+
+    public static void closeStream(InputStream inputStream) {
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            log.warn("Failed to close input stream", e);
+        }
+    }
+
+    public static void closeStream(ZipInputStream zipInputStream) {
+        try {
+            if (zipInputStream != null) {
+                zipInputStream.closeEntry();
+                zipInputStream.close();
+            }
+        } catch (IOException e) {
+            log.warn("Failed to close input zipInputStream", e);
+        }
+    }
+
+    public static Path skipZipParentFolder(Path unzippedPath) throws IOException {
+        try (Stream<Path> pathStream = Files.list(unzippedPath)) {
+            List<Path> childrenPath = pathStream.collect(Collectors.toList());
+            if (childrenPath.size() == 1 && Files.isDirectory(childrenPath.get(0))) {
+                return childrenPath.get(0);
+            }
+            return unzippedPath;
+        }
+    }
+
+
     public static void copyFolder(Path source, Path target) throws IOException {
         Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
 
@@ -199,9 +315,10 @@ public class FileUtil {
             Map<String,ZbTheme> resMap = new LinkedHashMap<>();
             pathStream.forEach(path -> {
                 if (Files.isDirectory(path)) {
-                    String s = readFile(Paths.get(path.toString()+"/setting.json"));
+                    String s = readFile(Paths.get(path.toString()+"/"+CoreConst.THEME_SETTING_NAME));
                     if(StringUtils.isNotEmpty(s)){
-                        ZbTheme zbTheme=GsonUtil.fromJson(s,ZbTheme.class);
+                        Yaml yaml = new Yaml();
+                        ZbTheme zbTheme = yaml.loadAs(s, ZbTheme.class);
                         resMap.put(zbTheme.getId(),zbTheme);
                     }
 
@@ -248,9 +365,9 @@ public class FileUtil {
         return false;
     }
 
-    private static String readFile(Path path){
+    public static String readFile(Path path){
         try {
-            return new String(Files.readAllBytes(path));
+            return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
         } catch (IOException e) {
             return null;
         }
@@ -262,6 +379,7 @@ public class FileUtil {
         file.setPath(path.toString());
         file.setIsFile(Files.isRegularFile(path));
         file.setIsEdit(isEditable(path));
+        file.setDisabled(file.getIsFile()&&!file.getIsEdit());
         return file;
     }
     public static void main(String[] args) {

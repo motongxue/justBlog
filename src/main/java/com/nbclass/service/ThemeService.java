@@ -1,6 +1,8 @@
 package com.nbclass.service;
 
 import com.nbclass.framework.theme.ZbTheme;
+import com.nbclass.vo.UploadResponseVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,5 +22,7 @@ public interface ThemeService {
 
     void saveFileContent(String absolutePath, String content);
 
+    void copyUserThemeToSystemTheme(String themeId);
 
+    UploadResponseVo upload(MultipartFile file);
 }

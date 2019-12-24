@@ -1,0 +1,23 @@
+id: nbclass
+name: nbclass
+description: 系统默认主题
+img: /theme/nbclass/static/img/theme-preview.png
+setFlag: 1
+settings:
+- label: 站长信息
+  form:
+  - name: sitePersonName
+    label: 站长名称
+    type: text
+    placeholder: 请输入名称
+    defaultValue: nbclass
+  - name: sitePersonDesc
+    label: 站长描述
+    type: text
+    placeholder: 请输入描述
+    defaultValue: nbclass is very nb
+  - name: sitePersonPic
+    label: 站长头像
+    type: file
+    placeholder: 头像地址
+    defaultValue: /theme/nbclass/static/img/person.jpg

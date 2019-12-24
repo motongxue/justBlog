@@ -35,9 +35,6 @@ import java.util.Objects;
 public class UploadController {
     private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
 
-    @Autowired
-    private ConfigService configService;
-
     @PostMapping(value = "/upload")
     @AccessToken
     public UploadResponseVo upload(@RequestParam MultipartFile file) throws Exception{

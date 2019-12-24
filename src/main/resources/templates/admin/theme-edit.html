@@ -6,31 +6,45 @@
         <title>主题编辑</title>
         <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
         <link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+        <link rel="stylesheet" th:href="@{/codemirror/lib/codemirror.css}"/>
         <link rel="stylesheet" th:href="@{/css/app.css}"/>
         <style>
-            .theme-bottom{
-                text-align: right;
-                margin-top: 20px;
-                padding: 10px 0;
-                border-top: 1px solid #eee;
+            .z-theme-edit-content .z-tree .z-tree-icon{
+                margin-right: 2px;
+            }
+            .z-theme-edit-content .z-tree .z-tree-node-a .z-tree-node-name {
+                padding: 0 5px;
+            }
+            .z-theme-edit-content #theme-tree{
+                padding: 10px 15px;
+                border: 1px solid #e5e5e5;
+                border-radius: 2px;
+                height: calc(100vh - 170px);
+                overflow: auto;
+            }
+            .z-theme-edit-content .CodeMirror{
+                height: calc(100vh - 170px);
+                border: 1px solid #e5e5e5;
+            }
+            .z-theme-edit-content .CodeMirror-hscrollbar{
+                bottom: -1px;
             }
         </style>
     </head>
     <body>
-        <div class="z-content">
+        <div class="z-content z-theme-edit-content">
             <div class="z-card">
                 <div class="z-card-header">[[${theme.name}]]</div>
                 <div class="z-card-body">
-                    <div class="col-md-4">
-                        <div id="theme-tree"></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="theme-editor">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div id="theme-tree"></div>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="theme-bottom">
-                            <button id="btn-save" class="btn btn-primary">保存</button>
+                        <div class="col-md-9">
+                            <div class="theme-editor">
+                                <div id="codeArea"></div>
+                                <button id="btn-save" class="btn btn-primary mt-15" disabled="disabled">保存</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,23 +52,61 @@
         </div>
         <script th:src="@{/js/jquery.min.js}"></script>
         <script th:src="@{/js/bootstrap.min.js}"></script>
+        <script th:src="@{/codemirror/lib/codemirror.js}"></script>
+        <script th:src="@{/codemirror/mode/xml/xml.js}"></script>
+        <script th:src="@{/codemirror/mode/javascript/javascript.js}"></script>
+        <script th:src="@{/codemirror/mode/css/css.js}"></script>
+        <script th:src="@{/codemirror/mode/htmlmixed/htmlmixed.js}"></script>
         <script th:src="@{/js/app.js}"></script>
         <script>
             $(function () {
                 var themeId = '[[${theme.id}]]';
+                var filePath;
+
+                var editor = CodeMirror(document.getElementById("codeArea"), {
+                    value:"",
+                    mode: "text/html",
+                    lineNumbers: true
+                });
+
                 App.postAjax("/admin/theme/getFiles",{themeId:themeId},function (data) {
                     if(data.status===200){
                         App.initTree("#theme-tree", {
                             data: data.data,
-                            nameField:'name',
+                            nameControl:true,
                             click: function (file) {
-                                App.msgS("name:" + file.name);
+                                if(file.name.endsWith(".yml")){
+                                    App.msg({content:"配置文件,谨慎修改！",icon:4});
+                                }
+                                if(file.isFile){
+                                    filePath = file.path;
+                                    App.mask("#btn-save");
+                                    App.postAjax("/admin/theme/getFileContent",{themeId:themeId,path:filePath},function (data) {
+                                        App.unmask("#btn-save");
+                                        editor.setValue(data.msg);
+                                    })
+                                }
                             }
                         })
                     }else{
                         App.msgE(data.msg);
                     }
+                });
+                
+                $("#btn-save").click(function () {
+                    App.mask("#btn-save");
+                    App.postAjax("/admin/theme/setFileContent",{themeId:themeId,path:filePath,content:editor.getValue()},function (data) {
+                        App.unmask("#btn-save");
+                        if(data.status===200){
+                            App.msgS(data.msg);
+                        }else{
+                            data.msgE(data.msg);
+                        }
+                    })
                 })
+
+
+
 
                /* App.postAjax("/admin/theme/getFileContent",{themeId:themeId,path:"D:\\file\\theme\\nbclass\\article.html"},function (data) {
                     console.log(data);

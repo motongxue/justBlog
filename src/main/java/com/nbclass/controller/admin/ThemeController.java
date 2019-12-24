@@ -2,18 +2,25 @@ package com.nbclass.controller.admin;
 
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.config.properties.ZbProperties;
+import com.nbclass.framework.exception.OssException;
+import com.nbclass.framework.oss.OssFactory;
 import com.nbclass.framework.theme.ZbFile;
+import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.FileUtil;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ThemeService;
 import com.nbclass.vo.ResponseVo;
+import com.nbclass.vo.UploadResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/admin/theme")
@@ -40,7 +47,7 @@ public class ThemeController {
     @AccessToken
     public ResponseVo save(String themeId, String settingJson){
         themeService.updateSettings(themeId, settingJson);
-        return ResponseUtil.success(String.format("主题设置保存成功"));
+        return ResponseUtil.success("主题设置保存成功");
     }
 
     @PostMapping("/getFiles")
@@ -54,6 +61,20 @@ public class ThemeController {
     @AccessToken
     public ResponseVo getFileContent(String path){
         return ResponseUtil.success(themeService.getFileContent(path));
+    }
+
+    @PostMapping("/setFileContent")
+    @AccessToken
+    public ResponseVo getFileContent(String themeId, String path, String content){
+        themeService.saveFileContent(path,content);
+        themeService.copyUserThemeToSystemTheme(themeId);
+        return ResponseUtil.success("文件内容保存成功");
+    }
+
+    @PostMapping(value = "/upload")
+    @AccessToken
+    public UploadResponseVo upload(@RequestParam MultipartFile file){
+        return themeService.upload(file);
     }
 
 }

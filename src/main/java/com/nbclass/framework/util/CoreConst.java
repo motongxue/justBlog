@@ -17,7 +17,8 @@ public class CoreConst {
     public static final Integer  PAGE_SIZE                = 10;
     public static final String   ACCESS_TOKEN             = "access_token";
     public static final String   ROOT_PATH                = System.getProperty("user.dir");
-    public static final String   workDirKey             = "zb.workDir";
+    public static final String   workDirKey               = "zb.workDir";
     public static final String   THEME_FOLDER             = "templates/theme/";
-    public static final String   FILE_FOLDER             = "file/";
+    public static final String   THEME_SETTING_NAME      = "setting.yml";
+    public static final String   FILE_FOLDER              = "file/";
 }
