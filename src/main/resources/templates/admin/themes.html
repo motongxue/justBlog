@@ -34,8 +34,7 @@
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="ri-more-fill"></i>更多</a>
 										<ul class="dropdown-menu">
 											<li><a class="theme-edit" th:theme-id="${theme.id}"><i class="ri-pencil-line"></i>编辑模板</a></li>
-											<li><a class="theme-update" th:theme-id="${theme.id}"><i class="ri-upload-2-line"></i>更新模板</a></li>
-											<li><a class="theme-delete" th:theme-id="${theme.id}"><i class="ri-close-line"></i>删除模板</a></li>
+											<li><a th:class="${curThemeId==theme.id?'theme-delete disabled':'theme-delete'}" th:theme-id="${theme.id}"><i class="ri-close-line"></i>删除主题</a></li>
 										</ul>
 									</li>
 								</ul>
@@ -51,25 +50,37 @@
 		</div>
 		<script th:src="@{/js/jquery.min.js}"></script>
 		<script th:src="@{/js/bootstrap.min.js}"></script>
-		<script th:src="@{/js/app.js}"></script>
+		<script th:src="@{/js/app-manage.js}"></script>
         <script>
-            var popId;
             $(function () {
                 App.initUploader({
                     pick: '#uploadTheme',
                     url:'/admin/theme/upload',
                     accept:'zip',
                     before:function(){
-                        App.mask("#uploadTheme");
+						App.blockUI({
+							target: 'body',
+							boxed: true,
+							message: '上传中...',
+							img:'/img/loading/loading-spinner-grey.gif'
+						});
+                        App.mask('#uploadTheme');
                     },
                     onSuccess:function(picker,data){
-                        App.unmask("#uploadTheme");
+						App.unblockUI('body');
+                        App.unmask('#uploadTheme');
                         if(data.status===200){
-                            App.msg({content:"上传成功！",icon:1,time:2000},function () {
+                            App.msg({content:'上传成功！',icon:1,time:1000},function () {
 								window.location.reload();
                             });
-                        }
-                    }
+                        }else{
+							App.msgE(data.msg);
+						}
+                    },
+					onError:function () {
+						App.unblockUI('body');
+						App.msgE("上传错误！");
+					}
                 });
 
             	//主题启用
@@ -105,10 +116,10 @@
 							close: true
 						});
 					}
-				})
+				});
 
+				//编辑主题
                 $(".theme-edit").on("click",function () {
-                    var $this = $(this);
                     var themeId = $(this).attr("theme-id");
                     parent.addTabs({
                         id:"theme-edit-"+themeId,
@@ -116,29 +127,28 @@
                         url:"theme/"+themeId+"/edit",
                         close: true
                     });
-                })
+                });
+
+				//删除主题
+				$(".theme-delete").on("click",function () {
+					var $this = $(this);
+					var themeId = $this.attr("theme-id");
+					if(!$this.hasClass("disabled")) {
+						App.confirm({content:"确认删除该主题？"}, function () {
+							App.postAjax("/admin/theme/delete", {themeId: themeId}, function (data) {
+								if (data.status === 200) {
+									App.msg({content: '删除成功！', icon: 1, time: 1000}, function () {
+										window.location.reload();
+									});
+								} else {
+									App.msgE(data.msg);
+								}
+							})
+						})
+					}
+				});
             });
 
-            function showPopup(type,v) {
-				popId = App.popup({
-					title: "主题设置",
-					content: $("#theme-modal"),
-					onCancel: closePopup,
-					onShow: function () {
-                        /*处理数据*/
-                    }
-				},function(e){
-				    App.mask(e);
-				},function(){
-					closePopup(popId);
-				});
-			}
-			
-			function closePopup() {
-				App.closePopup(popId,function () {
-					$("#themeForm").html("");
-				});
-			}
         </script>
 
 	</body>

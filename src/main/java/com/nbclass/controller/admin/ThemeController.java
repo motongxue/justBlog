@@ -2,10 +2,7 @@ package com.nbclass.controller.admin;
 
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.config.properties.ZbProperties;
-import com.nbclass.framework.exception.OssException;
-import com.nbclass.framework.oss.OssFactory;
 import com.nbclass.framework.theme.ZbFile;
-import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.FileUtil;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ThemeService;
@@ -20,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/admin/theme")
@@ -48,6 +44,13 @@ public class ThemeController {
     public ResponseVo save(String themeId, String settingJson){
         themeService.updateSettings(themeId, settingJson);
         return ResponseUtil.success("主题设置保存成功");
+    }
+
+    @PostMapping("/delete")
+    @AccessToken
+    public ResponseVo delete(String themeId){
+        themeService.delete(themeId);
+        return ResponseUtil.success("删除成功");
     }
 
     @PostMapping("/getFiles")

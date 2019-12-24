@@ -3,10 +3,10 @@ package com.nbclass.service.impl;
 import com.google.gson.reflect.TypeToken;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.config.properties.ZbProperties;
-import com.nbclass.framework.exception.OssException;
 import com.nbclass.framework.exception.ZbException;
 import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.theme.ZbThemeForm;
+import com.nbclass.framework.theme.ZbThemeSetting;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.FileUtil;
 import com.nbclass.framework.util.GsonUtil;
@@ -15,12 +15,11 @@ import com.nbclass.service.ThemeService;
 import com.nbclass.service.ThymeleafService;
 import com.nbclass.vo.UploadResponseVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -28,7 +27,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
-import java.util.stream.Stream;
 import java.util.zip.ZipInputStream;
 
 @Service
@@ -57,11 +55,16 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public List<ZbTheme> selectAll() {
-        String json = redisService.get(CacheKeyPrefix.THEMES.getPrefix());
-        Map<String, ZbTheme> map = GsonUtil.fromJson(json,new TypeToken<Map<String, ZbTheme>>(){}.getType());
-        List<ZbTheme> list = new ArrayList<>();
+        Map<String, ZbTheme> map = selectThemesMap();
+        List<ZbTheme> list = new LinkedList<>();
         map.forEach((k,v)-> list.add(v));
         return list;
+    }
+
+    @Override
+    public Map<String, ZbTheme> selectThemesMap() {
+        String json = redisService.get(CacheKeyPrefix.THEMES.getPrefix());
+        return GsonUtil.fromJson(json,new TypeToken<Map<String, ZbTheme>>(){}.getType());
     }
 
     @Override
@@ -100,6 +103,19 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
+    public void delete(String themeId) {
+        if(themeId.equals(selectCurrent().getId())){
+            throw new ZbException("主题正在使用，不可删除");
+        }
+        FileUtil.delete(getUserPath(themeId));
+        FileUtil.delete(getSystemPath(themeId));
+        redisService.del(CacheKeyPrefix.THEME.getPrefix()+themeId);
+        Map<String, ZbTheme> themeMap = selectThemesMap();
+        themeMap.remove(themeId);
+        redisService.set(CacheKeyPrefix.THEMES.getPrefix(),GsonUtil.toJson(themeMap));
+    }
+
+    @Override
     public String getFileContent(String absolutePath) {
         Path path = Paths.get(absolutePath);
         try {
@@ -122,13 +138,8 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     public void copyUserThemeToSystemTheme(String themeId) {
         try {
-            String workThemeDir = zbProperties.getWorkDir() + "theme/" + themeId+"/";
-            String themeClassPath = ResourceUtils.CLASSPATH_URL_PREFIX + CoreConst.THEME_FOLDER + themeId +"/";
-            URI themeUri = ResourceUtils.getURL(themeClassPath).toURI();
-            boolean isJarEnv = "jar".equalsIgnoreCase(themeUri.getScheme());
-            FileSystem fileSystem = isJarEnv? FileSystems.newFileSystem(themeUri, Collections.emptyMap()):null;
-            Path sysSource = isJarEnv? fileSystem.getPath("/BOOT-INF/classes/" + CoreConst.THEME_FOLDER + themeId+"/") : Paths.get(themeUri);
-            Path userSource = Paths.get(workThemeDir);
+            Path sysSource = this.getSystemPath(themeId);
+            Path userSource = this.getUserPath(themeId);
             FileUtil.copyFolder(userSource, sysSource);
         } catch (Exception e) {
             throw new ZbException("保存文件失败", e);
@@ -165,24 +176,15 @@ public class ThemeServiceImpl implements ThemeService {
                 Path targetThemePath = Paths.get(themeDir);
                 FileUtil.copyFolder(filterTempPath, targetThemePath);
                 //用户目录copy到系统目录，待优化
-                String workThemeDir = zbProperties.getWorkDir() + "theme/";
-                String themeClassPath = ResourceUtils.CLASSPATH_URL_PREFIX + CoreConst.THEME_FOLDER;
-                URI themeUri = ResourceUtils.getURL(themeClassPath).toURI();
-                boolean isJarEnv = "jar".equalsIgnoreCase(themeUri.getScheme());
-                FileSystem fileSystem = isJarEnv? FileSystems.newFileSystem(themeUri, Collections.emptyMap()):null;
-                Path sysSource = isJarEnv? fileSystem.getPath("/BOOT-INF/classes/" + CoreConst.THEME_FOLDER) : Paths.get(themeUri);
-                Path userSource = Paths.get(workThemeDir);
+                Path sysSource = this.getSystemPath(null);
+                Path userSource = this.getUserPath(null);
                 FileUtil.copyFolder(userSource, sysSource);
                 //存入缓存
-                redisService.set(CacheKeyPrefix.THEME.getPrefix()+themeId,zbTheme);
-                List<ZbTheme> list = this.selectAll();
-                list.add(zbTheme);
-                Map<String, ZbTheme> userThemeMap = new LinkedHashMap<>();
-                for(ZbTheme theme : list){
-                    userThemeMap.put(theme.getId(),theme);
-                }
-                redisService.set(CacheKeyPrefix.THEMES.getPrefix(),GsonUtil.toJson(userThemeMap));
-                return  new UploadResponseVo(themeId,file.getOriginalFilename(), "zip", themeId, CoreConst.SUCCESS_CODE);
+                handleThemeSetting(zbTheme);
+                Map<String, ZbTheme> themeMap = selectThemesMap();
+                themeMap.put(themeId,zbTheme);
+                redisService.set(CacheKeyPrefix.THEMES.getPrefix(),GsonUtil.toJson(themeMap));
+                return new UploadResponseVo(themeId,file.getOriginalFilename(), "zip", themeId, CoreConst.SUCCESS_CODE);
             }else{
                 throw new ZbException("未找到该主题配置文件！");
             }
@@ -195,4 +197,39 @@ public class ThemeServiceImpl implements ThemeService {
         }
 
     }
+
+    @Override
+    public Path getSystemPath(String themeId) {
+        try {
+            String themeClassPath = String.format("%s%s%s",ResourceUtils.CLASSPATH_URL_PREFIX,CoreConst.THEME_FOLDER,StringUtils.isNotEmpty(themeId)?(themeId+"/"):"");
+            URI themeUri = ResourceUtils.getURL(themeClassPath).toURI();
+            boolean isJarEnv = "jar".equalsIgnoreCase(themeUri.getScheme());
+            FileSystem fileSystem = isJarEnv? FileSystems.newFileSystem(themeUri, Collections.emptyMap()):null;
+            return isJarEnv? fileSystem.getPath(String.format("/BOOT-INF/classes/%s%s",CoreConst.THEME_FOLDER,StringUtils.isNotEmpty(themeId)?(themeId+"/"):"")) : Paths.get(themeUri);
+        } catch (Exception e) {
+            log.error("获取系统主题路径失败：{}",e);
+        }
+        return null;
+    }
+
+    @Override
+    public Path getUserPath(String themeId) {
+        return  Paths.get(String.format("%s%s%s",zbProperties.getWorkDir(),"theme/",StringUtils.isNotEmpty(themeId)?(themeId+"/"):""));
+    }
+
+    @Override
+    public void handleThemeSetting(ZbTheme theme) {
+        ZbTheme themeCache = redisService.get(CacheKeyPrefix.THEME + theme.getId());
+        if (themeCache == null) {
+            List<ZbThemeSetting> settingList = theme.getSettings();
+            Map<String,String> map= new HashMap<>();
+            settingList.forEach(setting-> setting.getForm().forEach(formItem->{
+                formItem.setValue(formItem.getDefaultValue());
+                map.put(formItem.getName(),formItem.getValue());
+            }));
+            theme.setSetting(map);
+            redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
+        }
+    }
+
 }

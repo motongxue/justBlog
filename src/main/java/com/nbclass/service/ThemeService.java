@@ -4,7 +4,9 @@ import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.vo.UploadResponseVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 public interface ThemeService {
 
@@ -14,9 +16,13 @@ public interface ThemeService {
 
     List<ZbTheme> selectAll();
 
+    Map<String, ZbTheme> selectThemesMap();
+
     ZbTheme selectByThemeId(String themeId);
 
     void updateSettings(String themeId, String settingJson);
+
+    void delete(String themeId);
 
     String getFileContent(String absolutePath);
 
@@ -25,4 +31,10 @@ public interface ThemeService {
     void copyUserThemeToSystemTheme(String themeId);
 
     UploadResponseVo upload(MultipartFile file);
+
+    Path getSystemPath(String themeId);
+
+    Path getUserPath(String themeId);
+
+    void handleThemeSetting(ZbTheme theme);
 }
