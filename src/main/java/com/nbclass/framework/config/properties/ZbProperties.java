@@ -1,6 +1,5 @@
 package com.nbclass.framework.config.properties;
 
-import com.nbclass.framework.util.CoreConst;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

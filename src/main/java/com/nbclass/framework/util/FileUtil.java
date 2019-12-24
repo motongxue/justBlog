@@ -382,6 +382,7 @@ public class FileUtil {
         file.setDisabled(file.getIsFile()&&!file.getIsEdit());
         return file;
     }
+
     public static void main(String[] args) {
         try {
              String filePath = ResourceUtils.getFile("classpath:templates/theme/nbclass/").getPath();
