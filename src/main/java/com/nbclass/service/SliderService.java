@@ -1,7 +1,6 @@
 package com.nbclass.service;
 
 import com.nbclass.model.BlogSlider;
-import javafx.scene.control.Slider;
 
 import java.util.List;
 
