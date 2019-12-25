@@ -1,4 +1,4 @@
-# zb-blog
+# JustBlog
 
 #### 项目介绍
 精简的博客系统，完美自适应。满足您的强迫症<br/>
@@ -32,12 +32,12 @@ Spring Boot、MyBatis、Redis、mysql、thymeleaf、jwt<br/>
 本项目可以做cms建站。完美的设计模式。简单的操作。可一键实现企业建站，博客建站等等...
 
 #### 版权所有
-zb-blog为nbclass和本人所有，任何未经本人同意下，进行商用或者以个人名义发表发布源码为侵权，后果自负。
+JustBlog为nbclass和本人所有，任何未经本人同意下，进行商用或者以个人名义发表发布源码为侵权，后果自负。
 本博客仅供交流学习以及非商业性的个人部署。谢谢合作
 
-#### zb-ui后台模板说明
+#### zuu后台模板说明
 有需要后台ui加密前模板的同学请移步<br/>
-[zb-ui,功能强大且贼精简的后台ui模板](https://zuu.app)
+[zuu,功能强大且贼精简的后台ui模板](https://zuu.app)
 
 #### 完成进度
 已完成：<br/>
@@ -66,7 +66,6 @@ zb-blog为nbclass和本人所有，任何未经本人同意下，进行商用或
 ![支付宝](https://images.gitee.com/uploads/images/2019/1028/163337_21cc2b3f_1414419.jpeg)
 
 #### 其他开源项目
-[zb-shiro权限系统](https://gitee.com/supperzh/zb-shiro)<br/>
 [zplayer音乐播放器](https://gitee.com/supperzh/zplayer)
 
 
