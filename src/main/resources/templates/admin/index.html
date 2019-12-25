@@ -3,7 +3,8 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-		<title>Just-控制台</title>
+		<title th:text="${@module.get('sysConfig').ADMIN_SITE_NAME}"></title>
+		<link rel="icon" th:href="${@module.get('sysConfig').SITE_ICON}">
 		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 		<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
 		<link rel="stylesheet" th:href="@{/css/app.css}"/>

@@ -304,6 +304,20 @@
                 }
             });
 
+            $("#saveAdmin").on('click',function () {
+                if(App.validate("#adminForm")){
+                    App.mask("#saveAdmin");
+                    App.postAjax("/admin/config/save",$("#adminForm").serialize(),function (data) {
+                        App.unmask("#saveAdmin");
+                        if(data.status===200){
+                            App.msgS(data.msg);
+                        }else{
+                            App.msgE(data.msg);
+                        }
+                    })
+                }
+            });
+
             $("#saveStorage").on('click', function () {
                 App.unmask("#saveStorage");
                 App.postAjax("/admin/config/save/storage",$("#storageForm").serialize(),function (data) {

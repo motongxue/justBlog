@@ -32,10 +32,10 @@ public class ConfigController {
                 configService.updateByKey(key,map.get(key));
             }
             thymeleafService.initStaticPath();
-            return ResponseUtil.success("基础设置成功");
+            return ResponseUtil.success("设置保存成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtil.error("基础设置失败");
+            return ResponseUtil.error("设置保存失败");
         }
     }
 
