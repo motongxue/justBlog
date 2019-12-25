@@ -14,8 +14,9 @@
             <div class="z-card-body">
                 <div class="z-tabs z-tabs-easy">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#basic" data-toggle="tab" aria-expanded="true">基础设置</a></li>
-                        <li class=""><a href="#storage" data-toggle="tab" aria-expanded="false">存储设置</a></li>
+                        <li class="active"><a href="#basic" data-toggle="tab" aria-expanded="true">前台设置</a></li>
+                        <li><a href="#admin" data-toggle="tab" aria-expanded="true">后台设置</a></li>
+                        <li><a href="#storage" data-toggle="tab" aria-expanded="false">存储设置</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="basic" class="tab-pane active">
@@ -40,6 +41,28 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">网站图标:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <div class="input-group">
+                                                <input th:value="${config.SITE_ICON}" type="text" name="SITE_ICON" class="form-control" require="">
+                                                <span class="input-group-btn">
+                                                      <button type="button" class="btn btn-success btn-flat uploader">上传</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">网站Logo:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <div class="input-group">
+                                                <input th:value="${config.SITE_LOGO}" type="text" name="SITE_LOGO" class="form-control" require="">
+                                                <span class="input-group-btn">
+                                                      <button type="button" class="btn btn-success btn-flat uploader">上传</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-lg-2 col-sm-3 control-label">网站关键字：</label>
                                         <div class="col-md-5 col-sm-8">
                                             <textarea th:text="${config.SITE_KWD}" rows="2" type="text" class="form-control" name="SITE_KWD" require="">
@@ -53,6 +76,30 @@
                                             </textarea>
                                         </div>
                                     </div>
+                                    <button type="button" id="saveBasic" class="btn btn-primary">保存</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="admin" class="tab-pane">
+                            <form id="adminForm" class="form-horizontal">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">后台标题：</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input th:value="${config.ADMIN_SITE_NAME}" type="text" class="form-control" name="ADMIN_SITE_NAME" require="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">后台Logo:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <div class="input-group">
+                                                <input th:value="${config.ADMIN_SITE_LOGO}" type="text" name="ADMIN_SITE_LOGO" class="form-control" require="">
+                                                <span class="input-group-btn">
+                                                      <button type="button" class="btn btn-success btn-flat uploader">上传</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label class="col-lg-2 col-sm-3 control-label">编辑器类型：</label>
                                         <div class="col-md-5 col-sm-8">
@@ -62,7 +109,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <button type="button" id="saveBasic" class="btn btn-primary">保存</button>
+                                    <button type="button" id="saveAdmin" class="btn btn-primary">保存</button>
                                 </div>
                             </form>
                         </div>
@@ -227,8 +274,22 @@
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script th:src="@{/js/app.js}"></script>
     <script type="text/javascript">
-        App.initSelect("select");
         $(function () {
+            App.initSelect("select");
+            App.initUploader({
+                pick: '.uploader',
+                url:'/upload/upload',
+                accept:'jpg,png',
+                before:function(){
+                    App.mask(".uploader");
+                },
+                onSuccess:function(picker,data){
+                    App.unmask(".uploader");
+                    if(data.status===200){
+                        $(picker).parent().prev().val(data.url);
+                    }
+                }
+            });
             $("#saveBasic").on('click',function () {
                 if(App.validate("#siteForm")){
                     App.mask("#saveBasic");
