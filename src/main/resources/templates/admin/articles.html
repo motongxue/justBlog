@@ -85,9 +85,14 @@
 			</div>
             <div class="z-card">
                 <div class="z-card-body">
+					<div class="btn-group z-table-btn-group" role="group">
+						<button id="btn_add" type="button" class="btn btn-primary">写文章</button>
+						<button id="btn_batch_delete" type="button" class="btn btn-danger">批量删除</button>
+					</div>
                     <table id="table" data-url="/admin/article/list" data-key="id" data-response-handler="responseHandler" data-query-params="queryParams">
                         <thead>
                             <tr>
+								<th data-checkbox="true"></th>
                                 <th data-field="title" data-align="center" data-formatter="formatTitle">标题</th>
 								<th data-field="category" data-align="center" data-formatter="formatCategory">栏目</th>
 								<th data-field="tagList" data-align="center" data-formatter="formatTags">标签</th>
@@ -128,9 +133,28 @@
 				});
 
 				$("#btn_add").on('click', function(){
-					/*showPopup(1);*/
+                    parent.addTabs({id:'900101', title:'写文章', close:true, url:'article/add', hashChange:true});
 				});
 
+                $("#btn_batch_delete").on('click', function(){
+                    var checkedRows= App.getTableSelections("#table");
+                    if(checkedRows.length>0){
+                        App.confirm({content: "确定删除选中的"+checkedRows.length+"条记录？"},function () {
+                            var ids=[];
+                            $.each(checkedRows, function (i, item) {
+                                ids.push(item.id);
+                            });
+                            App.postAjax("/admin/article/delete", {"ids": ids}, function (data) {
+                                if (data.status === 200) {
+                                    App.refreshTable("#table");
+                                }
+                                App.msgS(data.msg);
+                            })
+                        })
+                    }else{
+                        App.msgE("请选择至少一条记录");
+                    }
+                });
             });
 
 			function  queryParams() {

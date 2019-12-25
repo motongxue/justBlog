@@ -131,18 +131,19 @@
 				    title: '首页',
 				    close: false,
 				    url: 'welcome',
-				    hashChange:false,
+				    hashChange:false
 				});
 				//处理第一次进入刷新
 				App.activeLocationHref(true);
 
-
-				/**/
-
 			});
 
 			function addTabs(options) {
-				App.addTabs(options);
+			    if(options.hashChange){
+                    parent.location.href="/admin#"+options.url;
+				}else{
+                    App.addTabs(options);
+				}
 			}
 		</script>
 	</body>

@@ -12,7 +12,7 @@
 		<div class="z-content">
 			<div class="z-card">
                 <div class="z-card-body z-card-body-tight">
-					<button id="uploadTheme" class="btn btn-outline-primary mb-15">上传主题</button>
+					<button id="uploadTheme" class="btn btn-outline-primary"><i class="mr-3 fa fa-cloud-upload"></i>上传主题</button>
 					<div id="themes" class="themes-content">
 						<div th:each="theme:${themes}" class="theme-item">
 							<div class="theme-box">
@@ -113,7 +113,8 @@
 							id:"theme-set-"+themeId,
 							title:"主题设置-"+themeId,
 							url:"theme/"+themeId+"/setting",
-							close: true
+							close: true,
+							hashChange: false
 						});
 					}
 				});
@@ -125,7 +126,8 @@
                         id:"theme-edit-"+themeId,
                         title:"主题编辑-"+themeId,
                         url:"theme/"+themeId+"/edit",
-                        close: true
+                        close: true,
+                        hashChange: false
                     });
                 });
 
