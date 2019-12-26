@@ -1003,6 +1003,75 @@ input,textarea {
 .z-checkbox>input[type='checkbox'][disabled]+label, .z-radio>input[type='radio'][disabled]+label {
     opacity: 0.6;
 }
+
+
+/*开关*/
+.z-switch input {
+    position: absolute;
+    opacity: 0;
+}
+.z-switch {
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 20px;
+    margin-bottom: 0;
+    cursor: pointer;
+    background-color: #00c292;
+    border-radius: 30px;
+}
+
+.z-switch input:checked+i:before {
+    top: 50%;
+    right: 5px;
+    bottom: 50%;
+    left: 50%;
+    border-width: 0;
+    border-radius: 5px;
+}
+
+.z-switch i:before {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+    background-color: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 30px;
+    content: "";
+    -webkit-transition: all .2s;
+    transition: all .2s;
+}
+
+.z-switch input:checked+i:after {
+    margin-left: 16px;
+}
+
+.z-switch i:after {
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    width: 18px;
+    background-color: #fff;
+    border-radius: 50%;
+    content: "";
+    -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,.25);
+    box-shadow: 1px 1px 3px rgba(0,0,0,.25);
+    -webkit-transition: margin-left .3s;
+    transition: margin-left .3s;
+}
+
+.z-switch.z-switch-disabled{
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.z-switch.z-switch-disabled i:before{
+    background-color: #eee;
+}
+
+
 /*表单*/
 .form-group label{
     font-weight: 400;
