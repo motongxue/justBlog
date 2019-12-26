@@ -32,6 +32,7 @@
             <div class="z-card">
                 <div class="z-card-body">
 					<div class="btn-group z-table-btn-group" role="group">
+						<button id="btn_batch_audit" type="button" class="btn btn-primary">批量审核</button>
 						<button id="btn_batch_delete" type="button" class="btn btn-danger">批量删除</button>
 					</div>
                     <table id="table" data-url="/admin/comment/list" data-query-params="queryParams" data-key="id" data-response-handler="responseHandler">
@@ -77,6 +78,34 @@
 
 				$("#btn_query").on('click', function(){
 					App.refreshTable("#table");
+				});
+
+				$("#btn_batch_audit").on('click', function(){
+                    var checkedRows= App.getTableSelections("#table");
+                    if(checkedRows.length>0){
+                        var checkStatus=true;
+                        var ids=[];
+                        $.each(checkedRows, function (i, item) {
+                            if(item.status===1){
+                                App.msgE("选择中包含已审核记录");
+                                checkStatus=false;
+                                return false;
+							}
+                            ids.push(item.id);
+                        });
+                        if(checkStatus){
+                            App.confirm({content: "确定审核?"},function () {
+                                App.postAjax("/admin/comment/audit/batch", {"ids": ids}, function (data) {
+                                    if (data.status === 200) {
+                                        App.refreshTable("#table");
+                                    }
+                                    App.msgS(data.msg);
+                                });
+                            });
+						}
+					}else{
+                        App.msgE("请选择至少一条记录");
+                    }
 				});
 
 				$("#btn_batch_delete").on('click', function(){

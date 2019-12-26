@@ -60,6 +60,12 @@ public interface CommentMapper extends MyMapper<BlogComment> {
      */
     int deleteBatchByArticleIds(Integer[] articleIds);
 
+    /**
+     * 批量审核
+     *
+     * @param ids ids
+     */
+    int auditBatch(Integer[] ids);
 
     /**
      * 批量删除
@@ -67,5 +73,6 @@ public interface CommentMapper extends MyMapper<BlogComment> {
      * @param ids ids
      */
     int deleteBatch(Integer[] ids);
+
 
 }

@@ -24,5 +24,3 @@ spring:
     properties.mail.smtp.starttls.required: true
     properties.mail.smtp.ssl.enable: true
     default-encoding: utf-8
-zb:
-  workDir: D:\file\

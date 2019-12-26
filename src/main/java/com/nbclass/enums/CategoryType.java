@@ -10,7 +10,8 @@ package com.nbclass.enums;
 public enum CategoryType {
 
     CATEGORY(0, "目录"),
-    CATEGORY_PAGE(1, "栏目页面");
+    CATEGORY_PAGE(1, "文章栏目"),
+    PAGE(2, "页面");
 
     private Integer type;
     private String desc;

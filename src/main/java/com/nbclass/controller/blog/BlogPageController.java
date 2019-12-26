@@ -2,14 +2,15 @@ package com.nbclass.controller.blog;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.nbclass.enums.CategoryType;
 import com.nbclass.enums.SliderType;
-import com.nbclass.framework.config.properties.ZbProperties;
 import com.nbclass.framework.exception.ResourceNotFoundException;
 import com.nbclass.framework.util.CoreConst;
-import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogCategory;
-import com.nbclass.service.*;
+import com.nbclass.service.ArticleService;
+import com.nbclass.service.CategoryService;
+import com.nbclass.service.SliderService;
 import com.nbclass.vo.ArticleVo;
 import com.nbclass.vo.PageVo;
 import org.springframework.beans.BeanUtils;
@@ -17,14 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 前端页面控制器
@@ -70,16 +66,18 @@ public class BlogPageController {
         if(blogCategory==null){
             throw new ResourceNotFoundException();
         }
-        ArticleVo vo = new ArticleVo();
-        vo.setCategory(category);
-        loadArticle(model, vo, category);
+        if(blogCategory.getType().equals(CategoryType.CATEGORY_PAGE.getType())){
+            ArticleVo vo = new ArticleVo();
+            vo.setCategory(category);
+            loadArticle(model, vo, category);
+        }
         return String.format("theme/%s/%s", CoreConst.currentTheme,  blogCategory.getTemplate());
     }
 
     @GetMapping("/{category}/page/{pageNum}")
     public String category(@PathVariable("category") String category, @PathVariable("pageNum") Integer pageNum, Model model){
         BlogCategory blogCategory = categoryService.selectByAlias(category);
-        if(blogCategory==null){
+        if(blogCategory==null || !blogCategory.getType().equals(CategoryType.CATEGORY_PAGE.getType())){
             throw new ResourceNotFoundException();
         }
         ArticleVo vo = new ArticleVo();

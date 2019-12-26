@@ -160,6 +160,7 @@
         where sid = #{sid}
     </select>
 
+
     <delete id="deleteBatchByArticleIds">
         delete from
         blog_comment
@@ -169,6 +170,16 @@
             #{item}
         </foreach>
     </delete>
+
+    <update id="auditBatch">
+        update blog_comment
+        set `status` = 1
+        where
+        id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
 
     <delete id="deleteBatch" parameterType="map">
         delete from

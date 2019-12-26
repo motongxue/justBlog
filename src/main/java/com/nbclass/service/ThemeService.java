@@ -32,9 +32,9 @@ public interface ThemeService {
 
     UploadResponseVo upload(MultipartFile file);
 
-    Path getSystemPath(String themeId);
+    Path getSysThemePath(String themeId);
 
-    Path getUserPath(String themeId);
+    Path getUserThemePath(String themeId);
 
     void handleThemeSetting(ZbTheme theme);
 }

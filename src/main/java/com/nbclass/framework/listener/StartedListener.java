@@ -63,8 +63,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     private void initThemes() {
         try {
             log.info("Blog themes start init");
-            Path sysSource = themeService.getSystemPath(null);
-            Path userSource = themeService.getUserPath(null);
+            Path sysSource = themeService.getSysThemePath(null);
+            Path userSource = themeService.getUserThemePath(null);
             Map<String, ZbTheme> sysThemeMap = FileUtil.scanThemeFolder(sysSource);
             Map<String, ZbTheme> userThemeMap = FileUtil.scanThemeFolder(userSource);
             if (CollectionUtils.isEmpty(sysThemeMap)) {
@@ -81,7 +81,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
                     if(userTheme == null){
                         //系统主题不在用户自定义目录，则copy进用户自定义目录
                         try {
-                            FileUtil.copyFolder( themeService.getSystemPath(k), themeService.getUserPath(k));
+                            FileUtil.copyFolder( themeService.getSysThemePath(k), themeService.getUserThemePath(k));
                             themeService.handleThemeSetting(v);
                             userThemeMap.put(k,v);
                         } catch (IOException e) {

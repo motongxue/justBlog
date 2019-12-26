@@ -8,6 +8,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
+import java.io.File;
+
 
 /**
  * WebMvcConfig配置类-资源映射
@@ -22,16 +25,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final String FILE_PROTOCOL = "file:///";
 
-    @Autowired
+    @Resource
     private  ZbProperties zbProperties;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String workDir = FILE_PROTOCOL + zbProperties.getWorkDir();
         registry.addResourceHandler("/theme/*/static/**")
-                .addResourceLocations(workDir + "theme/");
+                .addResourceLocations(FILE_PROTOCOL + zbProperties.getWorkThemeDir() + File.separator);
         registry.addResourceHandler("/file/**")
-                .addResourceLocations(workDir + CoreConst.FILE_FOLDER);
+                .addResourceLocations(FILE_PROTOCOL + zbProperties.getWorkFileDir() + File.separator);
     }
 
 }

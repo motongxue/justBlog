@@ -35,10 +35,18 @@ public class CommentController {
     @PostMapping("/audit")
     @AccessToken
     public ResponseVo audit(Integer id, String replyContent){
-        commentService.audit(id);
+        commentService.audit(new Integer[]{id});
         commentService.adminReply(id,replyContent);
         return ResponseUtil.success("审核成功");
     }
+
+    @PostMapping("/audit/batch")
+    @AccessToken
+    public ResponseVo audit(@RequestParam("ids[]") Integer[]ids){
+        commentService.audit(ids);
+        return ResponseUtil.success("批量审核成功");
+    }
+
     @PostMapping("/reply")
     @AccessToken
     public ResponseVo reply(Integer id, String replyContent){

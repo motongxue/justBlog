@@ -66,4 +66,4 @@ jwt:
   issuer: sys_user
   expire: 30
 zb:
-  workDir: D:\file\
+  workDir: .nbclass

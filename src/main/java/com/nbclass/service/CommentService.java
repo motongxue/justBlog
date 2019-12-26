@@ -42,9 +42,8 @@ public interface CommentService {
 
     /**
      * 审核comment
-     * @return ResponseVo
      */
-    void audit(Integer id);
+    void audit(Integer[] ids);
 
     /**
      * 回复comment

@@ -56,7 +56,7 @@ public class ThemeController {
     @PostMapping("/getFiles")
     @AccessToken
     public ResponseVo getFiles(String themeId){
-        List<ZbFile> files = FileUtil.listFileTree(Paths.get(properties.getWorkDir() + "/theme/" + themeId));
+        List<ZbFile> files = FileUtil.listFileTree(Paths.get(properties.getWorkThemeDir(themeId)));
         return ResponseUtil.success(files);
     }
 

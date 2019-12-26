@@ -107,8 +107,8 @@ public class ThemeServiceImpl implements ThemeService {
         if(themeId.equals(selectCurrent().getId())){
             throw new ZbException("主题正在使用，不可删除");
         }
-        FileUtil.delete(getUserPath(themeId));
-        FileUtil.delete(getSystemPath(themeId));
+        FileUtil.delete(getUserThemePath(themeId));
+        FileUtil.delete(getSysThemePath(themeId));
         redisService.del(CacheKeyPrefix.THEME.getPrefix()+themeId);
         Map<String, ZbTheme> themeMap = selectThemesMap();
         themeMap.remove(themeId);
@@ -138,8 +138,8 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     public void copyUserThemeToSystemTheme(String themeId) {
         try {
-            Path sysSource = this.getSystemPath(themeId);
-            Path userSource = this.getUserPath(themeId);
+            Path sysSource = this.getSysThemePath(themeId);
+            Path userSource = this.getUserThemePath(themeId);
             FileUtil.copyFolder(userSource, sysSource);
         } catch (Exception e) {
             throw new ZbException("保存文件失败", e);
@@ -172,12 +172,12 @@ public class ThemeServiceImpl implements ThemeService {
                 if(null!=selectByThemeId(themeId)){
                     throw new ZbException("当前安装的主题已存在！");
                 }
-                String themeDir = zbProperties.getWorkDir() + "theme/"+themeId+"/";
+                String themeDir = zbProperties.getWorkThemeDir(themeId);
                 Path targetThemePath = Paths.get(themeDir);
                 FileUtil.copyFolder(filterTempPath, targetThemePath);
                 //用户目录copy到系统目录，待优化
-                Path sysSource = this.getSystemPath(null);
-                Path userSource = this.getUserPath(null);
+                Path sysSource = this.getSysThemePath(null);
+                Path userSource = this.getUserThemePath(null);
                 FileUtil.copyFolder(userSource, sysSource);
                 //存入缓存
                 handleThemeSetting(zbTheme);
@@ -199,7 +199,7 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Path getSystemPath(String themeId) {
+    public Path getSysThemePath(String themeId) {
         try {
             String themeClassPath = String.format("%s%s%s",ResourceUtils.CLASSPATH_URL_PREFIX,CoreConst.THEME_FOLDER,StringUtils.isNotEmpty(themeId)?(themeId+"/"):"");
             URI themeUri = ResourceUtils.getURL(themeClassPath).toURI();
@@ -213,8 +213,8 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public Path getUserPath(String themeId) {
-        return  Paths.get(String.format("%s%s%s",zbProperties.getWorkDir(),"theme/",StringUtils.isNotEmpty(themeId)?(themeId+"/"):""));
+    public Path getUserThemePath(String themeId) {
+        return  Paths.get(StringUtils.isEmpty(themeId)? zbProperties.getWorkThemeDir():zbProperties.getWorkThemeDir(themeId));
     }
 
     @Override

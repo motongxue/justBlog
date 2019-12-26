@@ -321,12 +321,11 @@ public class FileUtil {
                         ZbTheme zbTheme = yaml.loadAs(s, ZbTheme.class);
                         resMap.put(zbTheme.getId(),zbTheme);
                     }
-
                 }
             });
             return resMap;
         } catch (IOException e) {
-            throw new ZbException("Failed to scan system theme");
+            throw new ZbException("Failed to scan theme folder");
         }
     }
 

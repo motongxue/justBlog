@@ -37,7 +37,7 @@
         <div class="z-card-body">
 
             <div class="form-group">
-                <label  class="col-sm-3"></label>
+                <label  class="col-sm-3 control-label">栏目类型 :</label>
                 <div class="col-sm-8">
                     <div class="z-radio">
                         <input type="radio" name="type" value="0" require=""/>
@@ -45,7 +45,11 @@
                     </div>
                     <div class="z-radio">
                         <input type="radio" name="type" value="1" checked require="">
-                        <label><i></i>栏目页面</label>
+                        <label><i></i>文章栏目</label>
+                    </div>
+                    <div class="z-radio">
+                        <input type="radio" name="type" value="2" require="">
+                        <label><i></i>页面</label>
                     </div>
                 </div>
             </div>
@@ -148,7 +152,9 @@
         if(value===0){
             typeStr='<span class="badge badge-success">目录</span>';
         }else if(value===1){
-            typeStr='<span class="badge badge-primary">栏目页面</span>';
+            typeStr='<span class="badge badge-primary">文章栏目</span>';
+        }else if(value===2){
+            typeStr='<span class="badge badge-warning">页面</span>';
         }
         return typeStr;
     }

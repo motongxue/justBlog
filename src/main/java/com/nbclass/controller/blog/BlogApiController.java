@@ -66,6 +66,7 @@ public class BlogApiController {
             UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
             comment.setBrowser(userAgent.getBrowser().getName());
             comment.setOs(userAgent.getOperatingSystem().getName());
+            comment.setIp(IpUtil.getIpAddr(request));
             return commentService.save(comment);
         }
     }

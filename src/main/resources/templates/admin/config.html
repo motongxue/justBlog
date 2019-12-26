@@ -25,13 +25,13 @@
                                     <div class="form-group">
                                         <label class="col-lg-2 col-sm-3 control-label">网站域名：</label>
                                         <div class="col-md-5 col-sm-8">
-                                            <input th:value="${config.SITE_HOST}" type="text" class="form-control" name="SITE_HOST" require="">
+                                            <input th:value="${config.SITE_HOST}" type="text" class="form-control" name="SITE_HOST" placeholder="请以http(s)开头" require="">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-lg-2 col-sm-3 control-label">CDN域名：</label>
                                         <div class="col-md-5 col-sm-8">
-                                            <input th:value="${config.SITE_CDN}" type="text" class="form-control" name="SITE_HOST" require="">
+                                            <input th:value="${config.SITE_CDN}" type="text" class="form-control" name="SITE_HOST">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -146,7 +146,7 @@
                                     <div class="form-group">
                                         <div class="col-lg-2 col-sm-3  control-label">本地文件存储路径:</div>
                                         <div class="col-md-5 col-sm-8  control-label">
-                                            文件将保存在工作空间workDir的file下, <span class="text-danger">[[${workDir}]]file</span>
+                                            文件将保存在用户目录workDir的file下, <span class="text-danger">[[${workDir}]]file</span>
                                         </div>
                                     </div>
                                 </div>

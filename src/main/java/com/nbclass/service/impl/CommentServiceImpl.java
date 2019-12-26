@@ -105,11 +105,11 @@ public class CommentServiceImpl implements CommentService {
                     if (floor==null){
                         floor=0;
                     }
-                    redisService.set(cacheKey, floor + 1);
                 }
                 comment.setFloor(floor+1);
+                redisService.set(cacheKey, comment.getFloor());
             }
-            if(StringUtils.isNotBlank(comment.getQq())){
+            if(StringUtils.isNotBlank(comment.getQq())&&StringUtils.isEmpty(comment.getAvatar())){
                 comment.setAvatar("https://q1.qlogo.cn/g?b=qq&nk="+comment.getQq()+"&s=100");
             }
             comment.setCreateTime(new Date());
@@ -123,11 +123,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void audit(Integer id) {
-        BlogComment comment = new BlogComment();
-        comment.setId(id);
-        comment.setStatus(CoreConst.STATUS_VALID);
-        commentMapper.updateByPrimaryKeySelective(comment);
+    public void audit(Integer[] ids) {
+        commentMapper.auditBatch(ids);
     }
 
     @Override

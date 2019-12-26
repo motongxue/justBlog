@@ -153,7 +153,7 @@ public class AdminPageController{
         Map<String, String> configMap = configService.selectAll();
         String json = configMap.get(ConfigKey.CLOUD_STORAGE_CONFIG.getValue());
         CloudStorageConfigVo cloudStorageConfig = GsonUtil.fromJson(json, CloudStorageConfigVo.class);
-        String workDir = PropertiesUtil.getString(CoreConst.workDirKey);
+        String workDir = CoreConst.USER_HOME + File.separator + PropertiesUtil.getString(CoreConst.workDirKey);
         model.addAttribute("workDir", workDir.endsWith(File.separator)?workDir:workDir+File.separator);
         model.addAttribute("config",configMap);
         model.addAttribute("cloudStorageConfig",cloudStorageConfig);
