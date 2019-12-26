@@ -107,7 +107,7 @@
 </div>
 <script th:src="@{/js/jquery.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/app-manage.js}"></script>
 <script>
     var popId;
     $(function () {
@@ -144,8 +144,8 @@
                 placeHolder: "无",
                 data: data.data,
                 iconType: 2,
-                treeNameField: 'name',
-                treeValueField: 'id'
+                nameField: 'name',
+                valueField: 'id'
             };
             if(type===1) {
                 App.initTreeSelect("#pid", treeSelectOptions);
