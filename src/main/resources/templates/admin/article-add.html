@@ -6,10 +6,15 @@
 	<title>写文章</title>
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 	<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+	<link th:if="${editorType=='2'}" rel="stylesheet" th:href="@{/css/highlight.min.css}"/>
+	<link th:if="${editorType=='2'}" rel="stylesheet" th:href="@{/css/simplemde.min.css}"/>
 	<link rel="stylesheet" th:href="@{/css/app.css}"/>
 	<style>
-		.w-e-text-container{
+		#article-editor .w-e-text-container{
 			height: 780px !important;
+		}
+		#article-editor .CodeMirror-scroll{
+			height: 756px;
 		}
 	</style>
 </head>
@@ -22,6 +27,7 @@
 				<input id="articleStatus" type="hidden" name="status">
 				<input id="articleContent" type="hidden" name="content">
 				<input id="articleContentMd" type="hidden" name="contentMd">
+				<input type="hidden" name="editorType" th:value="${editorType}">
 				<div class="col-lg-7 article-area">
 					<div class="form-group">
 						<div class="col-xs-12">
@@ -29,7 +35,8 @@
 						</div>
 					</div>
 					<div class="form-group form-editor">
-						<div class="col-xs-12" id="article-editor">
+						<div class="col-xs-12"  id="article-editor">
+							<textarea th:if="${editorType=='2'}" id="articleField" class="display-none"></textarea>
 						</div>
 					</div>
 				</div>
@@ -220,9 +227,12 @@
 </div>
 <script th:src="@{/js/jquery.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/wangEditor.min.js}"></script>
+<script th:if="${editorType=='1'}" th:src="@{/js/wangEditor.min.js}"></script>
+<script th:if="${editorType=='2'}" th:src="@{/js/highlight.min.js}"></script>
+<script th:if="${editorType=='2'}" th:src="@{/js/simplemde.min.js}"></script>
 <script th:src="@{/js/app.js}"></script>
 <script>
+	var editorType = '[[${editorType}]]';
 	$(function () {
         App.initUploader({
             pick: '.upload-cover',
@@ -280,15 +290,33 @@
 		});
 
     });
-
-    var E = window.wangEditor;
-    var articleEditor = new E('#article-editor');
-    articleEditor.customConfig.uploadImgServer = '/upload/uploadForEditor';
-    articleEditor.customConfig.uploadFileName = 'img';
-    articleEditor.customConfig.uploadImgTimeout = 30000;
-    articleEditor.customConfig.uploadImgMaxLength = 5;
-    articleEditor.create();
-
+    var articleEditor;
+	if(editorType==="1"){
+        var E = window.wangEditor;
+		articleEditor = new E('#article-editor');
+        articleEditor.customConfig.uploadImgServer = '/upload/uploadForEditor';
+        articleEditor.customConfig.uploadFileName = 'img';
+        articleEditor.customConfig.uploadImgTimeout = 30000;
+        articleEditor.customConfig.uploadImgMaxLength = 5;
+        articleEditor.create();
+	}else{
+        articleEditor = new SimpleMDE({
+            element: document.getElementById("articleField"),
+            autoDownloadFontAwesome: false,
+            placeholder: "请输入文章内容",
+            autosave: {
+                enabled: true,
+                delay: 15000,
+                uniqueId: "editor-1"
+            },
+            renderingConfig: {
+                codeSyntaxHighlighting: true
+            },
+            showIcons: ["code", "table", "clean-block", "horizontal-rule"],
+            tabSize: 4,
+            status: [ "lines", "words"]
+        });
+	}
 
     function  saveArticle(status) {
 		$("#articleStatus").val(status);
@@ -298,7 +326,8 @@
 					App.confirm({content:"确认保存文章？"},function () {
 						App.postAjax("/admin/article/save",$("#articleForm").serialize(),function (data) {
 							if(data.status===200){
-                                App.msgS(data.msg,function () {
+                                if(editorType==="2"){articleEditor.clearAutosavedValue();}
+                                App.msg({content:data.msg, time:1000},function () {
                                     window.location.reload();
                                 });
 							}else{
@@ -322,14 +351,15 @@
     }
 
     function  validateArticleContent() {
-		var articleText = articleEditor.txt.text();
-		var articleHtml = articleEditor.txt.html();
-		if("<p><br></p>"!==articleHtml){
+		var articleText = editorType==="1"?articleEditor.txt.text():articleEditor.value();
+		var articleHtml = editorType==="1"?articleEditor.txt.html():articleEditor.markdown(articleText);
+		if(""!==articleText){
 			$("#articleContentMd").val(articleText);
 			$("#articleContent").val(articleHtml);
 			return true;
 		}else{
-			App.makeError("#article-editor .w-e-text-container","请输入文章内容", true);
+		    var errorContainer = editorType==="1"?"#article-editor .w-e-text-container":"#article-editor .CodeMirror";
+			App.makeError(errorContainer, "请输入文章内容", true);
 			return false;
 		}
 	}

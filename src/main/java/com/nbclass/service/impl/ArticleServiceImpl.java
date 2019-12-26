@@ -194,7 +194,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.setAliasName(UUIDUtil.generateShortUuid());
         }
         if(article.getId()==null){
-            article.setEditorType(Integer.valueOf(configService.selectAll().get(ConfigKey.EDITOR_TYPE.getValue())));
             article.setCreateTime(date);
             articleMapper.insertSelective(article);
         }else{

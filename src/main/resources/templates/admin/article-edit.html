@@ -6,10 +6,15 @@
 	<title>编辑文章</title>
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
 	<link rel="stylesheet" th:href="@{/iconfont/iconfont.css}"/>
+	<link th:if="${article.editorType==2}" rel="stylesheet" th:href="@{/css/highlight.min.css}"/>
+	<link th:if="${article.editorType==2}" rel="stylesheet" th:href="@{/css/simplemde.min.css}"/>
 	<link rel="stylesheet" th:href="@{/css/app.css}"/>
 	<style>
-		.w-e-text-container{
+		#article-editor .w-e-text-container{
 			height: 780px !important;
+		}
+		#article-editor .CodeMirror-scroll{
+			height: 756px;
 		}
 	</style>
 </head>
@@ -31,6 +36,7 @@
 					</div>
 					<div class="form-group form-editor">
 						<div class="col-xs-12" id="article-editor">
+							<textarea th:if="${article.editorType==2}" id="articleField" class="display-none" th:text="${article.contentMd}"></textarea>
 						</div>
 					</div>
 				</div>
@@ -221,9 +227,12 @@
 </div>
 <script th:src="@{/js/jquery.min.js}"></script>
 <script th:src="@{/js/bootstrap.min.js}"></script>
-<script th:src="@{/js/wangEditor.min.js}"></script>
+<script th:if="${article.editorType==1}" th:src="@{/js/wangEditor.min.js}"></script>
+<script th:if="${article.editorType==2}" th:src="@{/js/highlight.min.js}"></script>
+<script th:if="${article.editorType==2}" th:src="@{/js/simplemde.min.js}"></script>
 <script th:src="@{/js/app.js}"></script>
 <script>
+    var editorType = '[[${article.editorType}]]';
 	$(function () {
         App.initUploader({
             pick: '.upload-cover',
@@ -264,7 +273,6 @@
             };
 			App.initTreeSelect("#categoryId", treeSelectOptions);
         });
-
         //文章类型
         $("input[name='type']").on("change",function () {
             if($(this).val()==="1"){
@@ -282,15 +290,29 @@
 
     });
 
-    var E = window.wangEditor;
-    var articleEditor = new E('#article-editor');
-    articleEditor.customConfig.uploadImgServer = '/upload/uploadForEditor';
-    articleEditor.customConfig.uploadFileName = 'img';
-    articleEditor.customConfig.uploadImgTimeout = 30000;
-    articleEditor.customConfig.uploadImgMaxLength = 5;
-    articleEditor.create();
-    articleEditor.txt.html($("#articleContent").val());
-
+    var articleEditor;
+    if(editorType==="1") {
+        var E = window.wangEditor;
+        articleEditor = new E('#article-editor');
+        articleEditor.customConfig.uploadImgServer = '/upload/uploadForEditor';
+        articleEditor.customConfig.uploadFileName = 'img';
+        articleEditor.customConfig.uploadImgTimeout = 30000;
+        articleEditor.customConfig.uploadImgMaxLength = 5;
+        articleEditor.create();
+        articleEditor.txt.html($("#articleContent").val());
+    }else{
+        articleEditor = new SimpleMDE({
+            element: document.getElementById("articleField"),
+            autoDownloadFontAwesome: false,
+            placeholder: "请输入文章内容",
+            renderingConfig: {
+                codeSyntaxHighlighting: true
+            },
+            showIcons: ["code", "table", "clean-block", "horizontal-rule"],
+            tabSize: 4,
+            status: [ "lines", "words"]
+        });
+	}
 
     function  saveArticle(status) {
 		$("#articleStatus").val(status);
@@ -322,16 +344,17 @@
     }
 
     function  validateArticleContent() {
-		var articleText = articleEditor.txt.text();
-		var articleHtml = articleEditor.txt.html();
-		if("<p><br></p>"!==articleHtml){
-			$("#articleContentMd").val(articleText);
-			$("#articleContent").val(articleHtml);
-			return true;
-		}else{
-			App.makeError("#article-editor .w-e-text-container","请输入文章内容", true);
-			return false;
-		}
+        var articleText = editorType==="1"?articleEditor.txt.text():articleEditor.value();
+        var articleHtml = editorType==="1"?articleEditor.txt.html():articleEditor.markdown(articleText);
+        if(""!==articleText){
+            $("#articleContentMd").val(articleText);
+            $("#articleContent").val(articleHtml);
+            return true;
+        }else{
+            var errorContainer = editorType==="1"?"#article-editor .w-e-text-container":"#article-editor .CodeMirror";
+            App.makeError(errorContainer, "请输入文章内容", true);
+            return false;
+        }
 	}
 </script>
 </body>

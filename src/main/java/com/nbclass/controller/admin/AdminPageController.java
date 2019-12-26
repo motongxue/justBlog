@@ -74,7 +74,8 @@ public class AdminPageController{
 
     @GetMapping("/article/add")
     @AccessToken
-    public String articleAdd(){
+    public String articleAdd(Model model){
+        model.addAttribute("editorType",configService.selectAll().get(ConfigKey.EDITOR_TYPE.getValue()));
         return  pathSuffix + "article-add";
     }
 
