@@ -14,8 +14,7 @@
             <div class="z-card-body">
                 <div class="z-tabs z-tabs-easy">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#basic" data-toggle="tab" aria-expanded="true">前台设置</a></li>
-                        <li><a href="#admin" data-toggle="tab" aria-expanded="true">后台设置</a></li>
+                        <li class="active"><a href="#basic" data-toggle="tab" aria-expanded="true">基础设置</a></li>
                         <li><a href="#storage" data-toggle="tab" aria-expanded="false">存储设置</a></li>
                     </ul>
                     <div class="tab-content">
@@ -76,13 +75,11 @@
                                             </textarea>
                                         </div>
                                     </div>
-                                    <button type="button" id="saveBasic" class="btn btn-primary">保存</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div id="admin" class="tab-pane">
-                            <form id="adminForm" class="form-horizontal">
-                                <div class="box-body">
+                                    <div class="form-group">
+                                        <div class="col-lg-7 col-sm-11 ">
+                                            <hr class="z-dashed"/>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label class="col-lg-2 col-sm-3 control-label">后台标题：</label>
                                         <div class="col-md-5 col-sm-8">
@@ -109,7 +106,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <button type="button" id="saveAdmin" class="btn btn-primary">保存</button>
+                                    <button type="button" id="saveBasic" class="btn btn-primary">保存</button>
                                 </div>
                             </form>
                         </div>
@@ -303,21 +300,6 @@
                     })
                 }
             });
-
-            $("#saveAdmin").on('click',function () {
-                if(App.validate("#adminForm")){
-                    App.mask("#saveAdmin");
-                    App.postAjax("/admin/config/save",$("#adminForm").serialize(),function (data) {
-                        App.unmask("#saveAdmin");
-                        if(data.status===200){
-                            App.msgS(data.msg);
-                        }else{
-                            App.msgE(data.msg);
-                        }
-                    })
-                }
-            });
-
             $("#saveStorage").on('click', function () {
                 App.unmask("#saveStorage");
                 App.postAjax("/admin/config/save/storage",$("#storageForm").serialize(),function (data) {
