@@ -105,16 +105,6 @@ a:hover, a:focus{
 input,textarea {
     /* -webkit-appearance: none;*/
 }
-.z-admin-shade{
-    position: fixed;
-    display: none;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,.3);
-    z-index: 1008;
-}
 .wrapper {
     min-height: 100%;
     position: relative;
