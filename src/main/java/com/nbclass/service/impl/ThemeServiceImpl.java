@@ -219,17 +219,14 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public void handleThemeSetting(ZbTheme theme) {
-        ZbTheme themeCache = redisService.get(CacheKeyPrefix.THEME + theme.getId());
-        if (themeCache == null) {
-            List<ZbThemeSetting> settingList = theme.getSettings();
-            Map<String,String> map= new HashMap<>();
-            settingList.forEach(setting-> setting.getForm().forEach(formItem->{
-                formItem.setValue(formItem.getDefaultValue());
-                map.put(formItem.getName(),formItem.getValue());
-            }));
-            theme.setSetting(map);
-            redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
-        }
+        List<ZbThemeSetting> settingList = theme.getSettings();
+        Map<String,String> map= new HashMap<>();
+        settingList.forEach(setting-> setting.getForm().forEach(formItem->{
+            formItem.setValue(formItem.getDefaultValue());
+            map.put(formItem.getName(),formItem.getValue());
+        }));
+        theme.setSetting(map);
+        redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
     }
 
 }

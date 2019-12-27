@@ -73,33 +73,30 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             //用户自定义主题目录和系统主题目录处理
             if (CollectionUtils.isEmpty(userThemeMap)) {
                 FileUtil.copyFolder(sysSource, userSource);
-                sysThemeMap.forEach((k,v)-> themeService.handleThemeSetting(v));
-                redisService.set(CacheKeyPrefix.THEMES.getPrefix(), GsonUtil.toJson(sysThemeMap));
+                userThemeMap = sysThemeMap;
             } else {
-                sysThemeMap.forEach((k,v)->{
-                    ZbTheme userTheme = userThemeMap.get(k);
+                Map<String, ZbTheme> finalUserThemeMap = userThemeMap;
+                sysThemeMap.forEach((k, v)->{
+                    ZbTheme userTheme = finalUserThemeMap.get(k);
                     if(userTheme == null){
                         //系统主题不在用户自定义目录，则copy进用户自定义目录
                         try {
                             FileUtil.copyFolder( themeService.getSysThemePath(k), themeService.getUserThemePath(k));
-                            themeService.handleThemeSetting(v);
-                            userThemeMap.put(k,v);
+                            finalUserThemeMap.put(k,v);
                         } catch (IOException e) {
                             throw new RuntimeException("copy theme to user folder error:{}", e);
                         }
-                    }else{
-                        //系统主题在用户自定义目录
-                        themeService.handleThemeSetting(userTheme);
                     }
                 });
                 FileUtil.copyFolder(userSource, sysSource);
-                redisService.set(CacheKeyPrefix.THEMES.getPrefix(),  GsonUtil.toJson(userThemeMap));
             }
+            userThemeMap.forEach((k,v)-> themeService.handleThemeSetting(v));
+            redisService.set(CacheKeyPrefix.THEMES.getPrefix(),  GsonUtil.toJson(userThemeMap));
             //当前主题处理
             ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
             if (null == currentTheme) {
                 //第一次启动，初始化当前系统主题
-                currentTheme = sysThemeMap.entrySet().iterator().next().getValue();
+                currentTheme = userThemeMap.entrySet().iterator().next().getValue();
                 redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), currentTheme);
             }
             CoreConst.currentTheme=currentTheme.getId();
