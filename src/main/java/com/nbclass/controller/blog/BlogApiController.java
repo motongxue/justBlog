@@ -9,6 +9,7 @@ import com.nbclass.service.CommentService;
 import com.nbclass.vo.CommentVo;
 import com.nbclass.vo.ResponseVo;
 import eu.bitwalker.useragentutils.UserAgent;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,23 +41,29 @@ public class BlogApiController {
 
     @PostMapping("article/look")
     public ResponseVo articleLook(HttpServletRequest request, @RequestParam Integer articleId){
-        return articleService.articleLook(articleId, IpUtil.getIpAddr(request));
+        synchronized (IpUtil.getIpAddr(request)) {
+            return articleService.articleLook(articleId, IpUtil.getIpAddr(request));
+        }
     }
 
     @PostMapping("article/love")
     public ResponseVo articleLove(HttpServletRequest request, @RequestParam Integer articleId){
-        return articleService.articleLove(articleId, IpUtil.getIpAddr(request));
+        synchronized (IpUtil.getIpAddr(request)) {
+            return articleService.articleLove(articleId, IpUtil.getIpAddr(request));
+        }
     }
 
     @PostMapping("comment/love")
     public ResponseVo commentLove(HttpServletRequest request, @RequestParam Integer commentId){
-        return commentService.commentLove(commentId, IpUtil.getIpAddr(request));
+        synchronized (IpUtil.getIpAddr(request)) {
+            return commentService.commentLove(commentId, IpUtil.getIpAddr(request));
+        }
     }
 
     @PostMapping("comment/save")
     public ResponseVo commentSave(HttpServletRequest request, BlogComment comment){
         synchronized (IpUtil.getIpAddr(request)){
-            if (org.springframework.util.StringUtils.isEmpty(comment.getNickname())) {
+            if (StringUtils.isEmpty(comment.getNickname())) {
                 return ResponseUtil.error("请输入昵称");
             }
             String content = comment.getContent();
