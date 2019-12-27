@@ -14,12 +14,13 @@ public class CoreConst {
     public static final Integer  STATUS_INVALID           = 0;
     public static final Integer  IS_YES                    = 1;
     public static final Integer  IS_NO                     = 0;
+    public static final Integer  PAGE_NUM                 = 1;
     public static final Integer  PAGE_SIZE                = 10;
     public static final String   ACCESS_TOKEN             = "access_token";
     public static final String   USER_HOME                = System.getProperty("user.home");
     public static final String   workDirKey               = "zb.workDir";
     public static final String   THEME_FOLDER             = "templates/theme/";
     public static final String   THEME_SETTING_NAME      = "setting.yml";
-    public static final String   THEME_                     = "theme";
+    public static final String   THEME_                    = "theme";
     public static final String   FILE_                     = "file";
 }
