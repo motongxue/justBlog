@@ -1,6 +1,7 @@
 package com.nbclass.controller.blog;
 
 import com.nbclass.framework.util.IpUtil;
+import com.nbclass.framework.util.QQUtil;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.framework.util.XssKillerUtil;
 import com.nbclass.model.BlogComment;
@@ -11,10 +12,7 @@ import com.nbclass.vo.ResponseVo;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -75,6 +73,15 @@ public class BlogApiController {
             comment.setOs(userAgent.getOperatingSystem().getName());
             comment.setIp(IpUtil.getIpAddr(request));
             return commentService.save(comment);
+        }
+    }
+
+    @PostMapping("qq/{id}")
+    public ResponseVo qqInfo(@PathVariable("id") Long id){
+        try{
+            return ResponseUtil.success(QQUtil.getQqInfo(id));
+        }catch (Exception e){
+            return ResponseUtil.error("获取QQ号失败");
         }
     }
 
