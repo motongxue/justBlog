@@ -23,6 +23,8 @@
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
+        <result column="s_name" property="sName" />
+        <result column="s_alias_name" property="sAliasName" />
         <association property="article" javaType="com.nbclass.model.BlogArticle">
             <result property="id" jdbcType="INTEGER" column="article_id"/>
             <result property="title" jdbcType="VARCHAR" column="article_title"/>
@@ -77,9 +79,8 @@
             p.id AS parent_id,
             p.nickname AS parent_nickname,
             p.content AS parent_content,
-            a.id as article_id,
-            a.title as article_title,
-            a.alias_name as article_alias_name
+            a.title as s_name,
+            a.alias_name as s_alias_name
         FROM
             blog_comment t
         LEFT JOIN blog_comment p ON t.parent_id = p.id

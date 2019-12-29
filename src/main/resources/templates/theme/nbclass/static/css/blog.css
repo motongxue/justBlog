@@ -1554,4 +1554,72 @@ body {
     display: none
 }
 
+
+.emoji-editor {
+    height: 100px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #555;
+    display: block;
+    font-size: 14px;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    transition: border-color .15s ease-in-out 0s,box-shadow .15s ease-in-out 0s;
+    width: 100%;
+    overflow: auto;
+}
+.emoji-editor:focus{
+    border: 1px solid #0080FF;
+    box-shadow: none;
+    outline: none;
+}
+
+.emoji-tool{
+    position: relative;
+}
+.emoji-btn{
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+}
+.emoji-btn i{
+    font-size: 36px;
+    color: #cfcfcf;
+}
+.emoji-content {
+    width: 281px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    box-shadow: 0 5px 15px 0 rgba(0,0,0,.15);
+    position: absolute;
+    top: 40px;
+    left: 0;
+    border-radius: 4px;
+    display: none;
+    z-index: 2;
+}
+.emoji-content ul {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.emoji-content ul li {
+    width: 35px;
+    height: 35px;
+    list-style-type: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
 /**/

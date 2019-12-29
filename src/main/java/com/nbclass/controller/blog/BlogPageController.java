@@ -73,7 +73,8 @@ public class BlogPageController {
             vo.setCategory(category);
             loadArticle(model, vo, category);
         }
-        return String.format("theme/%s/%s", CoreConst.currentTheme,  blogCategory.getTemplate());
+        model.addAttribute("sid",-blogCategory.getId());
+        return String.format("theme/%s/%s", CoreConst.currentTheme, blogCategory.getTemplate());
     }
 
     @GetMapping("/{category}/page/{pageNum}")

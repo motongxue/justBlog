@@ -7,14 +7,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * XssKillerUtil
- *
- * @version V1.0
- * @date 2019/10/11
- * @author nbclass
+ * @author eden
+ * @version 1.0
+ * @website https://www.nbclass.com
+ * @date 2018/8/07 18:13
+ * @since 1.0
  */
 public class XssKillerUtil {
-    private static final String[] WHITE_LIST = {"p", "strong", "pre", "code", "span", "blockquote", "em", "a", "br","br/"};
+    private static final String[] WHITE_LIST = {"p", "strong", "pre", "code", "span", "blockquote", "em", "a",
+            "br","br/","font","img","u","b","table","tbody","th","tr","td","ul","li","ol","h1","h2","h3","h4","h5"};
     private static String reg = null;
     private static String legalTags = null;
 
@@ -58,6 +59,9 @@ public class XssKillerUtil {
      * @return
      */
     public static boolean isValidByJsoup(String xssStr) {
+        if (null == xssStr || xssStr.isEmpty()) {
+            return true;
+        }
         return Jsoup.isValid(xssStr, custome());
     }
 
@@ -67,7 +71,8 @@ public class XssKillerUtil {
      * @return
      */
     private static Whitelist custome() {
-        return Whitelist.none().addTags("p", "strong", "pre", "code", "span", "blockquote", "br").addAttributes("span", "class");
+        return Whitelist.none().addTags("p", "strong", "pre", "code", "span", "blockquote", "em", "a",
+                "br","br/","font","img","u","b","table","tbody","th","tr","td","ul","li","ol","h1","h2","h3","h4","h5").addAttributes("span", "class");
     }
 
     /**
@@ -91,4 +96,7 @@ public class XssKillerUtil {
         // TODO ...
         return xssStr;
     }
+
+
+
 }

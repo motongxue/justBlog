@@ -29,4 +29,11 @@ public interface CategoryMapper extends MyMapper<BlogCategory> {
      * @param id id
      */
     int deleteById(Integer id);
+
+    /**
+     * 根据ids查询栏目列表
+     * @param ids ids
+     * @return list
+     */
+    List<BlogCategory> selectByIds(List<Integer> ids);
 }

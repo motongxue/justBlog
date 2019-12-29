@@ -1,9 +1,6 @@
 package com.nbclass.controller.blog;
 
-import com.nbclass.framework.util.IpUtil;
-import com.nbclass.framework.util.QQUtil;
-import com.nbclass.framework.util.ResponseUtil;
-import com.nbclass.framework.util.XssKillerUtil;
+import com.nbclass.framework.util.*;
 import com.nbclass.model.BlogComment;
 import com.nbclass.service.ArticleService;
 import com.nbclass.service.CommentService;
@@ -65,9 +62,10 @@ public class BlogApiController {
                 return ResponseUtil.error("请输入昵称");
             }
             String content = comment.getContent();
-            if (!XssKillerUtil.isValid(content)) {
+            if (!XssKillerUtil.isValid(content) || ValidatorUtil.hasEmoji(content)) {
                 return ResponseUtil.error("内容不合法");
             }
+            comment.setContent(ValidatorUtil.crlf(comment.getContent()));
             UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
             comment.setBrowser(userAgent.getBrowser().getName());
             comment.setOs(userAgent.getOperatingSystem().getName());
@@ -84,5 +82,7 @@ public class BlogApiController {
             return ResponseUtil.error("获取QQ号失败");
         }
     }
+
+
 
 }

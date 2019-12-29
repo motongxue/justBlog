@@ -1,5 +1,6 @@
 package com.nbclass.framework.util;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -130,4 +131,30 @@ public class ValidatorUtil {
         return Pattern.matches(REGEX_IP_ADDR, ipAddr);
     }
 
+    /**
+     * 校验是否有表情符
+     *
+     * @param content
+     * @return
+     */
+    public static boolean hasEmoji(String content){
+        Pattern pattern = Pattern.compile("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]");
+        Matcher matcher = pattern.matcher(content);
+        return matcher.find();
+    }
+
+    /**
+     * crlf
+     *
+     * @param content
+     * @return
+     */
+    public static String crlf(String content){
+        Pattern pattern = Pattern.compile("(\r\n|\r|\n|\n\r)");
+        Matcher m = pattern.matcher(content);
+        if (m.find()) {
+            content = m.replaceAll("<br/>");
+        }
+        return content;
+    }
 }

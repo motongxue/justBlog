@@ -1,4 +1,75 @@
 $(function () {
+    var emojiHtml = '<div id="emojiEditorBox"><div contenteditable="plaintext-only" class="emoji-editor"></div><div class="emoji-tool">'+
+        '<div class="emoji-btn"><img src="'+emojiStatic+'/emoji/0.png'+'"/></div>'+
+        '<div class="emoji-content"><ul>';
+    $(emojiBtns).each(function(index,value){
+        emojiHtml+='<li><img src="'+emojiStatic+'/emoji/'+value+'.gif"></li>';
+    });
+    emojiHtml+= '</ul></div></div></div>';
+    $("#editor").append(emojiHtml);
+    var sel,range;
+    $("#emojiEditorBox .emoji-btn").click(function(e){
+        stopPropagation(e);
+        if($("#emojiEditorBox .emoji-content").is(':visible')){
+            $("#emojiEditorBox .emoji-content").slideUp(250);
+        }else{
+            $("#emojiEditorBox .emoji-content").slideDown(250);
+        }
+    });
+
+    $("#emojiEditorBox .emoji-content>ul>li").click(function(e){
+        stopPropagation(e);
+        $('#emojiEditorBox .emoji-editor').focus();
+        insertHtmlAtCaret('<img src="'+$(this).children().attr("src")+'">');
+        $("#emojiEditorBox .emoji-content").slideUp(250);
+    });
+
+    $(document).bind('click',function(){
+        $("#emojiEditorBox .emoji-content").slideUp(250);
+    });
+
+    $("#emojiEditorBox .emoji-editor").blur(function(){
+        sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        range.deleteContents();
+    });
+
+    function insertHtmlAtCaret(html){
+        if(sel==null){
+            sel= window.getSelection();
+            range = sel.getRangeAt(0);
+        }
+        if (window.getSelection) {
+            if (sel.getRangeAt && sel.rangeCount) {
+                var el = document.createElement("div");
+                el.innerHTML = html;
+                var frag = document.createDocumentFragment(), node, lastNode;
+                while ((node = el.firstChild)) {
+                    lastNode = frag.appendChild(node);
+                }
+                range.insertNode(frag);
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        } else if (document.selection && document.selection.type != "Control") {
+            document.selection.createRange().pasteHTML(html);
+        }
+    }
+
+    function stopPropagation(e) {
+        if (e.stopPropagation){
+            e.stopPropagation();
+        }else{
+            e.cancelBubble = true;
+        }
+    }
+
+
     var zblogNickName=Core.getCookie("zblog-username");
     var zblogQQ=Core.getCookie("zblog-qq");
     var zblogEmail=Core.getCookie("zblog-email");
@@ -114,8 +185,8 @@ $(function () {
                         $("#replyId").val(replyId);
                     }else{
                         var replyForm =
-                            '<form id="reply-comment-form" style="display: none;" class="form-horizontal mt-10">'+
-                            '   <input name="sid" type="hidden" value="'+sid+'"  />'+
+                            '<form id="reply-comment-form" style="display:none;" class="form-horizontal mt-10">'+
+                            '   <input name="sid" type="hidden" value="'+sid+'"/>'+
                             '   <input id="replyMid" name="mid" type="hidden" value="'+replyMid+'"  />'+
                             '   <input id="replyId" name="parentId" type="hidden" value="'+replyId+'"  />'+
                             '   <input id="replyNickname" name="parentNickname" type="hidden" value="'+replyNickname+'"  />'+
@@ -133,17 +204,83 @@ $(function () {
                             '   </div>'+
                             '   <div class="form-group">'+
                             '       <div class="col-xs-12">'+
-                            '           <input name="content" type="hidden" class="form-control" id="reply-comment-textarea-input">'+
-                            '           <textarea class="form-control" id="reply-comment-textarea" rows="4" placeholder="说点什么吧~"></textarea>'+
+                            '           <textarea id="reply-comment-textarea" name="content" style="display: none"></textarea>'+
+                            '           <div id="replyEmojiEditorBox">'+
+                            '               <div contenteditable="plaintext-only" class="emoji-editor"></div>' +
+                            '               <div class="emoji-tool">' +
+                            '                   <div class="emoji-btn"><img src="'+emojiStatic+'/emoji/0.png'+'"/></div>'+
+                            '                   <div class="emoji-content">' +
+                            '                       <ul>';
+                        $(emojiBtns).each(function(index,value){
+                            replyForm+='<li><img src="'+emojiStatic+'/emoji/'+value+'.gif"></li>';
+                        });
+                        replyForm +='               </ul>'+
+                            '                   </div>'+
+                            '               </div>'+
+                            '           </div>'+
                             '       </div>'+
                             '   </div>'+
                             '   <div>'+
-                            '   <button id="submitReplyCommentBtn" type="button" class="btn btn-pri">发表评论</button>'+
+                            '       <button id="submitReplyCommentBtn" type="button" class="btn btn-pri">发表评论</button>'+
                             '   </div>'+
                             '</form>';
                         $(this).parent().after(replyForm);
                         $("#reply-comment-form").slideDown(250);
                     }
+                    /*回复区域emoji事件*/
+                    var replySel,replyRange;
+                    $("#replyEmojiEditorBox .emoji-btn").click(function(e){
+                        stopPropagation(e);
+                        if($("#replyEmojiEditorBox .emoji-content").is(':visible')){
+                            $("#replyEmojiEditorBox .emoji-content").slideUp(250);
+                        }else{
+                            $("#replyEmojiEditorBox .emoji-content").slideDown(250);
+                        }
+                    });
+                    $("#replyEmojiEditorBox .emoji-content>ul>li").click(function(e){
+                        stopPropagation(e);
+                        $('#replyEmojiEditorBox .emoji-editor').focus();
+                        insertHtmlAtCaretReply('<img src="'+$(this).children().attr("src")+'">');
+                        $("#replyEmojiEditorBox .emoji-content").slideUp(250);
+                    });
+
+                    $(document).bind('click',function(){
+                        $("#replyEmojiEditorBox .emoji-content").slideUp(250);
+                    });
+
+                    $("#replyEmojiEditorBox .emoji-editor").blur(function(){
+                        replySel = window.getSelection();
+                        replyRange = replySel.getRangeAt(0);
+                        replyRange.deleteContents();
+                    });
+
+                    function insertHtmlAtCaretReply(html){
+                        if(replySel==null){
+                            replySel= window.getSelection();
+                            replyRange = replySel.getRangeAt(0);
+                        }
+                        if (window.getSelection) {
+                            if (replySel.getRangeAt && replySel.rangeCount) {
+                                var el = document.createElement("div");
+                                el.innerHTML = html;
+                                var frag = document.createDocumentFragment(), node, lastNode;
+                                while ((node = el.firstChild)) {
+                                    lastNode = frag.appendChild(node);
+                                }
+                                replyRange.insertNode(frag);
+                                if (lastNode) {
+                                    replyRange = replyRange.cloneRange();
+                                    replyRange.setStartAfter(lastNode);
+                                    replyRange.collapse(true);
+                                    replySel.removeAllRanges();
+                                    replySel.addRange(replyRange);
+                                }
+                            }
+                        } else if (document.selection && document.selection.type != "Control") {
+                            document.selection.createRange().pasteHTML(html);
+                        }
+                    }
+
                     $(this).hide();
                     $(this).next().show();
 
@@ -153,19 +290,19 @@ $(function () {
                     });
 
                     $("#submitReplyCommentBtn").on('click',function () {
+                        var replyContent = $("#replyEmojiEditorBox .emoji-editor").html();
+                        $("#reply-comment-textarea").val(replyContent);
                         if($("#reply-nickname").val()==""){
                             Core.msg("请输入昵称~");
                             return;
-                        }else if($("#reply-comment-textarea").val()==""){
+                        }else if(replyContent==""){
                             Core.msg("说点什么吧~");
                             return;
                         }
-                        var replyContent = formatContent($("#reply-comment-textarea").val());
-                        $("#reply-comment-textarea-input").val(replyContent);
                         Core.postAjax("/api/comment/save",$("#reply-comment-form").serialize(),function (data) {
                             Core.msg(data.msg);
                             if(data.status==200){
-                                $("#reply-comment-textarea-input,#reply-comment-textarea").val("");
+                                $("#replyEmojiEditorBox .emoji-editor").html("");
                                 $("#reply-comment-form").hide();
                                 $(".reply[style='display: none;']").next().hide();
                                 $(".reply[style='display: none;']").show();
@@ -187,7 +324,7 @@ $(function () {
                 });
 
                 $(".comment-support").click(function () {
-                    $thisLove = $(this);
+                    var $thisLove = $(this);
                     Core.postAjax("/api/comment/love",{"commentId":$(this).attr("biz-id")},function (data) {
                         if(data.status==200){
                             $thisLove.text(parseInt($thisLove.text())+1);
@@ -203,19 +340,19 @@ $(function () {
 
     /*提交评论*/
     $("#submitCommentBtn").click(function () {
+        var content = $("#emojiEditorBox .emoji-editor").html();
+        $("#comment-textarea").val(content);
         if($("#nickname").val()==""){
             Core.msg("请输入昵称~");
             return;
-        }else if($("#comment-textarea").val()==""){
+        }else if(content==""){
             Core.msg("说点什么吧~");
             return;
         }
-        var content = formatContent($("#comment-textarea").val());
-        $("#comment-textarea-input").val(content);
         Core.postAjax("/api/comment/save",$("#comment-form").serialize(),function (data) {
             Core.msg(data.msg);
             if(data.status===200){
-                $("#comment-textarea-input,#comment-textarea").val("");
+                $("#emojiEditorBox .emoji-editor").html("");
                 handleCommentData(data.data);
                 $(".no-comment").hide();
                 var formNickname = $("#nickname").val();
@@ -282,13 +419,6 @@ $(function () {
         $("#user-info").slideUp(250);
         $("#user-info").removeClass("user-show");
     })
-    /*格式化字符串*/
-    function formatContent(a) {
-        a = a.replace(/\r\n/g, '<br/>');
-        a = a.replace(/\n/g, '<br/>');
-        a = a.replace(/\s/g, ' ');
-        return a;
-    }
 
     function handleCommentData(data,isReply){
         var html='<li>'+
@@ -304,7 +434,7 @@ $(function () {
             ' <div class="comment-content">';
         if(isReply){
             var pNickname= $("#reply-comment-form").parent().find(".comment-top .comment-nickname>a:first-child").text();
-            var pText =  $("#reply-comment-form").parent().find(".comment-content>.comment-content-text").text();
+            var pText =  $("#reply-comment-form").parent().find(".comment-content>.comment-content-text").html();
             html+='<div class="comment-parent">'+
                 '<div class="comment-parent-user">	'+
                 '<a class="comment-link" data-link="comment-'+data.parentId+'">@'+pNickname+'</a>	'+

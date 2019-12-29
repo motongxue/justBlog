@@ -23,7 +23,7 @@ public class BlogComment implements Serializable {
     private Integer id;
 
     /**
-    * 被评论的文章或者页面的id(-1:留言板)
+    * 被评论的文章或者页面的id
     */
     private Integer sid;
 
@@ -119,4 +119,16 @@ public class BlogComment implements Serializable {
 
     @Transient
     BlogArticle article;
+
+    /**
+     * 主体名称
+     */
+    @Transient
+    String sName;
+
+    /**
+     * 主体名称
+     */
+    @Transient
+    String sAliasName;
 }

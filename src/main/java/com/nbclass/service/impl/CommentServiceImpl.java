@@ -5,8 +5,14 @@ import com.github.pagehelper.PageInfo;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.jwt.JwtUtil;
 import com.nbclass.framework.jwt.UserInfo;
-import com.nbclass.framework.util.*;
+import com.nbclass.framework.util.CopyUtil;
+import com.nbclass.framework.util.CoreConst;
+import com.nbclass.framework.util.IpUtil;
+import com.nbclass.framework.util.ResponseUtil;
+import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.mapper.CommentMapper;
+import com.nbclass.model.BlogArticle;
+import com.nbclass.model.BlogCategory;
 import com.nbclass.model.BlogComment;
 import com.nbclass.service.CommentService;
 import com.nbclass.service.RedisService;
@@ -23,9 +29,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * CommentServiceImpl
@@ -43,11 +49,38 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private RedisService redisService;
     @Autowired
+    private CategoryMapper categoryMapper;
+    @Autowired
     private CommentMapper commentMapper;
 
     @Override
     public List<BlogComment> selectList(Integer status) {
-        return commentMapper.selectList(status);
+        List<BlogComment> comments = commentMapper.selectList(status);
+        List<Integer> pageIds =  new ArrayList<>();
+        for(BlogComment comment:comments){
+            if(comment.getSid()>0){
+                BlogArticle article = comment.getArticle();
+                if(article!=null){
+                    comment.setSName(article.getTitle());
+                    comment.setSAliasName(article.getAliasName());
+                }
+            }else{
+                pageIds.add(-comment.getSid());
+            }
+        }
+        if(pageIds.size()>0){
+            List<BlogCategory> categories = categoryMapper.selectByIds(pageIds.stream().distinct().collect(Collectors.toList()));
+            for(BlogComment comment:comments){
+                for(BlogCategory category : categories){
+                    if((-comment.getSid())==category.getId()){
+                        comment.setSName(category.getName());
+                        comment.setSAliasName(category.getAliasName());
+                        break;
+                    }
+                }
+            }
+        }
+        return comments;
     }
 
     @Override

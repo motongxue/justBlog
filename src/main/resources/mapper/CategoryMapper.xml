@@ -67,4 +67,16 @@
         where id=#{id}
     </delete>
 
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select *
+        from blog_category
+        where
+        id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
 </mapper>

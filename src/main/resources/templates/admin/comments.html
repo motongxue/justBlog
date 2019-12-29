@@ -142,7 +142,7 @@
 			}
 
 			function formatArticle(index,value,row) {
-            	return value===-1?'<span>留言板</span>':'<a href="/a/'+row.article.aliasName+'" target="_blank">'+row.article.title+'</a>';
+            	return '<a href="/'+(value<0?'':'a/')+row.saliasName+'" target="_blank">'+row.sname+'</a>';
 			}
 
 			function formatContent(index,value,row) {
