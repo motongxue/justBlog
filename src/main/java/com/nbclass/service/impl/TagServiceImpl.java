@@ -1,6 +1,7 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.framework.util.ResponseUtil;
+import com.nbclass.mapper.ArticleTagMapper;
 import com.nbclass.mapper.TagMapper;
 import com.nbclass.model.BlogTag;
 import com.nbclass.service.TagService;
@@ -23,6 +24,8 @@ public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
 
     @Override
@@ -55,5 +58,6 @@ public class TagServiceImpl implements TagService {
     @Override
     public void deleteBatch(Integer[] ids) {
         tagMapper.deleteBatch(ids);
+        articleTagMapper.deleteBatchByTagIds(ids);
     }
 }

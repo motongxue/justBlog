@@ -44,7 +44,17 @@
         delete from
         blog_article_tag
         where
-        id in
+        article_id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBatchByTagIds" parameterType="map">
+        delete from
+        blog_article_tag
+        where
+        tag_id in
         <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>

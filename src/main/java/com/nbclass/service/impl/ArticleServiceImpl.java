@@ -202,23 +202,25 @@ public class ArticleServiceImpl implements ArticleService {
         }
         //处理tag
         List<BlogArticleTag> articleTags = new ArrayList<>();
-        for(String tagName : article.getTags().split(",")){
-            BlogTag tag = tagMapper.selectByName(tagName,null);
-            if(tag==null){
-                tag = new BlogTag();
-                tag.setName(tagName);
-                tag.setStatus(CoreConst.STATUS_VALID);
-                tag.setCreateTime(new Date());
-                tagMapper.insertSelective(tag);
+        if(StringUtils.isNotEmpty(article.getTags())){
+            for(String tagName : article.getTags().split(",")){
+                BlogTag tag = tagMapper.selectByName(tagName,null);
+                if(tag==null){
+                    tag = new BlogTag();
+                    tag.setName(tagName);
+                    tag.setStatus(CoreConst.STATUS_VALID);
+                    tag.setCreateTime(new Date());
+                    tagMapper.insertSelective(tag);
+                }
+                BlogArticleTag articleTag = new BlogArticleTag();
+                articleTag.setArticleId(article.getId());
+                articleTag.setTagId(tag.getId());
+                articleTag.setStatus(CoreConst.STATUS_VALID);
+                articleTags.add(articleTag);
             }
-            BlogArticleTag articleTag = new BlogArticleTag();
-            articleTag.setArticleId(article.getId());
-            articleTag.setTagId(tag.getId());
-            articleTag.setStatus(CoreConst.STATUS_VALID);
-            articleTags.add(articleTag);
-        }
-        if(!CollectionUtils.isEmpty(articleTags)){
-            articleTagMapper.insertBatch(articleTags);
+            if(!CollectionUtils.isEmpty(articleTags)){
+                articleTagMapper.insertBatch(articleTags);
+            }
         }
         return ResponseUtil.success("保存文章成功");
     }

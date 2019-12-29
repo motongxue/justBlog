@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
         List<BlogCategory> treeList = new ArrayList<>();
         for (BlogCategory tree : list) {
             tree.setOpen(true);
-            if(disabled && tree.getType()==0){
+            if(disabled && (tree.getType()==0||tree.getType()==2)){
                 tree.setDisabled(true);
             }
             if (tree.getPid()==null||tree.getPid() == 0) {

@@ -23,6 +23,8 @@ public interface ArticleTagMapper extends MyMapper<BlogArticleTag> {
 
     int deleteBatchByArticleIds(Integer[] articleIds);
 
+    int deleteBatchByTagIds(Integer[] tagIds);
+
     List<Integer> selectArticleIdsByTagIds(Integer[] tagIds);
 
 }

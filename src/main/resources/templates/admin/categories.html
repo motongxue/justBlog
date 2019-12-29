@@ -195,7 +195,7 @@
             App.msgE("存在子栏目，无法删除！");
             return;
         }
-        App.confirm({content: "确定删除?"},function () {
+        App.confirm({content: selectData.type===1?"删除该栏目后系统会删除其关联的文章和评论数据，确定删除?":"确定删除?"},function () {
             App.postAjax("/admin/category/delete", {"id": value}, function (data) {
                 if (data.status === 200) {
                     App.refreshTable("#table");
