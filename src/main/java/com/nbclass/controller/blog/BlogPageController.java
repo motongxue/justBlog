@@ -6,6 +6,7 @@ import com.nbclass.enums.CategoryType;
 import com.nbclass.enums.SliderType;
 import com.nbclass.framework.exception.ResourceNotFoundException;
 import com.nbclass.framework.util.CoreConst;
+import com.nbclass.framework.util.IpUtil;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.ArticleService;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -104,11 +106,12 @@ public class BlogPageController {
      * @return
      */
     @GetMapping("/a/{alias}")
-    public String article(Model model, @PathVariable("alias") String alias) {
+    public String article(HttpServletRequest request, Model model, @PathVariable("alias") String alias) {
         BlogArticle article = articleService.selectByAliasName(alias);
         if (article == null || CoreConst.STATUS_INVALID.equals(article.getStatus()) ) {
             throw new ResourceNotFoundException();
         }
+        articleService.articleLook(article.getId(), IpUtil.getIpAddr(request));
         model.addAttribute("article", article);
         return String.format("theme/%s/%s", CoreConst.currentTheme,  article.getTemplate());
     }

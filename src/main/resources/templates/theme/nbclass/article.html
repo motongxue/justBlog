@@ -72,21 +72,6 @@
 			<div th:replace="theme/nbclass/fragments/sidebar :: sidebar"></div>
 			<div class="return_top"><a class=" fa fa-arrow-up"></a></div>
 		</div>
-		<script>
-            var sid=[[${article.id}]];
-            $(function () {
-                Core.postAjax("/api/article/look",{"articleId":sid})
-                $(".thumbs-button").click(function () {
-                    Core.postAjax("/api/article/love",{"articleId":sid},function (data) {
-                        if(data.status==200){
-                            $("#loveCount").text(parseInt($("#loveCount").text())+1);
-                        }else{
-                            Core.msg(data.msg,2)
-                        }
-                    });
-                })
-            })
-		</script>
 		<script th:if="${article.isComment}" th:src="${static+'/js/comment.js'}"></script>
 	</body>
 
