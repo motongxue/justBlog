@@ -42,12 +42,11 @@
 				<div th:if="${article.isComment}" id="comment" class="comment comment-main">
 					<div class="comment-title">发表评论</div>
 					<form id="comment-form" class="form-horizontal mt-10">
-						<input id="articleId" name="sid" type="hidden" th:value="${article.id}">
-						<input id="avatar" name="avatar" type="hidden">
+						<input name="sid" type="hidden" th:value="${sid}">
 						<div id="user-name-content" class="user-name-content">欢迎您：<b id="user-name"></b><span class="save-user btn btn-sm btn-pri">保存</span></div>
 						<div class="form-group" id="user-info" style="display: none">
 							<div class="col-sm-4">
-								<input id="nickname" type="text"  class="form-control"  name="nickname" placeholder="昵称(必填)" require="">
+								<input id="nickname" type="text" class="form-control"  name="nickname" placeholder="昵称（必填）">
 							</div>
 							<div class="col-sm-4">
 								<input id="qq" type="text" class="form-control"  name="qq" placeholder="QQ（可获取头像和昵称）">
@@ -58,15 +57,19 @@
 						</div>
 						<div class="form-group">
 							<div class="col-xs-12">
-                                <input id="comment-textarea-input" name="content" type="hidden">
-								<textarea  id="comment-textarea"  class="form-control"  rows="4"  require="" placeholder="说点什么吧~"></textarea>
+								<textarea  id="comment-textarea" placeholder="说点什么吧~" style="display: none" name="content"></textarea>
+								<div id="editor"></div>
 							</div>
 						</div>
-						<div><button id="submitCommentBtn" type="button" class="btn btn-pri">发表评论</button></div>
+						<div ><button id="submitCommentBtn" type="button" class="btn btn-pri">发表评论</button></div>
 					</form>
 					<hr class="hr0 mt-15"/>
-					<ul id="comment-ul" class="comment">
-					</ul>
+					<div class="col-xs-12">
+						<div class="row">
+							<ul id="comment-ul" class="comment">
+							</ul>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div th:replace="theme/nbclass/fragments/sidebar :: sidebar"></div>
