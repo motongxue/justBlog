@@ -56,7 +56,8 @@ public class AdminPageController{
 
     @GetMapping("/welcome")
     @AccessToken
-    public String welcome() {
+    public String welcome(Model model) {
+        model.addAttribute("config",configService.selectAll());
         return  pathSuffix + "welcome";
     }
 

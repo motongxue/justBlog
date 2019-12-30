@@ -1,10 +1,12 @@
 package com.nbclass.framework.config;
 
 import com.nbclass.framework.config.properties.ZbProperties;
+import com.nbclass.framework.interceptor.PageViewInterceptor;
 import com.nbclass.framework.util.CoreConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -28,12 +30,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Resource
     private  ZbProperties zbProperties;
 
+    @Resource
+    private PageViewInterceptor pageViewInterceptor;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/theme/*/static/**")
                 .addResourceLocations(FILE_PROTOCOL + zbProperties.getWorkThemeDir() + File.separator);
         registry.addResourceHandler("/file/**")
                 .addResourceLocations(FILE_PROTOCOL + zbProperties.getWorkFileDir() + File.separator);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(pageViewInterceptor).addPathPatterns("/**");
     }
 
 }

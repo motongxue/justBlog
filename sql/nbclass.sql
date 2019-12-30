@@ -143,7 +143,7 @@ CREATE TABLE `blog_config` (
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`sys_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
 
 -- ----------------------------
 -- Records of blog_config
@@ -159,6 +159,7 @@ INSERT INTO `blog_config` VALUES ('8', 'SITE_ICON', '/img/logo-color.png', '网�
 INSERT INTO `blog_config` VALUES ('9', 'SITE_LOGO', '/img/logo-color.png', '网站logo', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:06');
 INSERT INTO `blog_config` VALUES ('10', 'ADMIN_SITE_LOGO', '/img/logo-white.png', '后台logo', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('11', 'ADMIN_SITE_NAME', 'Just', '后台标题', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 
 -- ----------------------------
 -- Table structure for blog_file
