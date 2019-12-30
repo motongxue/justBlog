@@ -418,6 +418,112 @@ var Core = (function () {
                 e.cancelBubble = true;
             }
         }
+
+        /*初始化回复表单域*/
+        var replyForm =
+            '<form id="reply-comment-form" style="display:none;" class="form-horizontal mt-10">'+
+            '   <input name="sid" type="hidden" value="'+options.sid+'"/>'+
+            '   <input id="replyMid" name="mid" type="hidden"  />'+
+            '   <input id="replyId" name="parentId" type="hidden" />'+
+            '   <input id="replyNickname" name="parentNickname" type="hidden" />'+
+            '   <div id="reply-user-form" class="form-group" style="display: '+(justNickName==""?"block":"none")+'">'+
+            '		<input id="reply-avatar" name="avatar" value="'+justAvatar+'" type="hidden">'+
+            '       <div class="col-sm-4">'+
+            '           <input id="reply-nickname" value="'+justNickName+'"  type="text" class="form-control" name="nickname" placeholder="昵称(必填)" />'+
+            '       </div>'+
+            '       <div class="col-sm-4">'+
+            '           <input id="reply-qq" value="'+justQQ+'" type="text" class="form-control" name="qq" placeholder="QQ（可获取头像和昵称）" />'+
+            '       </div>'+
+            '       <div class="col-sm-4">'+
+            '           <input id="reply-email" value="'+justEmail+'" type="text" class="form-control" name="email" placeholder="邮箱" />'+
+            '       </div>'+
+            '   </div>'+
+            '   <div class="form-group">'+
+            '       <div class="col-xs-12">'+
+            '           <textarea id="reply-comment-textarea" name="content" style="display: none"></textarea>'+
+            '           <div id="replyEmojiEditorBox">'+
+            '               <div contenteditable="plaintext-only" class="emoji-editor"></div>' +
+            '               <div class="emoji-tool">' +
+            '                   <div class="emoji-btn"><img src="'+options.emojiServer+'0.png'+'"/></div>'+
+            '                   <div class="emoji-content">' +
+            '                       <ul>';
+        replyForm += emojisLi;
+        replyForm +='               </ul>'+
+            '                   </div>'+
+            '               </div>'+
+            '           </div>'+
+            '       </div>'+
+            '   </div>'+
+            '   <div>'+
+            '       <button id="submitReplyCommentBtn" type="button" class="btn btn-pri">发表评论</button>'+
+            '   </div>'+
+            '</form>';
+        $("#comment-ul").append(replyForm);
+        /*回复区域emoji事件*/
+        var replySel,replyRange;
+        $("#replyEmojiEditorBox .emoji-btn").click(function(e){
+            stopPropagation(e);
+            if($("#replyEmojiEditorBox .emoji-content").is(':visible')){
+                $("#replyEmojiEditorBox .emoji-content").slideUp(250);
+            }else{
+                $("#replyEmojiEditorBox .emoji-content").slideDown(250);
+            }
+        });
+        $("#replyEmojiEditorBox .emoji-content>ul>li").click(function(e){
+            stopPropagation(e);
+            $('#replyEmojiEditorBox .emoji-editor').focus();
+            insertHtmlAtCaret('<img src="'+$(this).children().attr("src")+'">',replySel,replyRange);
+            $("#replyEmojiEditorBox .emoji-content").slideUp(250);
+        });
+        $(document).bind('click',function(){
+            $("#replyEmojiEditorBox .emoji-content").slideUp(250);
+        });
+        $("#replyEmojiEditorBox .emoji-editor").blur(function(){
+            replySel = window.getSelection();
+            replyRange = replySel.getRangeAt(0);
+            replyRange.deleteContents();
+        });
+        /*回复 qq失去焦点*/
+        $("#reply-qq").blur(function () {
+            var qq = $(this).val();
+            if(qq!=""){
+                Core.postAjax("/api/qq/"+qq,{},function (data) {
+                    if(data.status===200){
+                        $("#reply-nickname").val(data.data.name);
+                    }
+                });
+                $("#reply-avatar").val('https://q1.qlogo.cn/g?b=qq&nk='+qq+'&s=100');
+            }
+        });
+        /*提交回复内容*/
+        $("#submitReplyCommentBtn").on('click',function () {
+            var replyContent = $("#replyEmojiEditorBox .emoji-editor").html();
+            $("#reply-comment-textarea").val(replyContent);
+            if($("#reply-nickname").val()==""){
+                Core.msg("请输入昵称~");
+                return;
+            }else if(replyContent==""){
+                Core.msg("说点什么吧~");
+                return;
+            }
+            Core.postAjax("/api/comment/save",$("#reply-comment-form").serialize(),function (data) {
+                Core.msg(data.msg);
+                if(data.status==200){
+                    $("#replyEmojiEditorBox .emoji-editor").html("");
+                    $("#reply-comment-form").hide();
+                    $(".reply[style='display: none;']").next().hide();
+                    $(".reply[style='display: none;']").show();
+                    handleCommentData(data.data,1);
+                    if(Core.getCookie("just-nickname")==""){
+                        Core.setCookie("just-nickname",$("#reply-nickname").val(),30);
+                        Core.setCookie("just-qq",$("#reply-qq").val(),30);
+                        Core.setCookie("just-email",$("#reply-email").val(),30);
+                        Core.setCookie("just-avatar",$("#reply-avatar").val(),30);
+                    }
+                }
+            })
+        });
+
         /*分页获取评论数据*/
         function init(pageNum) {
             Core.postAjax("/api/comments",{"sid":options.sid,"pageNum": (pageNum==null? 1 : pageNum)},function (data) {
@@ -488,159 +594,58 @@ var Core = (function () {
                         commentOne+='<div id="comment-more" data-page="'+data.nextPage+'" class="comment-more">加载更多</div>'
                     }
                     $("#comment-ul").append(commentOne);
-                    /*加载更多*/
-                    $("#comment-more").click(function () {
-                        init($(this).attr("data-page"));
-                    });
-                    /*link至评论*/
-                    $("#comment-ul").on("click",".comment-link",function () {
-                        var commentLinkId = $(this).attr("data-link");
-                        $("html,body").animate({
-                            scrollTop:$("#"+commentLinkId).offset().top-55},{duration: 300,easing: "swing"})
-                    });
-                    /*初始化回复表单域*/
-                    var replyForm =
-                        '<form id="reply-comment-form" style="display:none;" class="form-horizontal mt-10">'+
-                        '   <input name="sid" type="hidden" value="'+options.sid+'"/>'+
-                        '   <input id="replyMid" name="mid" type="hidden"  />'+
-                        '   <input id="replyId" name="parentId" type="hidden" />'+
-                        '   <input id="replyNickname" name="parentNickname" type="hidden" />'+
-                        '   <div id="reply-user-form" class="form-group" style="display: '+(justNickName==""?"block":"none")+'">'+
-                        '		<input id="reply-avatar" name="avatar" value="'+justAvatar+'" type="hidden">'+
-                        '       <div class="col-sm-4">'+
-                        '           <input id="reply-nickname" value="'+justNickName+'"  type="text" class="form-control" name="nickname" placeholder="昵称(必填)" />'+
-                        '       </div>'+
-                        '       <div class="col-sm-4">'+
-                        '           <input id="reply-qq" value="'+justQQ+'" type="text" class="form-control" name="qq" placeholder="QQ（可获取头像和昵称）" />'+
-                        '       </div>'+
-                        '       <div class="col-sm-4">'+
-                        '           <input id="reply-email" value="'+justEmail+'" type="text" class="form-control" name="email" placeholder="邮箱" />'+
-                        '       </div>'+
-                        '   </div>'+
-                        '   <div class="form-group">'+
-                        '       <div class="col-xs-12">'+
-                        '           <textarea id="reply-comment-textarea" name="content" style="display: none"></textarea>'+
-                        '           <div id="replyEmojiEditorBox">'+
-                        '               <div contenteditable="plaintext-only" class="emoji-editor"></div>' +
-                        '               <div class="emoji-tool">' +
-                        '                   <div class="emoji-btn"><img src="'+options.emojiServer+'0.png'+'"/></div>'+
-                        '                   <div class="emoji-content">' +
-                        '                       <ul>';
-                    replyForm += emojisLi;
-                    replyForm +='               </ul>'+
-                        '                   </div>'+
-                        '               </div>'+
-                        '           </div>'+
-                        '       </div>'+
-                        '   </div>'+
-                        '   <div>'+
-                        '       <button id="submitReplyCommentBtn" type="button" class="btn btn-pri">发表评论</button>'+
-                        '   </div>'+
-                        '</form>';
-                    $("#comment-ul").append(replyForm);
-                    /*回复区域emoji事件*/
-                    var replySel,replyRange;
-                    $("#replyEmojiEditorBox .emoji-btn").click(function(e){
-                        stopPropagation(e);
-                        if($("#replyEmojiEditorBox .emoji-content").is(':visible')){
-                            $("#replyEmojiEditorBox .emoji-content").slideUp(250);
-                        }else{
-                            $("#replyEmojiEditorBox .emoji-content").slideDown(250);
-                        }
-                    });
-                    $("#replyEmojiEditorBox .emoji-content>ul>li").click(function(e){
-                        stopPropagation(e);
-                        $('#replyEmojiEditorBox .emoji-editor').focus();
-                        insertHtmlAtCaret('<img src="'+$(this).children().attr("src")+'">',replySel,replyRange);
-                        $("#replyEmojiEditorBox .emoji-content").slideUp(250);
-                    });
-                    $(document).bind('click',function(){
-                        $("#replyEmojiEditorBox .emoji-content").slideUp(250);
-                    });
-                    $("#replyEmojiEditorBox .emoji-editor").blur(function(){
-                        replySel = window.getSelection();
-                        replyRange = replySel.getRangeAt(0);
-                        replyRange.deleteContents();
-                    });
-                    /*回复 qq失去焦点*/
-                    $("#reply-qq").blur(function () {
-                        var qq = $(this).val();
-                        if(qq!=""){
-                            Core.postAjax("/api/qq/"+qq,{},function (data) {
-                                if(data.status===200){
-                                    $("#reply-nickname").val(data.data.name);
-                                }
-                            });
-                            $("#reply-avatar").val('https://q1.qlogo.cn/g?b=qq&nk='+qq+'&s=100');
-                        }
-                    });
-                    /*提交回复内容*/
-                    $("#submitReplyCommentBtn").on('click',function () {
-                        var replyContent = $("#replyEmojiEditorBox .emoji-editor").html();
-                        $("#reply-comment-textarea").val(replyContent);
-                        if($("#reply-nickname").val()==""){
-                            Core.msg("请输入昵称~");
-                            return;
-                        }else if(replyContent==""){
-                            Core.msg("说点什么吧~");
-                            return;
-                        }
-                        Core.postAjax("/api/comment/save",$("#reply-comment-form").serialize(),function (data) {
-                            Core.msg(data.msg);
-                            if(data.status==200){
-                                $("#replyEmojiEditorBox .emoji-editor").html("");
-                                $("#reply-comment-form").hide();
-                                $(".reply[style='display: none;']").next().hide();
-                                $(".reply[style='display: none;']").show();
-                                handleCommentData(data.data,1);
-                                if(Core.getCookie("just-nickname")==""){
-                                    Core.setCookie("just-nickname",$("#reply-nickname").val(),30);
-                                    Core.setCookie("just-qq",$("#reply-qq").val(),30);
-                                    Core.setCookie("just-email",$("#reply-email").val(),30);
-                                    Core.setCookie("just-avatar",$("#reply-avatar").val(),30);
-                                }
-                            }
-                        })
-                    });
-                    /*回复*/
-                    $(".reply").click(function () {
-                        replySel=null,replyRange=null;
-                        $("#replyEmojiEditorBox .emoji-editor").html("");
-                        var replyId=$(this).attr("reply-id");
-                        var replyMid=$(this).attr("reply-mid");
-                        var replyNickname=$(this).attr("reply-nickname");
-                        $("#reply-comment-form").css("display","none");
-                        $(this).parent().after($("#reply-comment-form"));
-                        $("#reply-comment-form").slideDown(250);
-                        $("#replyId").val(replyId);
-                        $("#replyMid").val(replyMid);
-                        $("#replyNickname").val(replyNickname);
-                        $(".cancel-reply:visible").hide();
-                        $(".reply").removeAttr("style");
-                        $(this).hide();
-                        $(this).next().show();
-                    });
-                    /*取消回复*/
-                    $(".cancel-reply").click(function () {
-                        $("#reply-comment-form").slideUp(250);
-                        $(this).hide();
-                        $(".reply").removeAttr("style");
-                    });
-                    /*评论点赞*/
-                    $(".comment-support").click(function () {
-                        var $thisLove = $(this);
-                        Core.postAjax("/api/comment/love",{"commentId":$(this).attr("biz-id")},function (data) {
-                            if(data.status===200){
-                                $thisLove.text(parseInt($thisLove.text())+1);
-                            }else{
-                                Core.msg(data.msg,2);
-                            }
-                        });
-                    })
                 }
             })
         }
         init();
+
+        /*加载更多*/
+        $(options.id).on("click","#comment-more",function () {
+            init($(this).attr("data-page"));
+        });
+        /*link至评论*/
+        $(options.id).on("click",".comment-link",function () {
+            var commentLinkId = $(this).attr("data-link");
+            $("html,body").animate({
+                scrollTop:$("#"+commentLinkId).offset().top-55},{duration: 300,easing: "swing"})
+        });
+        /*回复*/
+        $(options.id).on("click",".reply",function () {
+            replySel=null,replyRange=null;
+            $("#replyEmojiEditorBox .emoji-editor").html("");
+            var replyId=$(this).attr("reply-id");
+            var replyMid=$(this).attr("reply-mid");
+            var replyNickname=$(this).attr("reply-nickname");
+            $("#reply-comment-form").css("display","none");
+            $(this).parent().after($("#reply-comment-form"));
+            $("#reply-comment-form").slideDown(250);
+            $("#replyId").val(replyId);
+            $("#replyMid").val(replyMid);
+            $("#replyNickname").val(replyNickname);
+            $(".cancel-reply:visible").hide();
+            $(".reply").removeAttr("style");
+            $(this).hide();
+            $(this).next().show();
+        });
+        /*取消回复*/
+        $(options.id).on("click",".cancel-reply",function () {
+            $("#reply-comment-form").slideUp(250);
+            $(this).hide();
+            $(".reply").removeAttr("style");
+        });
+        /*评论点赞*/
+        $(options.id).on("click",".comment-support",function () {
+            var $thisLove = $(this);
+            Core.postAjax("/api/comment/love",{"commentId":$(this).attr("biz-id")},function (data) {
+                if(data.status===200){
+                    $thisLove.text(parseInt($thisLove.text())+1);
+                }else{
+                    Core.msg(data.msg,2);
+                }
+            });
+        });
+
+
         function handleCommentData(data,isReply){
             var html='<li>'+
                 '<div class="comment-body">'+
