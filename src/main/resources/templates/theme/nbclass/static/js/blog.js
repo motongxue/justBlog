@@ -612,11 +612,11 @@ var Core = (function () {
                         $("#reply-comment-form").css("display","none");
                         $(this).parent().after($("#reply-comment-form"));
                         $("#reply-comment-form").slideDown(250);
-                        $(".reply[style='display: none;']").next().hide();
-                        $(".reply[style='display: none;']").show();
                         $("#replyId").val(replyId);
                         $("#replyMid").val(replyMid);
                         $("#replyNickname").val(replyNickname);
+                        $(".cancel-reply:visible").hide();
+                        $(".reply").removeAttr("style");
                         $(this).hide();
                         $(this).next().show();
                     });
@@ -624,7 +624,7 @@ var Core = (function () {
                     $(".cancel-reply").click(function () {
                         $("#reply-comment-form").slideUp(250);
                         $(this).hide();
-                        $(this).prev().show();
+                        $(".reply").removeAttr("style");
                     });
                     /*评论点赞*/
                     $(".comment-support").click(function () {

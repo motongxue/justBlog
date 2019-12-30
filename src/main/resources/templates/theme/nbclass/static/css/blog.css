@@ -1246,7 +1246,12 @@ body {
 .comment-body .comment-info p, .comment-body-sub .comment-info p {
     margin: 0
 }
-
+.comment-body .comment-info .reply,.comment-body-sub .comment-info .reply{
+    display: none;
+}
+.comment-body .comment-info:hover .reply,.comment-body-sub .comment-info:hover .reply{
+    display: inline-block;
+}
 .comment-body .comment-info .reply,.comment-body .comment-info .cancel-reply, .comment-body-sub .comment-info .reply,.comment-body-sub .comment-info .cancel-reply {
     cursor: pointer
 }
