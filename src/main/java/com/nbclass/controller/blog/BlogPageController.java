@@ -3,7 +3,6 @@ package com.nbclass.controller.blog;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nbclass.enums.CategoryType;
-import com.nbclass.enums.SliderType;
 import com.nbclass.framework.exception.ResourceNotFoundException;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.IpUtil;
@@ -11,7 +10,6 @@ import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.service.ArticleService;
 import com.nbclass.service.CategoryService;
-import com.nbclass.service.SliderService;
 import com.nbclass.vo.ArticleVo;
 import com.nbclass.vo.PageVo;
 import org.springframework.beans.BeanUtils;
@@ -40,9 +38,6 @@ public class BlogPageController {
     @Autowired
     private ArticleService articleService;
 
-    @Autowired
-    private SliderService sliderService;
-
     /**
      * 首页入口
      */
@@ -50,8 +45,7 @@ public class BlogPageController {
     public String index(Model model) {
         ArticleVo vo = new ArticleVo();
         loadArticle(model, vo, "page");
-        model.addAttribute("notifyList",sliderService.selectByType(SliderType.NOTIFY.getType()));
-        model.addAttribute("sliderList",sliderService.selectByType(SliderType.SLIDER.getType()));
+        loadSiteInfo(model);
         return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
@@ -60,6 +54,7 @@ public class BlogPageController {
         ArticleVo vo = new ArticleVo();
         vo.setPageNum(pageNum);
         loadArticle(model, vo, "page");
+        loadSiteInfo(model);
         return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
@@ -75,6 +70,7 @@ public class BlogPageController {
             loadArticle(model, vo, category + "/page");
         }
         model.addAttribute("sid",-blogCategory.getId());
+        loadSiteInfo(model);
         return String.format("theme/%s/%s", CoreConst.currentTheme, blogCategory.getTemplate());
     }
 
@@ -88,6 +84,7 @@ public class BlogPageController {
         vo.setPageNum(pageNum);
         vo.setCategory(category);
         loadArticle(model, vo, category + "/page");
+        loadSiteInfo(model);
         return String.format("theme/%s/%s", CoreConst.currentTheme,  blogCategory.getTemplate());
     }
 
@@ -96,6 +93,7 @@ public class BlogPageController {
         ArticleVo vo = new ArticleVo();
         vo.setTagId(tagId);
         loadArticle(model, vo, "tag/" + tagId + "/page");
+        loadSiteInfo(model);
         return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
@@ -105,6 +103,7 @@ public class BlogPageController {
         vo.setTagId(tagId);
         vo.setPageNum(pageNum);
         loadArticle(model, vo, "tag/" + tagId +"/page");
+        loadSiteInfo(model);
         return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
@@ -124,6 +123,7 @@ public class BlogPageController {
         }
         articleService.articleLook(article.getId(), IpUtil.getIpAddr(request));
         model.addAttribute("article", article);
+        loadSiteInfo(model);
         return String.format("theme/%s/%s", CoreConst.currentTheme,  article.getTemplate());
     }
 
@@ -139,5 +139,8 @@ public class BlogPageController {
         model.addAttribute("articleList",articleList);
     }
 
+    private void loadSiteInfo(Model model){
+        model.addAttribute("siteInfo", articleService.siteInfoStatistics());
+    }
 
 }

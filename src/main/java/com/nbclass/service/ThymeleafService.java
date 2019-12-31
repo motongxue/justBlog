@@ -6,7 +6,7 @@ public interface ThymeleafService {
 
     void init();
 
-    void initStaticPath();
+    void initConfig();
 
     void initCurrentTheme(ZbTheme theme);
 

@@ -17,8 +17,6 @@ public interface SliderService {
 
     List<BlogSlider> selectList(Integer type, String name);
 
-    List<BlogSlider> selectByType(Integer type);
-
     void save(BlogSlider slider);
 
     void deleteBatch(Integer[] ids);

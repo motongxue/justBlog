@@ -28,7 +28,9 @@ public class ThymeleafServiceImpl implements ThymeleafService {
         if (thymeleafViewResolver != null) {
             ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
             Map<String, Object> vars = new HashMap<>();
-            String cdn = configService.selectAll().get(ConfigKey.SITE_CDN.getValue());
+            Map<String, String> map = configService.selectAll();
+            vars.put("config", map);
+            String cdn = map.get(ConfigKey.SITE_CDN.getValue());
             String staticPath = String.format("%s/theme/%s/static",cdn!=null ? cdn : "",currentTheme.getId());
             vars.put("static", staticPath);
             vars.put("currentTheme", currentTheme);
@@ -37,10 +39,14 @@ public class ThymeleafServiceImpl implements ThymeleafService {
     }
 
     @Override
-    public void initStaticPath() {
+    public void initConfig() {
         if (thymeleafViewResolver != null) {
+            //config
+            Map<String, String> map = configService.selectAll();
+            thymeleafViewResolver.addStaticVariable("config", map);
+            //static
             ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
-            String cdn = configService.get(ConfigKey.SITE_CDN.getValue());
+            String cdn = map.get(ConfigKey.SITE_CDN.getValue());
             String staticPath = String.format("%s/theme/%s/static",cdn!=null ? cdn : "",currentTheme.getId());
             thymeleafViewResolver.addStaticVariable("static",staticPath);
         }

@@ -6,7 +6,7 @@
 		<meta name="keywords" th:content="${article.seoKey}">
 		<meta name="description" th:content="${article.seoDesc}">
 		<title th:text="${article.title}"></title>
-		<link rel="icon" th:href="${@module.get('config').SITE_ICON}">
+		<link rel="icon" th:href="${config.SITE_ICON}">
 		<link th:href="${static+'/css/bootstrap.min.css'}" rel="stylesheet"/>
 		<link th:href="${static+'/iconfont/iconfont.css'}" rel="stylesheet"/>
 		<link th:href="${static+'/css/github-markdown.min.css'}"rel="stylesheet" />

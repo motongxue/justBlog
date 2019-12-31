@@ -33,7 +33,7 @@ public class ConfigController {
                 configService.updateByKey(key,map.get(key));
             }
             configService.updateByKey(ConfigKey.SYSTEM_IS_SET.getValue(), CoreConst.STATUS_VALID_STRING);
-            thymeleafService.initStaticPath();
+            thymeleafService.initConfig();
             return ResponseUtil.success("设置保存成功");
         } catch (Exception e) {
             e.printStackTrace();

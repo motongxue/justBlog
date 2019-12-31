@@ -60,10 +60,11 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     }
 
     private void printStartInfo() {
-        String isSet = configService.get(ConfigKey.SYSTEM_IS_SET.getValue());
+        Map<String, String> map = configService.selectAll();
+        String isSet = map.get(ConfigKey.SYSTEM_IS_SET.getValue());
         String blogUrl;
         if(StringUtils.isNotEmpty(isSet) && isSet.equals(CoreConst.STATUS_VALID_STRING)){
-            blogUrl=configService.get(ConfigKey.SITE_HOST.getValue());
+            blogUrl= map.get(ConfigKey.SITE_HOST.getValue());
             blogUrl = blogUrl.endsWith("/")?blogUrl.substring(0,blogUrl.length()-1):blogUrl;
         }else{
             blogUrl= String.format("http://%s:%s", IpUtil.getMachineIP(), environment.getProperty("server.port"));
@@ -118,11 +119,12 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     }
 
     private void initSystem(){
+        Map<String, String> map = configService.selectAll();
         //系统创建时间
         String createTimeKey = ConfigKey.SYSTEM_CREATE_TIME.getValue();
         String createTimeCache = redisService.get(createTimeKey);
         if(StringUtils.isEmpty(createTimeCache)){
-            String createTime = configService.get(createTimeKey);
+            String createTime = map.get(createTimeKey);
             if(StringUtils.isEmpty(createTime)){
                 createTime = DateUtil.getNewFormatDateString(new Date());
                 configService.updateByKey(createTimeKey,createTime);
@@ -133,7 +135,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
         String pageViewKey = ConfigKey.SYSTEM_PAGE_VIEW.getValue();
         String pageViewCache = redisService.get(pageViewKey);
         if(StringUtils.isEmpty(pageViewCache)){
-            redisService.set(pageViewKey,configService.get(pageViewKey));
+            redisService.set(pageViewKey,map.get(pageViewKey));
         }
     }
 

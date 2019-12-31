@@ -40,11 +40,6 @@ public class SliderServiceImpl implements SliderService {
     }
 
     @Override
-    public List<BlogSlider> selectByType(Integer type) {
-        return selectAll().stream().filter(item->item.getType().equals(type)).collect(Collectors.toList());
-    }
-
-    @Override
     @RedisCache(key = "SLIDERS",flush = true)
     public void save(BlogSlider slider) {
         Date date = new Date();

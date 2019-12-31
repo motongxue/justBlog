@@ -7,7 +7,6 @@ import com.nbclass.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class ConfigServiceImpl implements ConfigService {
     @RedisCache(key = "CONFIG")
     public Map<String, String> selectAll() {
         List<BlogConfig> sysConfigs = configMapper.selectAll();
-        Map<String,String>  map= new HashMap<String,String>(sysConfigs.size());
+        Map<String,String>  map= new HashMap<>(sysConfigs.size());
         for (BlogConfig config : sysConfigs){
             map.put(config.getSysKey(),config.getSysValue());
         }
@@ -41,8 +40,4 @@ public class ConfigServiceImpl implements ConfigService {
         return configMapper.updateByKey(key, value);
     }
 
-    @Override
-    public String get(String key) {
-        return selectAll().get(key);
-    }
 }

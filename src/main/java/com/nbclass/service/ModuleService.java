@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 权限模块，thymeleaf调用,部分方法可传pageSize
@@ -59,9 +60,9 @@ public class ModuleService {
                     case "linkList":            //友链
                         return linkService.selectAll();
                     case "notifyList":          //系统公告
-                        return sliderService.selectByType(SliderType.NOTIFY.getType());
-                    case "sliderList":          //轮播文章
-                        return sliderService.selectByType(SliderType.SLIDER.getType());
+                        return sliderService.selectAll().stream().filter(item->item.getType().equals(SliderType.NOTIFY.getType())).collect(Collectors.toList());
+                    case "sliderList":          //轮播列表
+                        return sliderService.selectAll().stream().filter(item->item.getType().equals(SliderType.SLIDER.getType())).collect(Collectors.toList());
                     case "recentList":          //最近文章
                         return articleService.recentList(CoreConst.PAGE_SIZE);
                     case "recommendedList":    //推荐文章
@@ -72,7 +73,7 @@ public class ModuleService {
                         return articleService.randomList(CoreConst.PAGE_SIZE);
                     case "siteInfo":            //网站信息统计
                         return articleService.siteInfoStatistics();
-                    case "config":           //网站基本信息
+                    case "config":           //网站设置
                         return configService.selectAll();
                     case "latestComments":
                         PageHelper.startPage(CoreConst.PAGE_NUM, StringUtils.isNotBlank(param)?new Integer(param):CoreConst.PAGE_SIZE);
