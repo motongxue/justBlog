@@ -40,7 +40,7 @@ public class ThymeleafServiceImpl implements ThymeleafService {
     public void initStaticPath() {
         if (thymeleafViewResolver != null) {
             ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
-            String cdn = configService.selectAll().get(ConfigKey.SITE_CDN.getValue());
+            String cdn = configService.get(ConfigKey.SITE_CDN.getValue());
             String staticPath = String.format("%s/theme/%s/static",cdn!=null ? cdn : "",currentTheme.getId());
             thymeleafViewResolver.addStaticVariable("static",staticPath);
         }

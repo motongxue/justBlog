@@ -1,15 +1,15 @@
 package com.nbclass.framework.listener;
 
 import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.theme.ZbTheme;
-import com.nbclass.framework.theme.ZbThemeSetting;
-import com.nbclass.framework.util.CoreConst;
-import com.nbclass.framework.util.FileUtil;
-import com.nbclass.framework.util.GsonUtil;
+import com.nbclass.framework.util.*;
+import com.nbclass.service.ConfigService;
 import com.nbclass.service.RedisService;
 import com.nbclass.service.ThemeService;
 import com.nbclass.service.ThymeleafService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +21,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -44,10 +43,14 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     @Resource
     private ThemeService themeService;
     @Resource
+    private ConfigService configService;
+    @Resource
     private ThymeleafService thymeleafService;
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
+        //系统初始化
+        this.initSystem();
         //初始化主题
         this.initThemes();
         //初始化模板引擎
@@ -57,7 +60,16 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     }
 
     private void printStartInfo() {
-        log.info("Blog started success : port : {}",environment.getProperty("server.port"));
+        String isSet = configService.get(ConfigKey.SYSTEM_IS_SET.getValue());
+        String blogUrl;
+        if(StringUtils.isNotEmpty(isSet) && isSet.equals(CoreConst.STATUS_VALID_STRING)){
+            blogUrl=configService.get(ConfigKey.SITE_HOST.getValue());
+            blogUrl = blogUrl.endsWith("/")?blogUrl.substring(0,blogUrl.length()-1):blogUrl;
+        }else{
+            blogUrl= String.format("http://%s:%s", IpUtil.getMachineIP(), environment.getProperty("server.port"));
+        }
+        log.info("Blog started success:   {}", blogUrl);
+        log.info("Blog admin started success:   {}/admin", blogUrl);
     }
 
     private void initThemes() {
@@ -102,6 +114,26 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             CoreConst.currentTheme=currentTheme.getId();
         }catch (Exception e){
             throw new RuntimeException("Blog themes init error", e);
+        }
+    }
+
+    private void initSystem(){
+        //系统创建时间
+        String createTimeKey = ConfigKey.SYSTEM_CREATE_TIME.getValue();
+        String createTimeCache = redisService.get(createTimeKey);
+        if(StringUtils.isEmpty(createTimeCache)){
+            String createTime = configService.get(createTimeKey);
+            if(StringUtils.isEmpty(createTime)){
+                createTime = DateUtil.getNewFormatDateString(new Date());
+                configService.updateByKey(createTimeKey,createTime);
+            }
+            redisService.set(createTimeKey,createTime);
+        }
+        //系统浏览数
+        String pageViewKey = ConfigKey.SYSTEM_PAGE_VIEW.getValue();
+        String pageViewCache = redisService.get(pageViewKey);
+        if(StringUtils.isEmpty(pageViewCache)){
+            redisService.set(pageViewKey,configService.get(pageViewKey));
         }
     }
 

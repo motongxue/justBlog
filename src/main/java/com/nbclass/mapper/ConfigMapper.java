@@ -26,4 +26,11 @@ public interface ConfigMapper extends MyMapper<BlogConfig> {
      */
     int updateByKey(@Param("key") String key, @Param("value") String value);
 
+    /**
+     * 根据key获取value
+     * @param key
+     * @return int
+     */
+    String getByKey(@Param("key") String key);
+
 }

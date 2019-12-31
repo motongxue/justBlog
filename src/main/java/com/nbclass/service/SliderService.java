@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface SliderService {
 
+    List<BlogSlider> selectAll();
+
     List<BlogSlider> selectList(Integer type, String name);
 
     List<BlogSlider> selectByType(Integer type);

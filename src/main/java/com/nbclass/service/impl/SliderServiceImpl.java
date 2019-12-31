@@ -1,5 +1,7 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.enums.SliderType;
+import com.nbclass.framework.annotation.RedisCache;
 import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.mapper.SliderMapper;
 import com.nbclass.model.BlogCategory;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * SliderServiceImpl
@@ -26,16 +29,23 @@ public class SliderServiceImpl implements SliderService {
     private SliderMapper sliderMapper;
 
     @Override
+    @RedisCache(key = "SLIDERS")
+    public List<BlogSlider> selectAll() {
+        return sliderMapper.selectAll();
+    }
+
+    @Override
     public List<BlogSlider> selectList(Integer type, String name) {
         return sliderMapper.selectList(type,name);
     }
 
     @Override
     public List<BlogSlider> selectByType(Integer type) {
-        return sliderMapper.selectList(type,null);
+        return selectAll().stream().filter(item->item.getType().equals(type)).collect(Collectors.toList());
     }
 
     @Override
+    @RedisCache(key = "SLIDERS",flush = true)
     public void save(BlogSlider slider) {
         Date date = new Date();
         slider.setUpdateTime(date);
@@ -48,6 +58,7 @@ public class SliderServiceImpl implements SliderService {
     }
 
     @Override
+    @RedisCache(key = "SLIDERS",flush = true)
     public void deleteBatch(Integer[] ids) {
         sliderMapper.deleteBatch(ids);
     }

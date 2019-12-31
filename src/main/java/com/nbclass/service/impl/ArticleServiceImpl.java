@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.util.CoreConst;
+import com.nbclass.framework.util.DateUtil;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.mapper.ArticleMapper;
@@ -150,7 +151,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Map<String, Object> siteInfoStatistics() {
-        return articleMapper.siteInfoStatistics();
+        Map<String, Object> map = articleMapper.siteInfoStatistics();
+        map.put(ConfigKey.SYSTEM_PAGE_VIEW.getValue(),redisService.get(ConfigKey.SYSTEM_PAGE_VIEW.getValue()));
+        String createTime = redisService.get(ConfigKey.SYSTEM_CREATE_TIME.getValue());
+        map.put(ConfigKey.SYSTEM_CREATE_TIME.getValue(), DateUtil.getDiffDays(new Date(),DateUtil.parseDateNewFormat(createTime))+1);
+        return map;
     }
 
     @Override

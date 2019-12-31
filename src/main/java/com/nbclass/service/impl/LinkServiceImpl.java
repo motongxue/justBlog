@@ -1,5 +1,6 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.framework.annotation.RedisCache;
 import com.nbclass.mapper.LinkMapper;
 import com.nbclass.model.BlogLink;
 import com.nbclass.service.LinkService;
@@ -23,6 +24,7 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Override
+    @RedisCache(key = "LINKS")
     public List<BlogLink> selectAll() {
         LinkVo link = new LinkVo();
         link.setStatus(true);
@@ -30,6 +32,7 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Override
+    @RedisCache(key = "LINKS",flush = true)
     public void save(BlogLink blogLink) {
         Date date = new Date();
         blogLink.setUpdateTime(date);
@@ -42,6 +45,7 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Override
+    @RedisCache(key = "LINKS",flush = true)
     public void deleteBatch(Integer[] ids) {
         linkMapper.deleteBatch(ids);
     }

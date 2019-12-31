@@ -1,11 +1,13 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.framework.annotation.RedisCache;
 import com.nbclass.mapper.ConfigMapper;
 import com.nbclass.model.BlogConfig;
 import com.nbclass.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ public class ConfigServiceImpl implements ConfigService {
     private ConfigMapper configMapper;
 
     @Override
+    @RedisCache(key = "CONFIG")
     public Map<String, String> selectAll() {
         List<BlogConfig> sysConfigs = configMapper.selectAll();
         Map<String,String>  map= new HashMap<String,String>(sysConfigs.size());
@@ -33,7 +36,13 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
+    @RedisCache(key = "CONFIG", flush = true)
     public int updateByKey(String key,String value) {
         return configMapper.updateByKey(key, value);
+    }
+
+    @Override
+    public String get(String key) {
+        return selectAll().get(key);
     }
 }

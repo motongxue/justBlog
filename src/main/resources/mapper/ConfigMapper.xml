@@ -29,4 +29,10 @@
         where sys_key = #{key}
     </update>
 
+    <select id="getByKey" resultType="string">
+        select sys_value
+        from blog_config
+        where sys_key = #{key}
+    </select>
+
 </mapper>

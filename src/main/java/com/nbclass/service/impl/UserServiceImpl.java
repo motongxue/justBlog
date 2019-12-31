@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         if(user==null || !PasswordHelper.verify(login.getPassword(),user)){
             return ResponseUtil.error("用户名或者密码错误");
         }
-        redisService.set(CacheKeyPrefix.SYS_USER+user.getUserId(), CopyUtil.getCopy(user, UserInfo.class));
+        redisService.set(CacheKeyPrefix.SYS_USER.getPrefix()+user.getUserId(), CopyUtil.getCopy(user, UserInfo.class));
         String token = jwtUtil.genToken(user);
         return ResponseUtil.success("登录成功",token);
     }

@@ -119,7 +119,7 @@
 							<label class="control-label label-four">访问路径:</label>
 							<div class="ml-80">
 								<input id="aliasName" type="text" name="aliasName" th:value="${article.aliasName}"  class="form-control" placeholder="访问路径，默认自动生成"/>
-								<span class="color-999" th:text="${@module.get('sysConfig').SITE_HOST+'/a/'}"></span><span id="aliasNameAuto" th:text="${article.aliasName==null||article.aliasName==''?'${auto}':article.aliasName}" class="text-primary">${auto}</span>
+								<span class="color-999" th:text="${@module.get('config').SITE_HOST+'/a/'}"></span><span id="aliasNameAuto" th:text="${article.aliasName==null||article.aliasName==''?'${auto}':article.aliasName}" class="text-primary">${auto}</span>
 							</div>
 						</div>
 					</div>

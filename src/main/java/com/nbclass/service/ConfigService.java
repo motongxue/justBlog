@@ -15,4 +15,6 @@ public interface ConfigService {
     Map<String,String> selectAll();
 
     int updateByKey(String key, String value);
+
+    String get(String key);
 }

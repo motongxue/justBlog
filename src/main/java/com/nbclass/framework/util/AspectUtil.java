@@ -77,4 +77,24 @@ public class AspectUtil {
         key.append(null == extra ? "" : extra);
         return key.toString();
     }
+
+    /**
+     * 获取切面缓存的key
+     *
+     * @param point
+     *         当前切面执行的方法
+     * @param prefix
+     *         key前缀 （非必选）
+     * @throws NoSuchMethodException
+     */
+    public static String getKey(ProceedingJoinPoint point, String prefix) throws NoSuchMethodException {
+        Method currentMethod = AspectUtil.getMethod(point);
+        String methodName = currentMethod.getName();
+        StringBuilder key = new StringBuilder();
+        key.append(getKeyOfClassPrefix(point, prefix));
+        key.append("_");
+        key.append(methodName);
+        key.append(CacheKeyUtil.getMethodParamsKey(point.getArgs()));
+        return key.toString();
+    }
 }

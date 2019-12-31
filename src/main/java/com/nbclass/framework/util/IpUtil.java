@@ -22,15 +22,8 @@ public class IpUtil {
         }
         if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
-            if(ip.equals("127.0.0.1")){
-                //根据网卡取本机配置的IP
-                InetAddress inet=null;
-                try {
-                    inet = InetAddress.getLocalHost();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-                ip= inet.getHostAddress();
+            if(ip.equals("127.0.0.1")||ip.equals("0:0:0:0:0:0:0:1")){
+                ip= getMachineIP();
             }
         }
         // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
@@ -40,5 +33,15 @@ public class IpUtil {
             }
         }
         return ip;
+    }
+
+    public static String getMachineIP() {
+        InetAddress machineAddress;
+        try {
+            machineAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            machineAddress = InetAddress.getLoopbackAddress();
+        }
+        return machineAddress.getHostAddress();
     }
 }

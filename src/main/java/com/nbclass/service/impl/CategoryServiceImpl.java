@@ -1,6 +1,7 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.enums.CategoryType;
+import com.nbclass.framework.annotation.RedisCache;
 import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.model.BlogCategory;
@@ -27,6 +28,13 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
+    @RedisCache(key = "CATEGORIES")
+    public List<BlogCategory> selectAll() {
+        List<BlogCategory> categories = categoryMapper.selectByType(null);
+        return listToTree(categories, false);
+    }
+
+    @Override
     public List<BlogCategory> selectAll(Integer type, boolean disabled) {
         List<BlogCategory> categories = categoryMapper.selectByType(type);
         return listToTree(categories, disabled);
@@ -40,6 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @RedisCache(key = "CATEGORIES",flush = true)
     public void save(BlogCategory category) {
         Date date = new Date();
         category.setUpdateTime(date);
@@ -55,6 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @RedisCache(key = "CATEGORIES",flush = true)
     public void deleteById(Integer id) {
         categoryMapper.deleteById(id);
     }

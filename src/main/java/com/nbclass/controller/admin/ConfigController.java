@@ -3,6 +3,7 @@ package com.nbclass.controller.admin;
 import com.google.gson.Gson;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
+import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ConfigService;
 import com.nbclass.service.ThymeleafService;
@@ -31,6 +32,7 @@ public class ConfigController {
             for (String key : map.keySet()) {
                 configService.updateByKey(key,map.get(key));
             }
+            configService.updateByKey(ConfigKey.SYSTEM_IS_SET.getValue(), CoreConst.STATUS_VALID_STRING);
             thymeleafService.initStaticPath();
             return ResponseUtil.success("设置保存成功");
         } catch (Exception e) {

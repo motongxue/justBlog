@@ -53,7 +53,7 @@ public class ModuleService {
                 }
                 switch (functionName){
                     case "categoryList":        //分类
-                        return categoryService.selectAll(null,false);
+                        return categoryService.selectAll();
                     case "tagList":             //标签
                         return tagService.selectAll();
                     case "linkList":            //友链
@@ -72,7 +72,7 @@ public class ModuleService {
                         return articleService.randomList(CoreConst.PAGE_SIZE);
                     case "siteInfo":            //网站信息统计
                         return articleService.siteInfoStatistics();
-                    case "sysConfig":           //网站基本信息
+                    case "config":           //网站基本信息
                         return configService.selectAll();
                     case "latestComments":
                         PageHelper.startPage(CoreConst.PAGE_NUM, StringUtils.isNotBlank(param)?new Integer(param):CoreConst.PAGE_SIZE);

@@ -13,6 +13,8 @@ public enum ConfigKey {
     ADMIN_SITE_LOGO("ADMIN_SITE_LOGO","后台LOGO"),
     ADMIN_SITE_NAME("ADMIN_SITE_NAME","后台标题"),
     SYSTEM_PAGE_VIEW("SYSTEM_PAGE_VIEW","系统访问数"),
+    SYSTEM_CREATE_TIME("SYSTEM_CREATE_TIME","系统建立时间"),
+    SYSTEM_IS_SET("SYSTEM_IS_SET","系统是否设置"),
     ;
 
     private String value;

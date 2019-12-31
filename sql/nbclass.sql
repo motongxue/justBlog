@@ -143,7 +143,7 @@ CREATE TABLE `blog_config` (
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`sys_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
 
 -- ----------------------------
 -- Records of blog_config
@@ -160,6 +160,8 @@ INSERT INTO `blog_config` VALUES ('9', 'SITE_LOGO', '/img/logo-color.png', '网�
 INSERT INTO `blog_config` VALUES ('10', 'ADMIN_SITE_LOGO', '/img/logo-white.png', '后台logo', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('11', 'ADMIN_SITE_NAME', 'Just', '后台标题', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('13', 'SYSTEM_CREATE_TIME', '', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('14', 'SYSTEM_IS_SET', '0', '系统是否设置', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 
 -- ----------------------------
 -- Table structure for blog_file
@@ -271,5 +273,5 @@ CREATE TABLE `blog_user` (
 -- ----------------------------
 -- Records of blog_user
 -- ----------------------------
-INSERT INTO `blog_user` VALUES ('1', '1000000862441215', '123456', '47b816ee4434cff22b070602299fbc7f', '8bdac39c0c1a46dd9f8c4a1d7cc9eecf', '123456', 'zqf@nbclass.com', null, null, '/img/logo.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
-INSERT INTO `blog_user` VALUES ('2', '1000000862441216', 'admin', '8fd06f8c1572f52ac9df72398d8fe9ca', '097cf4b9a18844b08b452d4ebefc1de0', 'admin', 'admin@nbclass.com', null, null, '/img/logo.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
+INSERT INTO `blog_user` VALUES ('1', '1000000862441215', '123456', '47b816ee4434cff22b070602299fbc7f', '8bdac39c0c1a46dd9f8c4a1d7cc9eecf', '123456', 'zqf@nbclass.com', null, null, '/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
+INSERT INTO `blog_user` VALUES ('2', '1000000862441216', 'admin', '8fd06f8c1572f52ac9df72398d8fe9ca', '097cf4b9a18844b08b452d4ebefc1de0', 'admin', 'admin@nbclass.com', null, null, '/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');

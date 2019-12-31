@@ -1,5 +1,6 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.framework.annotation.RedisCache;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.mapper.ArticleTagMapper;
 import com.nbclass.mapper.TagMapper;
@@ -29,6 +30,7 @@ public class TagServiceImpl implements TagService {
 
 
     @Override
+    @RedisCache(key = "TAGS")
     public List<BlogTag> selectAll() {
         return tagMapper.selectList(null);
     }
@@ -39,6 +41,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @RedisCache(key = "TAGS",flush = true)
     public ResponseVo save(BlogTag tag) {
         Date date = new Date();
         tag.setUpdateTime(date);
@@ -56,6 +59,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @RedisCache(key = "TAGS",flush = true)
     public void deleteBatch(Integer[] ids) {
         tagMapper.deleteBatch(ids);
         articleTagMapper.deleteBatchByTagIds(ids);
