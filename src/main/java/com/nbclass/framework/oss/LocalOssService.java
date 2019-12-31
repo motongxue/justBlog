@@ -55,7 +55,7 @@ public class LocalOssService extends OssService {
     }
 
     private String getRealPath(String path, String pre){
-        String dir = CoreConst.USER_HOME + File.separator + PropertiesUtil.getString(CoreConst.workDirKey) + File.separator + CoreConst.FILE_ + File.separator + pre;
+        String dir = CoreConst.USER_HOME + File.separator + PropertiesUtil.getString(CoreConst.WORK_DIR_KEY) + File.separator + CoreConst.FILE_ + File.separator + pre;
         if(!FileUtil.exists(dir)){
             try {
                 FileUtil.createDir(dir);

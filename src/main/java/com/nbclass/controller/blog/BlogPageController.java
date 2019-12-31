@@ -42,23 +42,24 @@ public class BlogPageController {
 
     @Autowired
     private SliderService sliderService;
+
     /**
      * 首页入口
      */
     @GetMapping("/")
     public String index(Model model) {
         ArticleVo vo = new ArticleVo();
-        loadArticle(model, vo, "index");
+        loadArticle(model, vo, "page");
         model.addAttribute("notifyList",sliderService.selectByType(SliderType.NOTIFY.getType()));
         model.addAttribute("sliderList",sliderService.selectByType(SliderType.SLIDER.getType()));
         return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
-    @GetMapping("index/{pageNum}")
+    @GetMapping("/page/{pageNum}")
     public String index(@PathVariable("pageNum") Integer pageNum, Model model) {
         ArticleVo vo = new ArticleVo();
         vo.setPageNum(pageNum);
-        loadArticle(model, vo, "index");
+        loadArticle(model, vo, "page");
         return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
@@ -71,7 +72,7 @@ public class BlogPageController {
         if(blogCategory.getType().equals(CategoryType.CATEGORY_PAGE.getType())){
             ArticleVo vo = new ArticleVo();
             vo.setCategory(category);
-            loadArticle(model, vo, category);
+            loadArticle(model, vo, category + "/page");
         }
         model.addAttribute("sid",-blogCategory.getId());
         return String.format("theme/%s/%s", CoreConst.currentTheme, blogCategory.getTemplate());
@@ -86,7 +87,7 @@ public class BlogPageController {
         ArticleVo vo = new ArticleVo();
         vo.setPageNum(pageNum);
         vo.setCategory(category);
-        loadArticle(model, vo, category);
+        loadArticle(model, vo, category + "/page");
         return String.format("theme/%s/%s", CoreConst.currentTheme,  blogCategory.getTemplate());
     }
 
@@ -94,7 +95,16 @@ public class BlogPageController {
     public String tag(Model model,@PathVariable("tagId") Integer tagId){
         ArticleVo vo = new ArticleVo();
         vo.setTagId(tagId);
-        loadArticle(model, vo, "tag");
+        loadArticle(model, vo, "tag/" + tagId + "/page");
+        return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
+    }
+
+    @GetMapping("/tag/{tagId}/page/{pageNum}")
+    public String tag(@PathVariable("tagId") Integer tagId, @PathVariable("pageNum") Integer pageNum, Model model) {
+        ArticleVo vo = new ArticleVo();
+        vo.setTagId(tagId);
+        vo.setPageNum(pageNum);
+        loadArticle(model, vo, "tag/" + tagId +"/page");
         return String.format("theme/%s/%s", CoreConst.currentTheme, "index");
     }
 
