@@ -223,7 +223,7 @@ var Core = (function () {
             '       <div class="col-xs-12">'+
             '           <textarea  id="comment-textarea" placeholder="说点什么吧~" style="display: none" name="content"></textarea>'+
             '           <div id="emojiEditorBox">' +
-            '               <div contenteditable="plaintext-only" class="emoji-editor"></div>' +
+            '               <div contenteditable="true" class="emoji-editor"></div>' +
             '               <div class="emoji-tool">' +
             '                   <div class="emoji-btn"><img src="'+options.emojiServer+'0.png"/></div>'+
             '                   <div class="emoji-content">'+
@@ -442,7 +442,7 @@ var Core = (function () {
             '       <div class="col-xs-12">'+
             '           <textarea id="reply-comment-textarea" name="content" style="display: none"></textarea>'+
             '           <div id="replyEmojiEditorBox">'+
-            '               <div contenteditable="plaintext-only" class="emoji-editor"></div>' +
+            '               <div contenteditable="true" class="emoji-editor"></div>' +
             '               <div class="emoji-tool">' +
             '                   <div class="emoji-btn"><img src="'+options.emojiServer+'0.png'+'"/></div>'+
             '                   <div class="emoji-content">' +

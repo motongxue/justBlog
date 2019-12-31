@@ -2,6 +2,7 @@ package com.nbclass.framework.listener;
 
 import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.enums.ConfigKey;
+import com.nbclass.framework.config.properties.ZbProperties;
 import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.util.*;
 import com.nbclass.service.ConfigService;
@@ -39,6 +40,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     @Resource
     Environment environment;
     @Resource
+    ZbProperties zbProperties;
+    @Resource
     private RedisService redisService;
     @Resource
     private ThemeService themeService;
@@ -69,7 +72,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
         }else{
             blogUrl= String.format("http://%s:%s", IpUtil.getMachineIP(), environment.getProperty("server.port"));
         }
-        log.info("Blog started success:   {}", blogUrl);
+        log.info("Blog work path at:            {}", zbProperties.getWorkDir());
+        log.info("Blog started success:         {}", blogUrl);
         log.info("Blog admin started success:   {}/admin", blogUrl);
     }
 

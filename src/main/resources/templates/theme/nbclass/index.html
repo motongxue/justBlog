@@ -22,7 +22,7 @@
 	</header>
 	<div class="zb-container zb-content">
 		<div class="zb-main">
-			<div th:if="${not #lists.isEmpty(${@module.get('notifyList')})}" class="notice">
+			<div th:if="${not #lists.isEmpty(@module.get('notifyList'))}" class="notice">
 				<div class="notice-icon">
 					<i class="fa fa-volume-up"></i>
 				</div>
