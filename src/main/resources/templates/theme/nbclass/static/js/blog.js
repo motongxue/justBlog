@@ -376,6 +376,7 @@ var Core = (function () {
             if(range){
                 range.collapse(false);
             }
+            $("#emojiEditorBox .emoji-editor").focus();
             insertHtmlAtCaret('<img src="'+$(this).children().attr("src")+'">',sel,range);
             $("#emojiEditorBox .emoji-content").slideUp(250);
         });
@@ -514,6 +515,7 @@ var Core = (function () {
             if(replyRange){
                 replyRange.collapse(false);
             }
+            $("#replyEmojiEditorBox .emoji-editor").focus();
             insertHtmlAtCaret('<img src="'+$(this).children().attr("src")+'">',replySel,replyRange);
             $("#replyEmojiEditorBox .emoji-content").slideUp(250);
         });
