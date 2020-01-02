@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public class XssKillerUtil {
-    private static final String[] WHITE_LIST = {"p", "strong", "pre", "code", "span", "blockquote", "em", "a",
+    private static final String[] WHITE_LIST = {"div","p", "strong", "pre", "code", "span", "blockquote", "em", "a",
             "br","br/","font","img","u","b","table","tbody","th","tr","td","ul","li","ol","h1","h2","h3","h4","h5"};
     private static String reg = null;
     private static String legalTags = null;

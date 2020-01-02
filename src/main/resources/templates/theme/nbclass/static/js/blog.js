@@ -52,7 +52,7 @@ var Core = (function () {
     //禁用button
     core.mask = function (e) {
         $(e).attr('disabled', "true");//添加disabled属性
-    }
+    };
 
     //启用button
     core.unmask = function (e) {
@@ -373,18 +373,57 @@ var Core = (function () {
         });
         $("#emojiEditorBox .emoji-content>ul>li").click(function(e){
             stopPropagation(e);
-            $('#emojiEditorBox .emoji-editor').focus();
+            if(range){
+                range.collapse(false);
+            }
             insertHtmlAtCaret('<img src="'+$(this).children().attr("src")+'">',sel,range);
             $("#emojiEditorBox .emoji-content").slideUp(250);
         });
         $(document).bind('click',function(){
             $("#emojiEditorBox .emoji-content").slideUp(250);
         });
-        $("#emojiEditorBox .emoji-editor").blur(function(){
-            sel = window.getSelection();
-            range = sel.getRangeAt(0);
-            range.deleteContents();
+        $("#emojiEditorBox .emoji-editor").mouseup(function(){
+            if(window.getSelection){
+                sel = window.getSelection();
+                range = sel.getRangeAt(0);
+            }
+        }).keyup(function(){
+            if(window.getSelection){
+                sel = window.getSelection();
+                range = sel.getRangeAt(0);
+            }
+        }).on('paste', function(e) {
+            e.preventDefault();
+            var text = null;
+            if(window.clipboardData && clipboardData.setData) {
+                // IE
+                text = window.clipboardData.getData('text');
+            } else {
+                text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            }
+            if (document.body.createTextRange) {
+                if (document.selection) {
+                    textRange = document.selection.createRange();
+                } else if (window.getSelection) {
+                    sel = window.getSelection();
+                    range = sel.getRangeAt(0);
+                    var tempEl = document.createElement("span");
+                    tempEl.innerHTML = "&#FEFF;";
+                    range.deleteContents();
+                    range.insertNode(tempEl);
+                    textRange = document.body.createTextRange();
+                    textRange.moveToElementText(tempEl);
+                    tempEl.parentNode.removeChild(tempEl);
+                }
+                textRange.text = text;
+                textRange.collapse(false);
+                textRange.select();
+            } else {
+                // Chrome之类浏览器
+                document.execCommand("insertText", false, text);
+            }
         });
+
         function insertHtmlAtCaret(html,sel,range){
             if(sel==null){
                 sel= window.getSelection();
@@ -402,7 +441,7 @@ var Core = (function () {
                     if (lastNode) {
                         range = range.cloneRange();
                         range.setStartAfter(lastNode);
-                        range.collapse(true);
+                        range.collapse(false);
                         sel.removeAllRanges();
                         sel.addRange(range);
                     }
@@ -472,17 +511,63 @@ var Core = (function () {
         $("#replyEmojiEditorBox .emoji-content>ul>li").click(function(e){
             stopPropagation(e);
             $('#replyEmojiEditorBox .emoji-editor').focus();
+            if(replyRange){
+                replyRange.collapse(false);
+            }
             insertHtmlAtCaret('<img src="'+$(this).children().attr("src")+'">',replySel,replyRange);
             $("#replyEmojiEditorBox .emoji-content").slideUp(250);
         });
         $(document).bind('click',function(){
             $("#replyEmojiEditorBox .emoji-content").slideUp(250);
         });
-        $("#replyEmojiEditorBox .emoji-editor").blur(function(){
+       /* $("#replyEmojiEditorBox .emoji-editor").blur(function(){
             replySel = window.getSelection();
             replyRange = replySel.getRangeAt(0);
             replyRange.deleteContents();
+        });*/
+
+        $("#replyEmojiEditorBox .emoji-editor").mouseup(function(){
+            if(window.getSelection){
+                replySel = window.getSelection();
+                replyRange = replySel.getRangeAt(0);
+            }
+        }).keyup(function(){
+            if(window.getSelection){
+                replySel = window.getSelection();
+                replyRange = replySel.getRangeAt(0);
+            }
+        }).on('paste', function(e) {
+            e.preventDefault();
+            var text = null;
+            if(window.clipboardData && clipboardData.setData) {
+                // IE
+                text = window.clipboardData.getData('text');
+            } else {
+                text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            }
+            if (document.body.createTextRange) {
+                if (document.selection) {
+                    textRange = document.selection.createRange();
+                } else if (window.getSelection) {
+                    replySel = window.getSelection();
+                    replyRange = sel.getRangeAt(0);
+                    var tempEl = document.createElement("span");
+                    tempEl.innerHTML = "&#FEFF;";
+                    replyRange.deleteContents();
+                    replyRange.insertNode(tempEl);
+                    textRange = document.body.createTextRange();
+                    textRange.moveToElementText(tempEl);
+                    tempEl.parentNode.removeChild(tempEl);
+                }
+                textRange.text = text;
+                textRange.collapse(false);
+                textRange.select();
+            } else {
+                // Chrome之类浏览器
+                document.execCommand("insertText", false, text);
+            }
         });
+
         /*回复 qq失去焦点*/
         $("#reply-qq").blur(function () {
             var qq = $(this).val();
