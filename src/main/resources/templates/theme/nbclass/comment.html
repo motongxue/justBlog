@@ -24,17 +24,13 @@
 				<div class="comment-describe">
 					<h3 class="comment-describe-title">留言板</h3>
 					<div>
-						<p>此路是我开，此树是我栽</p>
-					</div>
-					<hr class="hr0">
-					<div>
-						<p>博客名：智博客</p>
-						<p>链接：www.nbclass.com</p>
-						<p>邮箱：11283036@qq.com</p>
+						<p>博客名：[[${config.SITE_NAME}]]</p>
+						<p>博客地址：[[${config.SITE_HOST}]]</p>
+						<p>联系方式：[[${currentTheme.setting.sitePersonContact}]]</p>
 					</div>
 				</div>
 				<div id="comment" class="comment-main">
-					<div class="comment-title">发表评论</div>
+					<div class="comment-title">给我留言</div>
 				</div>
 			</div>
 			<div th:replace="theme/nbclass/fragments/sidebar :: sidebar"></div>

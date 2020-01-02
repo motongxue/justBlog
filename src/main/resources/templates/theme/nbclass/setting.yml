@@ -11,6 +11,11 @@ settings:
     type: text
     placeholder: 请输入名称
     defaultValue: nbclass
+  - name: sitePersonContact
+    label: 联系方式
+    type: text
+    placeholder: 请输入联系方式
+    defaultValue: 523179414@qq.com
   - name: sitePersonDesc
     label: 站长描述
     type: text
@@ -21,3 +26,24 @@ settings:
     type: file
     placeholder: 头像地址
     defaultValue: /theme/nbclass/static/img/person.jpg
+- label: 赞赏设置
+  form:
+  - name: zanShang
+    label: 是否开启
+    type: radio
+    defaultValue: 1
+    options:
+    - label: 是
+      value: 1
+    - label: 否
+      value: 0
+  - name: aliPayCode
+    label: 支付宝二维码
+    type: file
+    placeholder: 支付宝二维码图片地址
+    defaultValue: /theme/nbclass/static/img/zhifubao.jpg
+  - name: wxPayCode
+    label: 微信二维码
+    type: file
+    placeholder: 微信二维码图片地址
+    defaultValue: /theme/nbclass/static/img/weixin.jpg

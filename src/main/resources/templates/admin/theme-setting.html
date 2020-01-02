@@ -50,9 +50,9 @@
                                     <a th:href="${'#theme-tab-'+temp.index}" data-toggle="tab" aria-expanded="true" th:text="${item.label}"></a>
                                 </li>
                             </ul>
-                            <div class="tab-content">
-                                <div th:each="item,temp:${theme.settings}" th:id="${'theme-tab-'+temp.index}" th:class="${temp.index==0?'tab-pane active':'tab-pane'}">
-                                    <form id="theme-form">
+                            <form id="theme-form">
+                                <div class="tab-content">
+                                    <div th:each="item,temp:${theme.settings}" th:id="${'theme-tab-'+temp.index}" th:class="${temp.index==0?'tab-pane active':'tab-pane'}">
                                         <div th:each="formItem:${item.form}" class="form-group">
                                             <label class="control-label" th:text="${formItem.label+'：'}"></label>
                                             <input th:if="${formItem.type=='text'}" type="text" th:name="${formItem.name}" class="form-control" th:value="${formItem.value}" th:placeholder="${formItem.placeholder}"/>
@@ -71,9 +71,9 @@
                                                 </span>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                     <div class="col-md-12">

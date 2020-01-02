@@ -30,12 +30,13 @@
 					</div>
 					<div class="thumbs-content">
 						<span class="thumbs-button fa fa-thumbs-up"> 点赞 <span id="loveCount" th:text="${article.supportNum}"></span></span>
-						<span class="reward-button fa fa-money"> 打赏
-						<p class="reward-content">
-							<span class="reward-img"><img th:src="${static+'/img/weixin.jpg'}"><br>微信赞赏</span>
-							<span class="reward-img"><img th:src="${static+'/img/zhifubao.jpg'}"><br>支付宝赞赏</span></p>
-						<span class="reward-bottom"></span>
-						<span class="reward-bottom-top"></span>
+						<span th:if="${currentTheme.setting.zanShang=='1'}" class="reward-button fa fa-money"> 打赏
+							<p class="reward-content">
+								<span class="reward-img"><img th:src="${currentTheme.setting.wxPayCode}"><br>微信赞赏</span>
+								<span class="reward-img"><img th:src="${currentTheme.setting.aliPayCode}"><br>支付宝赞赏</span>
+							</p>
+							<span class="reward-bottom"></span>
+							<span class="reward-bottom-top"></span>
 						</span>
 					</div>
 				</div>
@@ -46,6 +47,20 @@
 			<div th:replace="theme/nbclass/fragments/sidebar :: sidebar"></div>
 			<div class="return_top"><a class=" fa fa-arrow-up"></a></div>
 		</div>
+		<script>
+			$(function () {
+                $(".thumbs-button").click(function () {
+                    Core.postAjax("/api/article/love",{articleId:[[${article.id}]]},function (data) {
+						if(data.status===200){
+						    var $count = $("#loveCount");
+                            $count.text(parseInt($count.text())+1);
+                        }else{
+                            Core.msg(data.msg,2);
+                        }
+                    })
+                })
+            })
+		</script>
 		<script th:if="${article.isComment}">
             Core.initComment({
                 id:"#comment",
