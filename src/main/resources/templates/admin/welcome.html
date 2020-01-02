@@ -10,15 +10,30 @@
 	</head>
 	<body>
 		<div class="z-content">
-			<div class="z-card">
-				<div class="z-card-header">
-					欢迎进入精简的UI世界。
-				</div>
-				<div class="z-card-body">
-					博客工作台
+			<div class="col-sm-3">
+				<div class="z-card z-card-body">
+					<h4>网站访问</h4>
+					<p>[[${siteInfo.SYSTEM_PAGE_VIEW}]]</p>
 				</div>
 			</div>
-
+			<div class="col-sm-3">
+				<div class="z-card z-card-body">
+					<h4>建立天数</h4>
+					<p>[[${siteInfo.SYSTEM_CREATE_TIME}]]</p>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="z-card z-card-body">
+					<h4>文章数</h4>
+					<p>[[${siteInfo.articleNum}]]</p>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="z-card z-card-body">
+					<h4>留言数</h4>
+					<p>[[${siteInfo.commentNum}]]</p>
+				</div>
+			</div>
 		</div>
 		<script th:src="@{/js/jquery.min.js}"></script>
 		<script th:src="@{/js/bootstrap.min.js}"></script>
