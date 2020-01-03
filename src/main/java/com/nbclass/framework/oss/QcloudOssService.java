@@ -1,17 +1,16 @@
 package com.nbclass.framework.oss;
 
 
-import com.nbclass.framework.exception.ZbException;
+import com.nbclass.framework.exception.OssException;
+import com.nbclass.model.BlogFile;
 import com.nbclass.vo.CloudStorageConfigVo;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
-import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.model.CannedAccessControlList;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
-import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 
 import java.io.ByteArrayInputStream;
@@ -37,33 +36,46 @@ public class QcloudOssService extends OssService {
     }
 
     @Override
-    public String upload(byte[] data, String path, boolean isPublic) {
+    public BlogFile upload(byte[] data, String path, boolean isPublic) {
         return upload(new ByteArrayInputStream(data), path, isPublic);
     }
 
     @Override
-    public String upload(InputStream inputStream, String path, boolean isPublic) {
+    public BlogFile upload(InputStream inputStream, String path, boolean isPublic) {
         try {
             ObjectMetadata objectMetadata = new ObjectMetadata();
-            PutObjectRequest putObjectRequest = new PutObjectRequest(config.getQcloudBucketName(), path, inputStream,objectMetadata);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(config.getQcloudBucketName(), path, inputStream, objectMetadata);
             if(isPublic){
                 putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
             }
-            PutObjectResult putObjectResult = client.putObject(putObjectRequest);
-        } catch (CosClientException e) {
-            throw new ZbException("文件上传失败，" + e.getMessage());
+            client.putObject(putObjectRequest);
+            BlogFile blogFile = new BlogFile();
+            blogFile.withFilePath(path)
+                    .withFileFullPath(config.getQcloudDomain() + "/" + path)
+                    .withFileName(getFileName(path))
+                    .withFileType(getFileType(path))
+                    .withOssType(OssTypeEnum.QCLOUD.getValue());
+            return blogFile;
+        } catch (Exception e) {
+            throw new OssException("文件上传失败，" + e.getMessage());
+        } finally {
+            client.shutdown();
         }
-        client.shutdown();
-        return config.getQcloudDomain() + "/" + path;
+
     }
 
     @Override
-    public String uploadSuffix(byte[] data, String suffix, boolean isPublic) {
+    public BlogFile uploadSuffix(byte[] data, String suffix, boolean isPublic) {
         return upload(data, getPath(config.getQcloudPrefix(), suffix), isPublic);
     }
 
     @Override
-    public String uploadSuffix(InputStream inputStream, String suffix, boolean isPublic) {
+    public BlogFile uploadSuffix(InputStream inputStream, String suffix, boolean isPublic) {
         return upload(inputStream, getPath(config.getQcloudPrefix(), suffix), isPublic);
+    }
+
+    @Override
+    public void delete(String path) {
+        client.deleteObject(config.getQcloudBucketName(), path);
     }
 }

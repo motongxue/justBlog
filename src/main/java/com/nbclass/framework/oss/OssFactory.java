@@ -29,4 +29,22 @@ public final class OssFactory {
         return null;
     }
 
+    public static OssService init(Integer type){
+        //获取云存储配置信息
+        ConfigService sysConfigService = SpringContextHolder.getBean(ConfigService.class);
+        String value = sysConfigService.selectAll().get(ConfigKey.CLOUD_STORAGE_CONFIG.getValue());
+        Gson gson = new Gson();
+        CloudStorageConfigVo config = gson.fromJson(value,CloudStorageConfigVo.class);
+        if(type.equals(OssTypeEnum.LOCAL.getValue())){
+            return new LocalOssService(config);
+        }else if(type.equals(OssTypeEnum.QINIU.getValue())){
+            return new QiniuOssService(config);
+        }else if(type.equals(OssTypeEnum.ALIYUN.getValue())){
+            return new AliyunOssService(config);
+        }else if(type.equals(OssTypeEnum.QCLOUD.getValue())){
+            return new QcloudOssService(config);
+        }
+        return null;
+    }
+
 }

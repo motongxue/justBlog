@@ -149,6 +149,13 @@ public class AdminPageController{
         return  pathSuffix + "sliders";
     }
 
+    @GetMapping("/files")
+    @AccessToken
+    public String files(){
+        return  pathSuffix + "files";
+    }
+
+
     @GetMapping(value = "/config")
     @AccessToken
     public String config(Model model){

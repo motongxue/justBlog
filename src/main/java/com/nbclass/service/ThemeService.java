@@ -1,7 +1,7 @@
 package com.nbclass.service;
 
 import com.nbclass.framework.theme.ZbTheme;
-import com.nbclass.vo.UploadResponseVo;
+import com.nbclass.vo.ResponseVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ public interface ThemeService {
 
     void copyUserThemeToSystemTheme(String themeId);
 
-    UploadResponseVo upload(MultipartFile file);
+    ResponseVo upload(MultipartFile file);
 
     Path getSysThemePath(String themeId);
 

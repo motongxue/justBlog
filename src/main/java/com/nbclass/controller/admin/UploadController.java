@@ -1,22 +1,21 @@
 package com.nbclass.controller.admin;
 
 import com.alibaba.druid.support.json.JSONUtils;
-import com.google.gson.Gson;
-import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
-import com.nbclass.framework.exception.OssException;
+import com.nbclass.framework.exception.ZbException;
 import com.nbclass.framework.oss.OssFactory;
-import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.ResponseUtil;
-import com.nbclass.service.ConfigService;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.model.BlogFile;
+import com.nbclass.service.FileService;
 import com.nbclass.vo.ResponseVo;
-import com.nbclass.vo.UploadResponseVo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -33,46 +32,46 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/upload")
 public class UploadController {
+
     private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
+    @Autowired
+    private FileService fileService;
 
     @PostMapping(value = "/upload")
     @AccessToken
-    public UploadResponseVo upload(@RequestParam MultipartFile file) throws Exception{
+    public ResponseVo upload(@RequestParam MultipartFile file) throws Exception{
         if (file == null || file.isEmpty()) {
-            throw new OssException(UploadResponseVo.Error.FILENOTFOUND);
+            throw new ZbException("文件不能为空");
         }
-        String originalFilename = file.getOriginalFilename();
         try {
-            String suffix = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
-            String path = Objects.requireNonNull(OssFactory.init()).uploadSuffix(file.getBytes(), suffix,true);
-            return  new UploadResponseVo(path,originalFilename, suffix, path, CoreConst.SUCCESS_CODE);
-        }catch (OssException e) {
-            return  new UploadResponseVo(originalFilename, CoreConst.FAIL_CODE, e.getMessage());
+            BlogFile blogFile = Objects.requireNonNull(OssFactory.init()).uploadFile(file, true);
+            fileService.save(blogFile);
+            return ResponseUtil.success(blogFile);
         }catch (Exception e) {
             logger.error(String.format("UploadController.upload%s", e));
-            throw e;
+            return ResponseUtil.error("上传失败",file.getOriginalFilename());
         }
     }
 
     @PostMapping("/uploadForEditor")
     @AccessToken
-    public String upload(@RequestParam("img") List<MultipartFile> list){
+    public String uploadForEditor(@RequestParam("img") List<MultipartFile> list){
         if (list == null || list.isEmpty()) {
-            throw new OssException(UploadResponseVo.Error.FILENOTFOUND);
+            throw new ZbException("文件不能为空");
         }
         List<String> urlList= new ArrayList<>();
         for(MultipartFile file : list){
-            String originalFilename = file.getOriginalFilename();
             try {
-                String suffix = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
-                String path = Objects.requireNonNull(OssFactory.init()).uploadSuffix(file.getBytes(), suffix,true);
+                BlogFile blogFile = Objects.requireNonNull(OssFactory.init()).uploadFile(file, true);
+                String path = blogFile.getFileFullPath();
+                fileService.save(blogFile);
                 if(StringUtils.isNotBlank(path)){
                     urlList.add(path);
                 }else{
                     return  "{\"errno\":-1,\"data\":[]}";
                 }
             } catch (Exception e) {
-                logger.error(String.format("NewsController.upload%s", e));
+                logger.error(String.format("UploadController.uploadForEditor%s", e));
                 return  "{\"errno\":-1,\"data\":[]}";
             }
         }

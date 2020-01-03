@@ -7,7 +7,6 @@ import com.nbclass.framework.util.FileUtil;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ThemeService;
 import com.nbclass.vo.ResponseVo;
-import com.nbclass.vo.UploadResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,7 +75,7 @@ public class ThemeController {
 
     @PostMapping(value = "/upload")
     @AccessToken
-    public UploadResponseVo upload(@RequestParam MultipartFile file){
+    public ResponseVo upload(@RequestParam MultipartFile file){
         return themeService.upload(file);
     }
 

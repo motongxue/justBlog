@@ -241,10 +241,10 @@
             before:function(){
                 App.mask(".upload-cover");
             },
-            onSuccess:function(picker,data){
+            onSuccess:function(picker,res){
                 App.unmask(".upload-cover");
-                if(data.status===200){
-                    $("#cover").val(data.url);
+                if(res.status===200){
+                    $("#cover").val(res.data.fileFullPath);
 				}
             }
         });
@@ -255,10 +255,10 @@
             before:function(){
                 App.mask(".upload-video");
             },
-            onSuccess:function(picker,data){
+            onSuccess:function(picker,res){
                 App.unmask(".upload-video");
-                if(data.status===200){
-                    $("#video").val(data.url);
+                if(res.status===200){
+                    $("#video").val(res.data.fileFullPath);
                 }
             }
         });

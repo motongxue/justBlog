@@ -3,28 +3,28 @@
         <img th:src="${config.ADMIN_SITE_LOGO}">
     </a>
     <nav class="navbar navbar-static-top">
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <a href="javascript:void(0)" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">切换导航</span>
         </a>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
-                    <a href="#">[[${userInfo.username}]]<i class="fa fa-caret-down ml-5"></i></a>
+                    <a href="javascript:void(0)">[[${userInfo.username}]]<i class="fa fa-caret-down ml-5"></i></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a id="myInfo" href="#">个人信息</a>
+                            <a id="myInfo" href="javascript:void(0)">个人信息</a>
                         </li>
                         <li>
-                            <a id="updatePassword" href="#">修改密码</a>
+                            <a id="updatePassword" href="javascript:void(0)">修改密码</a>
                         </li>
                         <hr>
                         <li>
-                            <a id="logout" href="#">退出系统</a>
+                            <a id="logout" href="javascript:void(0)">退出系统</a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    <a href="javascript:void(0)" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>
             </ul>
         </div>
@@ -111,11 +111,11 @@
             before:function(){
                 App.mask("#uploadAvatar");
             },
-            onSuccess:function(picker,data){
+            onSuccess:function(picker,res){
                 App.unmask("#uploadAvatar");
-                if(data.status===200){
-                    $("#avatar").val(data.url);
-                    $("#avatarImg").attr("src",data.url);
+                if(res.status===200){
+                    $("#avatar").val(res.data.url);
+                    $("#avatarImg").attr("src",res.data.fileFullPath);
                 }
             }
         });

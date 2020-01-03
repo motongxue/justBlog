@@ -10,10 +10,12 @@ import com.nbclass.framework.theme.ZbThemeSetting;
 import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.FileUtil;
 import com.nbclass.framework.util.GsonUtil;
+import com.nbclass.framework.util.ResponseUtil;
+import com.nbclass.model.BlogFile;
 import com.nbclass.service.RedisService;
 import com.nbclass.service.ThemeService;
 import com.nbclass.service.ThymeleafService;
-import com.nbclass.vo.UploadResponseVo;
+import com.nbclass.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,12 +149,12 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public UploadResponseVo upload(MultipartFile file) {
+    public ResponseVo upload(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new ZbException(UploadResponseVo.Error.FILENOTFOUND);
+            throw new ZbException("文章不能为空");
         }
         if(!StringUtils.endsWithIgnoreCase(file.getOriginalFilename(), ".zip")){
-            throw new ZbException(UploadResponseVo.Error.ILLEGALEXTENSION);
+            throw new ZbException("不支持的文件类型");
         }
         ZipInputStream zis = null;
         Path tempPath = null;
@@ -184,13 +186,17 @@ public class ThemeServiceImpl implements ThemeService {
                 Map<String, ZbTheme> themeMap = selectThemesMap();
                 themeMap.put(themeId,zbTheme);
                 redisService.set(CacheKeyPrefix.THEMES.getPrefix(),GsonUtil.toJson(themeMap));
-                return new UploadResponseVo(themeId,file.getOriginalFilename(), "zip", themeId, CoreConst.SUCCESS_CODE);
+                BlogFile blogFile = new BlogFile();
+                blogFile.withOriginalName(file.getOriginalFilename())
+                        .withFileName(themeId)
+                        .withFilePath(themeId);
+                return ResponseUtil.success(blogFile);
             }else{
                 throw new ZbException("未找到该主题配置文件！");
             }
         } catch (Exception e) {
             log.error("上传主题失败:{}",e);
-            return  new UploadResponseVo(file.getOriginalFilename(), CoreConst.FAIL_CODE, e.getMessage());
+            return ResponseUtil.error(file.getOriginalFilename());
         } finally {
             FileUtil.closeStream(zis);
             FileUtil.delete(tempPath);

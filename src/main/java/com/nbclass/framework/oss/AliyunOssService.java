@@ -3,7 +3,8 @@ package com.nbclass.framework.oss;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyun.oss.model.ObjectMetadata;
-import com.nbclass.framework.exception.ZbException;
+import com.nbclass.framework.exception.OssException;
+import com.nbclass.model.BlogFile;
 import com.nbclass.vo.CloudStorageConfigVo;
 
 import java.io.ByteArrayInputStream;
@@ -27,12 +28,12 @@ public class AliyunOssService extends OssService {
     }
 
     @Override
-    public String upload(byte[] data, String path, boolean isPublic) {
+    public BlogFile upload(byte[] data, String path, boolean isPublic) {
         return upload(new ByteArrayInputStream(data), path, isPublic);
     }
 
     @Override
-    public String upload(InputStream inputStream, String path, boolean isPublic) {
+    public BlogFile upload(InputStream inputStream, String path, boolean isPublic) {
         try {
             if(isPublic){
                 ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -41,20 +42,34 @@ public class AliyunOssService extends OssService {
             }else{
                 client.putObject(config.getAliyunBucketName(), path, inputStream);
             }
+            BlogFile blogFile = new BlogFile();
+            blogFile.withFilePath(path)
+                    .withFileFullPath(config.getAliyunDomain() + "/" + path)
+                    .withFileName(getFileName(path))
+                    .withFileType(getFileType(path))
+                    .withOssType(OssTypeEnum.ALIYUN.getValue());
+            return blogFile;
         } catch (Exception e){
-            throw new ZbException("上传文件失败，请检查配置信息", e);
+            throw new OssException("上传文件失败，请检查配置信息", e);
+        } finally {
+            client.shutdown();
         }
-
-        return config.getAliyunDomain() + "/" + path;
     }
 
     @Override
-    public String uploadSuffix(byte[] data, String suffix, boolean isPublic) {
+    public BlogFile uploadSuffix(byte[] data, String suffix, boolean isPublic) {
         return upload(data, getPath(config.getAliyunPrefix(), suffix), isPublic);
     }
 
     @Override
-    public String uploadSuffix(InputStream inputStream, String suffix, boolean isPublic) {
+    public BlogFile uploadSuffix(InputStream inputStream, String suffix, boolean isPublic) {
         return upload(inputStream, getPath(config.getAliyunPrefix(), suffix), isPublic);
     }
+
+    @Override
+    public void delete(String path) {
+        client.deleteObject(config.getAliyunBucketName(), path);
+        client.shutdown();
+    }
+
 }

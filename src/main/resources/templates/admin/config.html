@@ -280,10 +280,10 @@
                 before:function(){
                     App.mask(".uploader");
                 },
-                onSuccess:function(picker,data){
+                onSuccess:function(picker,res){
                     App.unmask(".uploader");
-                    if(data.status===200){
-                        $(picker).parent().prev().val(data.url);
+                    if(res.status===200){
+                        $(picker).parent().prev().val(res.data.fileFullPath);
                     }
                 }
             });

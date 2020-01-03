@@ -99,9 +99,11 @@
                         before:function(){
                             App.mask($this);
                         },
-                        onSuccess:function(picker,data){
+                        onSuccess:function(picker,res){
                             App.unmask($this);
-                            $this.parent().prev().val(data.url);
+                            if(res.status===200) {
+                                $this.parent().prev().val(res.data.fileFullPath);
+                            }
                         }
                     });
                 });

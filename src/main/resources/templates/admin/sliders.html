@@ -89,10 +89,10 @@
                     before:function(){
                         App.mask(".upload-cover");
                     },
-                    onSuccess:function(picker,data){
+                    onSuccess:function(picker,res){
                         App.unmask(".upload-cover");
-                        if(data.status===200){
-                            $("#sliderImg").val(data.url);
+                        if(res.status===200){
+                            $("#sliderImg").val(res.data.fileFullPath);
                         }
                     }
                 });
