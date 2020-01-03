@@ -46,6 +46,7 @@
             <div class="z-card">
                 <div class="z-card-body">
 					<div class="btn-group z-table-btn-group" role="group">
+						<button id="btn_add" type="button" class="btn btn-primary">上传</button>
 						<button id="btn_batch_delete" type="button" class="btn btn-danger">批量删除</button>
 					</div>
                     <table id="table" data-url="/admin/file/list" data-query-params="queryParams" data-key="id" data-response-handler="responseHandler">
@@ -72,6 +73,22 @@
             $(function () {
                 App.initSelect("select");
                 App.initTable("#table");
+				App.initUploader({
+					pick: '#btn_add',
+					url:'/upload/upload',
+					before:function(){
+						App.mask("#btn_add");
+					},
+					onSuccess:function(picker,res){
+						App.unmask("#btn_add");
+						if(res.status===200){
+							App.msgS(res.msg);
+							App.refreshTable("#table");
+						}else{
+							App.msgE(res.msg);
+						}
+					}
+				});
 
 				$("#btn_query").on('click', function(){
 					App.refreshTable("#table");
