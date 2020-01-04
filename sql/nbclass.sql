@@ -150,14 +150,14 @@ CREATE TABLE `blog_config` (
 -- ----------------------------
 INSERT INTO `blog_config` VALUES ('1', 'CLOUD_STORAGE_CONFIG', '{\"type\":0,\"localDomain\":\"http://localhost:8080\",\"localPrefix\":\"\",\"qiniuDomain\":\"http://cdn.nbclass.com\",\"qiniuPrefix\":\"img/blog\",\"qiniuAccessKey\":\"dGKQzLej_0__Xd9kElc7IK-BXFTs\",\"qiniuSecretKey\":\"8sZZbdmEDS4yVx0DCF_-Das\",\"qiniuBucketName\":\"xxx\",\"aliyunDomain\":\"https://xxx.oss-cn-hangzhou.aliyuncs.com\",\"aliyunPrefix\":\"blog/\",\"aliyunEndPoint\":\"oss-cn-hangzhou.aliyuncs.com\",\"aliyunAccessKeyId\":\"LTAI4FgN4uWUatpHLxxjXmv1\",\"aliyunAccessKeySecret\":\"OJTXOBiLxxpKCAMURVlonFGdHb1n1\",\"aliyunBucketName\":\"xxx-img\",\"qcloudDomain\":\"https://xxx.cos.ap-shanghai.myqcloud.com\",\"qcloudPrefix\":\"blog/\",\"qcloudSecretId\":\"AKIDrxxxgT2fMDNHud5HDtOTJlACx\",\"qcloudSecretKey\":\"iBSZP6WifMn3A1cxxxwULwH\",\"qcloudBucketName\":\"sttbaxxx\",\"qcloudRegion\":\"ap-shanghai\"}', '云存储配置信息', '1', '2019-12-25 18:21:53', '2019-12-25 18:21:54');
 INSERT INTO `blog_config` VALUES ('2', 'SITE_HOST', 'http://localhost:8080', '网站域名', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:00');
-INSERT INTO `blog_config` VALUES ('3', 'SITE_CDN', 'http://localhost:8080', 'CDN域名', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:01');
-INSERT INTO `blog_config` VALUES ('4', 'SITE_NAME', 'nbclass', '网站名称', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:02');
-INSERT INTO `blog_config` VALUES ('5', 'SITE_KWD', 'nbclass,博客模板,zblog,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站关键字', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:03');
-INSERT INTO `blog_config` VALUES ('6', 'SITE_DESC', 'nbclass,博客模板,zblog,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站描述', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:03');
+INSERT INTO `blog_config` VALUES ('3', 'SITE_CDN', '', 'CDN域名', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:01');
+INSERT INTO `blog_config` VALUES ('4', 'SITE_NAME', 'JustBlog', '网站名称', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:02');
+INSERT INTO `blog_config` VALUES ('5', 'SITE_KWD', 'JustBlog,博客模板,nbclass,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站关键字', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:03');
+INSERT INTO `blog_config` VALUES ('6', 'SITE_DESC', 'JustBlog,博客模板,nbclass,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站描述', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:03');
 INSERT INTO `blog_config` VALUES ('7', 'EDITOR_TYPE', '2', '编辑器类型', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('8', 'SITE_ICON', '/img/logo-color.png', '网站ico', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:04');
-INSERT INTO `blog_config` VALUES ('9', 'SITE_LOGO', '/img/logo-color.png', '网站logo', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:06');
-INSERT INTO `blog_config` VALUES ('10', 'ADMIN_SITE_LOGO', '/img/logo-white.png', '后台logo', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('8', 'SITE_ICON', '/static/img/logo-color.png', '网站ico', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:04');
+INSERT INTO `blog_config` VALUES ('9', 'SITE_LOGO', '/static/img/logo-color.png', '网站logo', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:06');
+INSERT INTO `blog_config` VALUES ('10', 'ADMIN_SITE_LOGO', '/static/img/logo-white.png', '后台logo', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('11', 'ADMIN_SITE_NAME', 'Just', '后台标题', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('13', 'SYSTEM_CREATE_TIME', '', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
@@ -273,5 +273,5 @@ CREATE TABLE `blog_user` (
 -- ----------------------------
 -- Records of blog_user
 -- ----------------------------
-INSERT INTO `blog_user` VALUES ('1', '1000000862441215', '123456', '47b816ee4434cff22b070602299fbc7f', '8bdac39c0c1a46dd9f8c4a1d7cc9eecf', '123456', 'zqf@nbclass.com', null, null, '/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
-INSERT INTO `blog_user` VALUES ('2', '1000000862441216', 'admin', '8fd06f8c1572f52ac9df72398d8fe9ca', '097cf4b9a18844b08b452d4ebefc1de0', 'admin', 'admin@nbclass.com', null, null, '/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
+INSERT INTO `blog_user` VALUES ('1', '1000000862441215', '123456', '47b816ee4434cff22b070602299fbc7f', '8bdac39c0c1a46dd9f8c4a1d7cc9eecf', '123456', 'zqf@nbclass.com', null, null, '/static/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
+INSERT INTO `blog_user` VALUES ('2', '1000000862441216', 'admin', '8fd06f8c1572f52ac9df72398d8fe9ca', '097cf4b9a18844b08b452d4ebefc1de0', 'admin', 'admin@nbclass.com', null, null, '/static/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');

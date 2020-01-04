@@ -625,7 +625,7 @@ var Core = (function () {
                             '<li>'+
                             '	<div class="comment-body" id="comment-'+value.id+'">'+
                             '		<div class="comment-user-img">'+
-                            '			<img src="'+(value.avatar||"/img/user-default.png")+'" onerror="this.src=\'/img/user-default.png\'" />'+
+                            '			<img src="'+(value.avatar||"/static/img/user-default.png")+'" onerror="this.src=\'/static/img/user-default.png\'" />'+
                             '		</div>'+
                             '		<div class="comment-info">'+
                             '			<div class="comment-top">'+
@@ -652,7 +652,7 @@ var Core = (function () {
                                 commentOne +=
                                     '<div class="comment-body-sub" id="comment-'+nValue.id+'">'+
                                     '		<div class="comment-user-img">'+
-                                    '			<img src="'+(nValue.avatar||"/img/user-default.png")+'" onerror="this.src=\'/img/user-default.png\'" />'+
+                                    '			<img src="'+(nValue.avatar||"/static/img/user-default.png")+'" onerror="this.src=\'/static/img/user-default.png\'" />'+
                                     '		</div>'+
                                     '		<div class="comment-info">'+
                                     '			<div class="comment-top">'+
@@ -737,7 +737,7 @@ var Core = (function () {
             var html='<li>'+
                 '<div class="comment-body">'+
                 ' <div class="comment-user-img">'+
-                '<img src="'+data.avatar+'" onerror="this.src=\'/img/user-default.png\'" />'+
+                '<img src="'+data.avatar+'" onerror="this.src=\'/static/img/user-default.png\'" />'+
                 '</div>'+
                 '<div class="comment-info">'+
                 '<div class="comment-top">'+

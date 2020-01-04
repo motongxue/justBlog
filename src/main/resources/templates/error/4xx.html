@@ -3,13 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>[[${status}]]</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link th:href="@{/css/error.css}" rel="stylesheet"/>
+    <title>[[${status}]]</title>
+    <link rel="icon" th:href="${config.SITE_ICON}">
+    <link rel="stylesheet" th:href="${config.SITE_CDN+'/static/css/error.css'}"/>
 </head>
 <body>
 <div class="main-content error-content">
-    <div class="error-img-content"><img th:src="@{/img/500.png}"></div>
+    <div class="error-img-content"><img th:src="${config.SITE_CDN+'/static/img/500.png'}"></div>
     <p class="error-text">[[${error}]]</p>
     <div class="error-btn-content">
         <a class="btn btn-danger" href="/">返回主页</a>
