@@ -598,8 +598,7 @@ var Core = (function () {
                 if(data.status==200){
                     $("#replyEmojiEditorBox .emoji-editor").html("");
                     $("#reply-comment-form").hide();
-                    $(".reply[style='display: none;']").next().hide();
-                    $(".reply[style='display: none;']").show();
+                    $(".cancel-reply:visible").hide().prev().removeAttr("style");
                     handleCommentData(data.data,1);
                     if(Core.getCookie("just-nickname")==""){
                         Core.setCookie("just-nickname",$("#reply-nickname").val(),30);
