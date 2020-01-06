@@ -110,7 +110,6 @@ public class ThemeServiceImpl implements ThemeService {
             throw new ZbException("主题正在使用，不可删除");
         }
         FileUtil.delete(getUserThemePath(themeId));
-        FileUtil.delete(getSysThemePath(themeId));
         redisService.del(CacheKeyPrefix.THEME.getPrefix()+themeId);
         Map<String, ZbTheme> themeMap = selectThemesMap();
         themeMap.remove(themeId);
@@ -191,47 +190,51 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public Path getSysTemplatePath() {
-        try {
-            String templateClassPath = String.format("%s%s",ResourceUtils.CLASSPATH_URL_PREFIX,CoreConst.TEMPLATE_FOLDER);
-            URI themeUri = ResourceUtils.getURL(templateClassPath).toURI();
-            boolean isJarEnv = "jar".equalsIgnoreCase(themeUri.getScheme());
-            FileSystem fileSystem = isJarEnv? FileSystems.newFileSystem(themeUri, Collections.emptyMap()):null;
-            return isJarEnv? fileSystem.getPath(String.format("/BOOT-INF/classes/%s",CoreConst.TEMPLATE_FOLDER)) : Paths.get(themeUri);
-        } catch (Exception e) {
-            log.error("获取系统模板路径失败：{}",e);
-        }
-        return null;
+        return getJarOrLocalPath(CoreConst.TEMPLATE_FOLDER);
     }
 
     @Override
     public Path getSysThemePath(String themeId) {
-        try {
-            String themeClassPath = String.format("%s%s%s",ResourceUtils.CLASSPATH_URL_PREFIX,CoreConst.THEME_FOLDER,StringUtils.isNotEmpty(themeId)?(themeId+"/"):"");
-            URI themeUri = ResourceUtils.getURL(themeClassPath).toURI();
-            boolean isJarEnv = "jar".equalsIgnoreCase(themeUri.getScheme());
-            FileSystem fileSystem = isJarEnv? FileSystems.newFileSystem(themeUri, Collections.emptyMap()):null;
-            return isJarEnv? fileSystem.getPath(String.format("/BOOT-INF/classes/%s%s",CoreConst.THEME_FOLDER,StringUtils.isNotEmpty(themeId)?(themeId+"/"):"")) : Paths.get(themeUri);
-        } catch (Exception e) {
-            log.error("获取系统主题路径失败：{}",e);
-        }
-        return null;
+        return getJarOrLocalPath(CoreConst.THEME_FOLDER+themeId+"/");
+    }
+
+    @Override
+    public Path getUserThemePath() {
+        return  Paths.get(zbProperties.getWorkThemeDir());
     }
 
     @Override
     public Path getUserThemePath(String themeId) {
-        return  Paths.get(StringUtils.isEmpty(themeId)? zbProperties.getWorkThemeDir():zbProperties.getWorkThemeDir(themeId));
+        return  Paths.get(zbProperties.getWorkThemeDir(themeId));
     }
 
     @Override
     public void handleThemeSetting(ZbTheme theme) {
-        List<ZbThemeSetting> settingList = theme.getSettings();
-        Map<String,String> map= new HashMap<>();
-        settingList.forEach(setting-> setting.getForm().forEach(formItem->{
-            formItem.setValue(formItem.getDefaultValue());
-            map.put(formItem.getName(),formItem.getValue());
-        }));
-        theme.setSetting(map);
-        redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
+        String key = CacheKeyPrefix.THEME.getPrefix() + theme.getId();
+        if(null==redisService.get(key)){
+            List<ZbThemeSetting> settingList = theme.getSettings();
+            Map<String,String> map= new HashMap<>();
+            settingList.forEach(setting-> setting.getForm().forEach(formItem->{
+                formItem.setValue(formItem.getDefaultValue());
+                map.put(formItem.getName(),formItem.getValue());
+            }));
+            theme.setSetting(map);
+            redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
+        }
+    }
+
+
+    private Path getJarOrLocalPath(String folder){
+        try {
+            String templateClassPath =String.format("%s%s",ResourceUtils.CLASSPATH_URL_PREFIX, folder);
+            URI themeUri = ResourceUtils.getURL(templateClassPath).toURI();
+            boolean isJarEnv = "jar".equalsIgnoreCase(themeUri.getScheme());
+            FileSystem fileSystem = isJarEnv? FileSystems.newFileSystem(themeUri, Collections.emptyMap()):null;
+            return isJarEnv? fileSystem.getPath(String.format("/BOOT-INF/classes/%s",folder)) : Paths.get(themeUri);
+        } catch (Exception e) {
+            log.error("get path error ：{}",e);
+        }
+        return null;
     }
 
 }

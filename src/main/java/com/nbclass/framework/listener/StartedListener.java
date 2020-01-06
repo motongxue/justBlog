@@ -58,8 +58,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     public void onApplicationEvent(ApplicationStartedEvent event) {
         //系统初始化
         this.initSystem();
-        //系统初Thymeleaf
-        this.initThymeleaf();
+        //初始化Template
+        this.initTemplate();
         //初始化模板引擎
         thymeleafService.init();
         //打印信息
@@ -82,11 +82,11 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     }
 
 
-    private void initThymeleaf(){
+    private void initTemplate(){
         try {
+            log.info("Blog template start init...");
             Path sysPath = themeService.getSysTemplatePath();
             Path userPath = Paths.get(zbProperties.getWorkTemplateDir());
-            final Path[] sysThemePathFinal = {null};
             try (Stream<Path> pathStream = Files.list(sysPath)) {
                 pathStream.forEach(path -> {
                     try {
@@ -95,62 +95,57 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
                             if (!(pathStr.endsWith("theme")||pathStr.endsWith("theme/"))) {
                                 FileUtil.copyFolder(path, userPath.resolve(sysPath.relativize(path).toString()));
                             }else{
-                                sysThemePathFinal[0] = path;
+                                //主题文件夹处理
+                                try {
+                                    Path userSource = themeService.getUserThemePath();
+                                    Map<String, ZbTheme> sysThemeMap = FileUtil.scanThemeFolder(path);
+                                    Map<String, ZbTheme> userThemeMap = FileUtil.scanThemeFolder(userSource);
+                                    if (CollectionUtils.isEmpty(sysThemeMap) && CollectionUtils.isEmpty(userThemeMap)) {
+                                        throw new RuntimeException("system theme and user theme not exist");
+                                    }
+                                    //用户自定义主题目录和系统主题目录处理
+                                    if (CollectionUtils.isEmpty(userThemeMap)) {
+                                        FileUtil.copyFolder(path, userSource);
+                                        userThemeMap = sysThemeMap;
+                                    } else {
+                                        Map<String, ZbTheme> finalUserThemeMap = userThemeMap;
+                                        sysThemeMap.forEach((k, v)->{
+                                            ZbTheme userTheme = finalUserThemeMap.get(k);
+                                            if(userTheme == null){
+                                                //系统主题不在用户自定义目录，则copy进用户自定义目录
+                                                try {
+                                                    FileUtil.copyFolder( themeService.getSysThemePath(k), themeService.getUserThemePath(k));
+                                                    finalUserThemeMap.put(k,v);
+                                                } catch (IOException e) {
+                                                    throw new RuntimeException("Copy system theme ["+k+"] to user folder error:{}", e);
+                                                }
+                                            }
+                                        });
+                                    }
+                                    userThemeMap.forEach((k,v)-> themeService.handleThemeSetting(v));
+                                    redisService.set(CacheKeyPrefix.THEMES.getPrefix(),  GsonUtil.toJson(userThemeMap));
+                                    //当前主题处理
+                                    ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
+                                    if (null == currentTheme) {
+                                        //第一次启动，初始化当前系统主题
+                                        currentTheme = userThemeMap.entrySet().iterator().next().getValue();
+                                        redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), currentTheme);
+                                    }
+                                    CoreConst.currentTheme=currentTheme.getId();
+                                }catch (Exception e){
+                                    throw new RuntimeException("Blog themes init error", e);
+                                }
                             }
                         } else {
                             Files.copy(path, userPath.resolve(sysPath.relativize(path).toString()), StandardCopyOption.REPLACE_EXISTING);
                         }
                     }catch (IOException e) {
-                        log.error("copy sys template : {} to user template error : {}",path.toString(),userPath.toString());
+                        log.error("Copy system template : {} to user template : {} error  : {}",path.toString(),userPath.toString(),e);
                     }
                 });
             }
-            if(sysThemePathFinal[0]!=null){
-                try {
-                    log.info("Blog themes start init");
-                    Path sysSource = sysThemePathFinal[0];
-                    Path userSource = themeService.getUserThemePath(null);
-                    log.info("系统资源,{}",sysSource.toString());
-                    Map<String, ZbTheme> sysThemeMap = FileUtil.scanThemeFolder(sysSource);
-                    Map<String, ZbTheme> userThemeMap = FileUtil.scanThemeFolder(userSource);
-                    if (CollectionUtils.isEmpty(sysThemeMap)) {
-                        throw new RuntimeException("system theme does not exist");
-                    }
-                    //用户自定义主题目录和系统主题目录处理
-                    if (CollectionUtils.isEmpty(userThemeMap)) {
-                        FileUtil.copyFolder(sysSource, userSource);
-                        userThemeMap = sysThemeMap;
-                    } else {
-                        Map<String, ZbTheme> finalUserThemeMap = userThemeMap;
-                        sysThemeMap.forEach((k, v)->{
-                            ZbTheme userTheme = finalUserThemeMap.get(k);
-                            if(userTheme == null){
-                                //系统主题不在用户自定义目录，则copy进用户自定义目录
-                                try {
-                                    FileUtil.copyFolder( themeService.getSysThemePath(k), themeService.getUserThemePath(k));
-                                    finalUserThemeMap.put(k,v);
-                                } catch (IOException e) {
-                                    throw new RuntimeException("copy theme to user folder error:{}", e);
-                                }
-                            }
-                        });
-                    }
-                    userThemeMap.forEach((k,v)-> themeService.handleThemeSetting(v));
-                    redisService.set(CacheKeyPrefix.THEMES.getPrefix(),  GsonUtil.toJson(userThemeMap));
-                    //当前主题处理
-                    ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
-                    if (null == currentTheme) {
-                        //第一次启动，初始化当前系统主题
-                        currentTheme = userThemeMap.entrySet().iterator().next().getValue();
-                        redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), currentTheme);
-                    }
-                    CoreConst.currentTheme=currentTheme.getId();
-                }catch (Exception e){
-                    throw new RuntimeException("Blog themes init error", e);
-                }
-            }
         } catch (IOException e) {
-            log.error("copy sys template folder to user folder error : {}",e);
+            log.error("Copy system template folder to user folder error : {}",e);
         }
     }
 

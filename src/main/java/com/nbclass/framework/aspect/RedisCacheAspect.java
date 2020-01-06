@@ -56,7 +56,6 @@ public class RedisCacheAspect {
         boolean hasKey = redisService.hasKey(key);
         if (hasKey) {
             try {
-                logger.info("从缓存中获取数据：{}", key);
                 return redisService.get(key);
             } catch (Exception e) {
                 logger.error("从缓存中获取数据失败！", e);
@@ -65,7 +64,6 @@ public class RedisCacheAspect {
         // 先执行业务
         Object result = point.proceed();
         redisService.set(key, result, cache.expire(), cache.unit());
-        logger.info("从数据库中获取数据：{}", key);
         return result;
     }
 
