@@ -315,7 +315,7 @@ public class FileUtil {
             Map<String,ZbTheme> resMap = new LinkedHashMap<>();
             pathStream.forEach(path -> {
                 if (Files.isDirectory(path)) {
-                    String s = readFile(Paths.get(path.toString()+"/"+CoreConst.THEME_SETTING_NAME));
+                    String s = readFile(path.resolve(CoreConst.THEME_SETTING_NAME));
                     if(StringUtils.isNotEmpty(s)){
                         Yaml yaml = new Yaml();
                         ZbTheme zbTheme = yaml.loadAs(s, ZbTheme.class);
