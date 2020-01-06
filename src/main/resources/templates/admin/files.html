@@ -83,7 +83,7 @@
 					onSuccess:function(picker,res){
 						App.unmask("#btn_add");
 						if(res.status===200){
-							App.msgS(res.msg);
+							App.msgS("上传成功");
 							App.refreshTable("#table");
 						}else{
 							App.msgE(res.msg);
