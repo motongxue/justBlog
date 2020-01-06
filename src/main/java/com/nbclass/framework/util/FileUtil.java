@@ -1,9 +1,8 @@
 package com.nbclass.framework.util;
 
+import com.nbclass.framework.exception.ZbException;
 import com.nbclass.framework.theme.ZbFile;
 import com.nbclass.framework.theme.ZbTheme;
-import com.nbclass.framework.exception.ZbException;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ResourceUtils;
@@ -277,7 +276,6 @@ public class FileUtil {
             }
         });
     }
-
 
     public static List<ZbFile> listFiles(Path topPath, boolean recursion){
         List<ZbFile> files = listFiles(new ArrayList<>(), topPath, recursion);

@@ -21,9 +21,13 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * StartedListener
@@ -54,6 +58,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     public void onApplicationEvent(ApplicationStartedEvent event) {
         //系统初始化
         this.initSystem();
+        //初始化themeleaf所有文件
+        this.initThymeleaf();
         //初始化主题
         this.initThemes();
         //初始化模板引擎
@@ -76,6 +82,33 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
         log.info("Blog started success:         {}", blogUrl);
         log.info("Blog admin started success:   {}/admin", blogUrl);
     }
+
+
+    private void initThymeleaf(){
+        try {
+            Path sysPath = themeService.getSysTemplatePath();
+            Path userPath = Paths.get(zbProperties.getWorkTemplateDir());
+            try (Stream<Path> pathStream = Files.list(sysPath)) {
+                pathStream.forEach(path -> {
+                    try {
+                        if (Files.isDirectory(path)) {
+                            if (!path.toString().endsWith("theme")) {
+                                FileUtil.copyFolder(path, userPath.resolve(sysPath.relativize(path).toString()));
+                            }
+                        } else {
+                            Files.copy(path, userPath.resolve(sysPath.relativize(path).toString()), StandardCopyOption.REPLACE_EXISTING);
+                        }
+                    }catch (IOException e) {
+                        log.error("copy sys template : {} to user template error : {}",path.toString(),userPath.toString());
+                    }
+
+                });
+            }
+        } catch (IOException e) {
+            log.error("copy sys template folder to user folder error : {}",e);
+        }
+    }
+
 
     private void initThemes() {
         try {
@@ -105,6 +138,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
                         }
                     }
                 });
+                System.out.println(userSource.toString());
+                System.out.println(sysSource.toString());
                 FileUtil.copyFolder(userSource, sysSource);
             }
             userThemeMap.forEach((k,v)-> themeService.handleThemeSetting(v));

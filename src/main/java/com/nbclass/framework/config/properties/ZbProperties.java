@@ -28,12 +28,16 @@ public class ZbProperties{
         return CoreConst.USER_HOME + File.separator + workDir;
     }
 
+    public String getWorkTemplateDir(){
+        return CoreConst.USER_HOME + File.separator + workDir +  File.separator + CoreConst.TEMPLATE_ + File.separator;
+    }
+
     public String getWorkThemeDir(){
-        return CoreConst.USER_HOME + File.separator + workDir + File.separator + CoreConst.THEME_;
+        return CoreConst.USER_HOME + File.separator + workDir+  File.separator + CoreConst.TEMPLATE_ + File.separator + CoreConst.THEME_;
     }
 
     public String getWorkThemeDir(String themeId){
-        return CoreConst.USER_HOME + File.separator + workDir + File.separator + CoreConst.THEME_ + File.separator + themeId;
+        return CoreConst.USER_HOME + File.separator + workDir+  File.separator + CoreConst.TEMPLATE_ + File.separator + CoreConst.THEME_ + File.separator + themeId;
     }
 
     public String getWorkFileDir(){

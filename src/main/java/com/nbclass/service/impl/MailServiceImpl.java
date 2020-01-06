@@ -24,7 +24,7 @@ import java.util.Map;
 public class MailServiceImpl implements MailService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String templatePrefix="emailTemplate/";
+    private static final String templatePrefix="email/";
 
 
     @Autowired

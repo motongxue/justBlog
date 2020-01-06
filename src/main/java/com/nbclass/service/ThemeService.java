@@ -28,9 +28,9 @@ public interface ThemeService {
 
     void saveFileContent(String absolutePath, String content);
 
-    void copyUserThemeToSystemTheme(String themeId);
-
     ResponseVo upload(MultipartFile file);
+
+    Path getSysTemplatePath();
 
     Path getSysThemePath(String themeId);
 

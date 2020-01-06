@@ -21,6 +21,8 @@ public class CoreConst {
     public static final String   ACCESS_TOKEN             = "access_token";
     public static final String   USER_HOME                = System.getProperty("user.home");
     public static final String   WORK_DIR_KEY               = "zb.workDir";
+    public static final String   TEMPLATE_                  = "templates";
+    public static final String   TEMPLATE_FOLDER          = "templates/";
     public static final String   THEME_FOLDER             = "templates/theme/";
     public static final String   THEME_SETTING_NAME      = "setting.yml";
     public static final String   THEME_                    = "theme";

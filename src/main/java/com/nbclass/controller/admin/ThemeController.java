@@ -69,7 +69,6 @@ public class ThemeController {
     @AccessToken
     public ResponseVo getFileContent(String themeId, String path, String content){
         themeService.saveFileContent(path,content);
-        themeService.copyUserThemeToSystemTheme(themeId);
         return ResponseUtil.success("文件内容保存成功");
     }
 

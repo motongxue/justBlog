@@ -138,17 +138,6 @@ public class ThemeServiceImpl implements ThemeService {
     }
 
     @Override
-    public void copyUserThemeToSystemTheme(String themeId) {
-        try {
-            Path sysSource = this.getSysThemePath(themeId);
-            Path userSource = this.getUserThemePath(themeId);
-            FileUtil.copyFolder(userSource, sysSource);
-        } catch (Exception e) {
-            throw new ZbException("保存文件失败", e);
-        }
-    }
-
-    @Override
     public ResponseVo upload(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new ZbException("文章不能为空");
@@ -177,10 +166,6 @@ public class ThemeServiceImpl implements ThemeService {
                 String themeDir = zbProperties.getWorkThemeDir(themeId);
                 Path targetThemePath = Paths.get(themeDir);
                 FileUtil.copyFolder(filterTempPath, targetThemePath);
-                //用户目录copy到系统目录，待优化
-                Path sysSource = this.getSysThemePath(null);
-                Path userSource = this.getUserThemePath(null);
-                FileUtil.copyFolder(userSource, sysSource);
                 //存入缓存
                 handleThemeSetting(zbTheme);
                 Map<String, ZbTheme> themeMap = selectThemesMap();
@@ -202,6 +187,20 @@ public class ThemeServiceImpl implements ThemeService {
             FileUtil.delete(tempPath);
         }
 
+    }
+
+    @Override
+    public Path getSysTemplatePath() {
+        try {
+            String templateClassPath = String.format("%s%s",ResourceUtils.CLASSPATH_URL_PREFIX,CoreConst.TEMPLATE_FOLDER);
+            URI themeUri = ResourceUtils.getURL(templateClassPath).toURI();
+            boolean isJarEnv = "jar".equalsIgnoreCase(themeUri.getScheme());
+            FileSystem fileSystem = isJarEnv? FileSystems.newFileSystem(themeUri, Collections.emptyMap()):null;
+            return isJarEnv? fileSystem.getPath(String.format("/BOOT-INF/classes/%s",CoreConst.TEMPLATE_FOLDER)) : Paths.get(themeUri);
+        } catch (Exception e) {
+            log.error("获取系统模板路径失败：{}",e);
+        }
+        return null;
     }
 
     @Override
