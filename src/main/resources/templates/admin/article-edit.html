@@ -109,13 +109,16 @@
 					</div>
 					<div class="form-group">
 						<div class="col-xs-12">
-							<label class="control-label label-four">模板名称 <span class="text-danger">*</span>: <span class="z-tooltip">
+							<label class="control-label label-four">模板页面 <span class="text-danger">*</span>: <span class="z-tooltip">
 									<i class="z-tooltip-i fa fa-info-circle"></i>
 									<span class="z-tooltip-text z-tooltip-right">当前主题下的html页面名称</span>
 								</span>
 							</label>
 							<div class="ml-100">
-								<input type="text" name="template" th:value="${article.template}" class="form-control" placeholder="模板名称" require=""/>
+								<select name="template" class="form-control" require="">
+									<option value="">请选择</option>
+									<option th:each="option:${currentTheme.templates}" th:selected="${option}==${article.template}" th:value="${option}" th:text="${option}"></option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -239,6 +242,7 @@
 <script>
     var editorType = '[[${article.editorType}]]';
 	$(function () {
+		App.initSelect("select");
         App.initUploader({
             pick: '.upload-cover',
             url:'/upload/upload',
@@ -327,9 +331,9 @@
 					App.confirm({content:"确认保存文章？"},function () {
 						App.postAjax("/admin/article/save",$("#articleForm").serialize(),function (data) {
 							if(data.status===200){
-								App.msgS(data.msg)
+								App.msgS(data.msg);
 							}else{
-								App.msgE(data.msg)
+								App.msgE(data.msg);
 							}
 						})
 					})

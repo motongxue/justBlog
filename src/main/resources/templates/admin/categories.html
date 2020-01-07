@@ -76,9 +76,13 @@
                 </div>
             </div>
             <div class="form-group type-page">
-                <label  class="col-sm-3 control-label">模板名称 <span class="text-danger">*</span>:</label>
+                <label  class="col-sm-3 control-label">模板页面 <span class="text-danger">*</span>: <span class="z-tooltip">
+                        <i class="z-tooltip-i fa fa-info-circle"></i>
+                        <span class="z-tooltip-text z-tooltip-right">当前主题下的html页面名称</span>
+                    </span>
+                </label>
                 <div class="col-sm-8">
-                    <select name="template" class="form-control" require="">
+                    <select id="template" name="template" class="form-control" require="">
                         <option value="">请选择</option>
                         <option th:each="option:${currentTheme.templates}" th:value="${option}" th:text="${option}"></option>
                     </select>
@@ -232,6 +236,7 @@
                     if(selectData.aliasName!=null&&selectData.aliasName!==""){
                         $("#aliasNameAuto").text(selectData.aliasName);
                     }
+                    App.echoSelect("#template",selectData.template);
                 }
             }
         },function(){
@@ -260,6 +265,7 @@
             $("#pid").parent().removeClass("z-select-disabled");
             $(".type-page").show();
             $("#aliasNameAuto").text("${auto}");
+            App.resetSelect("#template");
         });
     }
 </script>

@@ -109,7 +109,7 @@
 					</div>
 					<div class="form-group">
 						<div class="col-xs-12">
-							<label class="control-label label-four">模板名称 <span class="text-danger">*</span>: <span class="z-tooltip">
+							<label class="control-label label-four">模板页面 <span class="text-danger">*</span>: <span class="z-tooltip">
 									<i class="z-tooltip-i fa fa-info-circle"></i>
 									<span class="z-tooltip-text z-tooltip-right">当前主题下的html页面名称</span>
 								</span>
@@ -335,8 +335,10 @@
 					App.confirm({content:"确认保存文章？"},function () {
 						App.postAjax("/admin/article/save",$("#articleForm").serialize(),function (data) {
 							if(data.status===200){
-                                if(editorType==="2"){articleEditor.clearAutosavedValue();}
-                                App.msg({content:data.msg, time:1000},function () {
+                                if(editorType==="2"){
+                                	articleEditor.clearAutosavedValue();
+                                }
+                                App.msg({content:data.msg, icon:1, time:1000},function () {
                                     window.location.reload();
                                 });
 							}else{

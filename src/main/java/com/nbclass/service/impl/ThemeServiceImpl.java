@@ -257,10 +257,10 @@ public class ThemeServiceImpl implements ThemeService {
         StringBuilder theme2Str= new StringBuilder();
         for(String template: theme1.getTemplates()){
             theme1Str.append(template);
-        };
+        }
         for(String template: theme2.getTemplates()){
             theme2Str.append(template);
-        };
+        }
         return theme1Str.toString().equals(theme2Str.toString());
     }
 
