@@ -46,6 +46,11 @@ public class ZbTheme implements Comparator<ZbTheme> {
     private Map<String,String> setting;
 
     /**
+     * html模板
+     */
+    private List<String> templates;
+
+    /**
      * 版本号
      */
     private String version;

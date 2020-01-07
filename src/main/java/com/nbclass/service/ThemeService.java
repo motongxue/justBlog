@@ -39,4 +39,6 @@ public interface ThemeService {
     Path getUserThemePath(String themeId);
 
     void handleThemeSetting(ZbTheme theme);
+
+    void handleCurrentTheme(ZbTheme userTheme, ZbTheme cacheTheme);
 }

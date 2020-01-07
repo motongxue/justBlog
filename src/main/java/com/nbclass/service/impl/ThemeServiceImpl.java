@@ -210,8 +210,8 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public void handleThemeSetting(ZbTheme theme) {
-        String key = CacheKeyPrefix.THEME.getPrefix() + theme.getId();
-        if(null==redisService.get(key)){
+        ZbTheme cacheTheme = this.selectByThemeId(theme.getId());
+        if(null==cacheTheme){
             List<ZbThemeSetting> settingList = theme.getSettings();
             Map<String,String> map= new HashMap<>();
             settingList.forEach(setting-> setting.getForm().forEach(formItem->{
@@ -220,6 +220,20 @@ public class ThemeServiceImpl implements ThemeService {
             }));
             theme.setSetting(map);
             redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), theme);
+        }else{
+            //文件夹内模板文件是否变化
+            if(!compareTemplate(theme,cacheTheme)){
+                cacheTheme.setTemplates(theme.getTemplates());
+                redisService.set(CacheKeyPrefix.THEME.getPrefix() + theme.getId(), cacheTheme);
+            }
+        }
+    }
+
+    @Override
+    public void handleCurrentTheme(ZbTheme userTheme, ZbTheme cacheTheme) {
+        if(!compareTemplate(userTheme,cacheTheme)){
+            cacheTheme.setTemplates(userTheme.getTemplates());
+            redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), cacheTheme);
         }
     }
 
@@ -235,6 +249,19 @@ public class ThemeServiceImpl implements ThemeService {
             log.error("get path error ：{}",e);
         }
         return null;
+    }
+
+
+    private boolean compareTemplate(ZbTheme theme1, ZbTheme theme2){
+        StringBuilder theme1Str = new StringBuilder();
+        StringBuilder theme2Str= new StringBuilder();
+        for(String template: theme1.getTemplates()){
+            theme1Str.append(template);
+        };
+        for(String template: theme2.getTemplates()){
+            theme2Str.append(template);
+        };
+        return theme1Str.toString().equals(theme2Str.toString());
     }
 
 }

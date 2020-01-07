@@ -27,6 +27,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -109,7 +110,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
                                         userThemeMap = sysThemeMap;
                                     } else {
                                         Map<String, ZbTheme> finalUserThemeMap = userThemeMap;
-                                        sysThemeMap.forEach((k, v)->{
+                                        Objects.requireNonNull(sysThemeMap).forEach((k, v)->{
                                             ZbTheme userTheme = finalUserThemeMap.get(k);
                                             if(userTheme == null){
                                                 //系统主题不在用户自定义目录，则copy进用户自定义目录
@@ -122,7 +123,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
                                             }
                                         });
                                     }
-                                    userThemeMap.forEach((k,v)-> themeService.handleThemeSetting(v));
+                                    Objects.requireNonNull(userThemeMap).forEach((k, v)-> themeService.handleThemeSetting(v));
                                     redisService.set(CacheKeyPrefix.THEMES.getPrefix(),  GsonUtil.toJson(userThemeMap));
                                     //当前主题处理
                                     ZbTheme currentTheme = redisService.get(CacheKeyPrefix.CURRENT_THEME.getPrefix());
@@ -130,6 +131,11 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
                                         //第一次启动，初始化当前系统主题
                                         currentTheme = userThemeMap.entrySet().iterator().next().getValue();
                                         redisService.set(CacheKeyPrefix.CURRENT_THEME.getPrefix(), currentTheme);
+                                    }else{
+                                        ZbTheme userCurrentTheme = userThemeMap.get(currentTheme.getId());
+                                        if(null!=userCurrentTheme){
+                                            themeService.handleCurrentTheme(userCurrentTheme, currentTheme);
+                                        }
                                     }
                                     CoreConst.currentTheme=currentTheme.getId();
                                 }catch (Exception e){

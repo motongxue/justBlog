@@ -115,7 +115,10 @@
 								</span>
 							</label>
 							<div class="ml-100">
-								<input type="text" name="template"  class="form-control" placeholder="模板名称" require=""/>
+								<select name="template" class="form-control" require="">
+									<option value="">请选择</option>
+									<option th:each="option:${currentTheme.templates}" th:value="${option}" th:text="${option}"></option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -239,6 +242,7 @@
 <script>
 	var editorType = '[[${editorType}]]';
 	$(function () {
+        App.initSelect("select");
         App.initUploader({
             pick: '.upload-cover',
             url:'/upload/upload',
