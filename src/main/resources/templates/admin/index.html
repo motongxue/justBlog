@@ -142,6 +142,13 @@
 				//处理第一次进入刷新
 				App.activeLocationHref(true);
 
+				//系统是否已设置
+				var systemIsSet = "[[${systemIsSet}]]";
+				if(systemIsSet!=="1"){
+				    App.confirm({content: "系统暂未设置，是否进行设置?"},function () {
+                        App.addTabs({id:'9005',title: '系统设置',close: true,url: 'config',urlType: 'relative'});
+					});
+				}
 			});
 
 			function addTabs(options) {

@@ -51,6 +51,7 @@ public class AdminPageController{
     @AccessToken
     public String index(Model model) {
         model.addAttribute("userInfo", jwtUtil.getUserInfo());
+        model.addAttribute("systemIsSet",configService.selectAll().get(ConfigKey.SYSTEM_IS_SET.getValue()));
         return  pathSuffix + "index";
     }
 
