@@ -9,28 +9,6 @@
         <link rel="stylesheet" th:href="${config.SITE_CDN+'/static/iconfont/iconfont.css'}"/>
         <link rel="stylesheet" th:href="${config.SITE_CDN+'/static/codemirror/lib/codemirror.css'}"/>
         <link rel="stylesheet" th:href="${config.SITE_CDN+'/static/css/app.css'}"/>
-        <style>
-            .z-theme-edit-content .z-tree .z-tree-icon{
-                margin-right: 2px;
-            }
-            .z-theme-edit-content .z-tree .z-tree-node-a .z-tree-node-name {
-                padding: 0 5px;
-            }
-            .z-theme-edit-content #theme-tree{
-                padding: 10px 15px;
-                border: 1px solid #e5e5e5;
-                border-radius: 2px;
-                height: calc(100vh - 170px);
-                overflow: auto;
-            }
-            .z-theme-edit-content .CodeMirror{
-                height: calc(100vh - 170px);
-                border: 1px solid #e5e5e5;
-            }
-            .z-theme-edit-content .CodeMirror-hscrollbar{
-                bottom: -1px;
-            }
-        </style>
     </head>
     <body>
         <div class="z-content z-theme-edit-content">

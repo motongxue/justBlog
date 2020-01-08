@@ -10,14 +10,6 @@
 	<link th:if="${article.editorType==2}" rel="stylesheet" th:href="${config.SITE_CDN+'/static/css/highlight.min.css'}"/>
 	<link th:if="${article.editorType==2}" rel="stylesheet" th:href="${config.SITE_CDN+'/static/css/simplemde.min.css'}"/>
 	<link rel="stylesheet" th:href="${config.SITE_CDN+'/static/css/app.css'}"/>
-	<style>
-		#article-editor .w-e-text-container{
-			height: 780px !important;
-		}
-		#article-editor .CodeMirror-scroll{
-			height: 756px;
-		}
-	</style>
 </head>
 <body>
 <div class="z-content">
@@ -90,7 +82,18 @@
 						<div class="col-xs-12">
 							<label class="control-label label-four">文章标签:</label>
 							<div class="ml-100">
-								<input id="tags" type="text" name="tags" th:value="${article.tags}" class="form-control" placeholder="多个标签英文逗号隔开"/>
+								<div class="article-tags-names">
+									<span class="article-no-tag" th:style="${#lists.isEmpty(article.tagList)?'':'display:none;'}">暂未填写标签</span>
+									<span class="article-tag-item" th:each="tag:${article.tagList}">
+										<span class="article-tag-name" th:text="${tag.name}"></span>
+										<input name="tags" th:value="${tag.name}" type="hidden"/>
+										<i class="ri-close-line remove-tag"></i>
+									</span>
+								</div>
+								<div class="article-tags-content">
+									<input id="tags" type="text" class="form-control" autocomplete="off" placeholder="请输入文字搜索，按Enter键可添加自定义标签"  aria-owns="tags-popup" spellcheck="false" aria-autocomplete="list" aria-controls="tags-popup"/>
+									<ul id="tags-popup" class="autocomplete-results" role="listbox"></ul>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -235,10 +238,10 @@
 </div>
 <script th:src="${config.SITE_CDN+'/static/js/jquery.min.js'}"></script>
 <script th:src="${config.SITE_CDN+'/static/js/bootstrap.min.js'}"></script>
+<script th:src="${config.SITE_CDN+'/static/js/app.js'}"></script>
 <script th:if="${article.editorType==1}" th:src="${config.SITE_CDN+'/static/js/wangEditor.min.js'}"></script>
 <script th:if="${article.editorType==2}" th:src="${config.SITE_CDN+'/static/js/highlight.min.js'}"></script>
 <script th:if="${article.editorType==2}" th:src="${config.SITE_CDN+'/static/js/simplemde.min.js'}"></script>
-<script th:src="${config.SITE_CDN+'/static/js/app.js'}"></script>
 <script>
     var editorType = '[[${article.editorType}]]';
 	$(function () {
@@ -296,6 +299,68 @@
 			var aliasName = $("#aliasName").val();
 			$("#aliasNameAuto").text(aliasName===""?"${auto}":aliasName);
 		});
+
+        //标签
+        $("#tags").bind("input propertychange",function(){
+            var tagName = $("#tags").val();
+            if(tagName===""){
+                $("#tags-popup").html("").hide();
+            }else{
+                App.postAjax("/admin/tag/list",{name:tagName,pageSize:20},function (data) {
+                    var html="";
+                    $(data.data.list).each(function (index,value) {
+                        html+='<li class="autocomplete-item">'+value.name+'</li>';
+                    });
+                    $("#tags-popup").html(html).show();
+                })
+            }
+        }).on("focus",function () {
+            if($(this).val()!==""){
+                $("#tags-popup").show();
+            }
+        }).on("keypress",function(e) {
+            if (e.keyCode === 13) {
+                handleTagName($(this).val().trim());
+            }
+        });
+
+        $("#tags-popup").on("click","li",function () {
+            handleTagName($(this).text());
+        });
+
+        $(".article-tags-names").on("click",".remove-tag",function () {
+            if($(".article-tags-names .article-tag-item").length===1){
+                $(".article-tags-names .article-no-tag").show();
+            }
+            $(this).parent().remove();
+        });
+
+        $(document).on('mousedown', function(e){
+            if($(e.target).closest('.article-tags-content').length===0){
+                $("#tags-popup").hide();
+            }
+        });
+
+        function handleTagName(tagName) {
+            var flag = true;
+            $(".article-tags-names input[name='tags']").each(function () {
+                if($(this).val()===tagName){
+                    flag=false;
+                    return false;
+                }
+            });
+            if(flag){
+                $(".article-tags-names .article-no-tag").hide();
+                var tagHtml = '<span class="article-tag-item">\n' +
+					'<span class="article-tag-name">'+tagName+'</span>\n' +
+					'<input name="tags" value="'+tagName+'" type="hidden"/>\n' +
+					'<i class="ri-close-line remove-tag"></i>\n' +
+					'</span>';
+                $(".article-tags-names").append(tagHtml);
+            }
+            $("#tags").val("");
+            $("#tags-popup").html("").hide();
+        }
 
     });
 

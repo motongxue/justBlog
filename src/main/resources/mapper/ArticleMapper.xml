@@ -30,7 +30,6 @@
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
-        <result column="tags" property="tags" />
         <association property="category" javaType="com.nbclass.model.BlogCategory">
             <result property="id" jdbcType="INTEGER" column="b_category_id"/>
             <result property="name" jdbcType="VARCHAR" column="b_category_name"/>
@@ -136,6 +135,7 @@
             #{id}
         </foreach>
         )
+        ORDER BY atag.id
     </select>
 
     <select id="selectCommentNumsBySids" parameterType="List" resultMap="BaseResultMap">
@@ -151,8 +151,7 @@
             #{id}
         </foreach>
         )
-        GROUP BY
-        sid
+        GROUP BY sid
     </select>
 
     <select id="siteInfoStatistics" resultType="map">
@@ -211,6 +210,7 @@
         LEFT JOIN blog_article_tag atag ON a.id = atag.article_id
         LEFT JOIN blog_tag t ON atag.tag_id = t.id
         WHERE a.alias_name=#{alias}
+        ORDER BY atag.id
     </select>
 
 
@@ -229,6 +229,7 @@
         LEFT JOIN blog_article_tag atag ON a.id = atag.article_id
         LEFT JOIN blog_tag t ON atag.tag_id = t.id
         WHERE a.id=#{id}
+        ORDER BY atag.id
     </select>
 
     <update id="updateNum" parameterType="map">

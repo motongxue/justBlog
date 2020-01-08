@@ -149,7 +149,7 @@ public class BlogArticle implements Serializable {
     private Integer commentNum;
 
     @Transient
-    private String tags;
+    private List<String> tags;
 
     @Transient
     private BlogCategory category;

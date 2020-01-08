@@ -136,17 +136,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public BlogArticle selectById(Integer id) {
-        BlogArticle article = articleMapper.selectById(id);
-        if(article!=null && !CollectionUtils.isEmpty(article.getTagList())){
-            StringBuilder tags = new StringBuilder();
-            for(BlogTag tag : article.getTagList()){
-                tags.append(tag.getName()).append(",");
-            }
-            if(StringUtils.isNotEmpty(tags.toString())){
-                article.setTags(tags.substring(0,tags.length()-1));
-            }
-        }
-        return article;
+        return articleMapper.selectById(id);
     }
 
     @Override
@@ -206,9 +196,9 @@ public class ArticleServiceImpl implements ArticleService {
             articleTagMapper.deleteByArticleId(article.getId());
         }
         //处理tag
-        List<BlogArticleTag> articleTags = new ArrayList<>();
-        if(StringUtils.isNotEmpty(article.getTags())){
-            for(String tagName : article.getTags().split(",")){
+        if(!CollectionUtils.isEmpty(article.getTags())){
+            List<BlogArticleTag> articleTags = new ArrayList<>();
+            for(String tagName : article.getTags()){
                 BlogTag tag = tagMapper.selectByName(tagName,null);
                 if(tag==null){
                     tag = new BlogTag();
@@ -227,6 +217,7 @@ public class ArticleServiceImpl implements ArticleService {
                 articleTagMapper.insertBatch(articleTags);
             }
         }
+
         return ResponseUtil.success("保存文章成功");
     }
 
