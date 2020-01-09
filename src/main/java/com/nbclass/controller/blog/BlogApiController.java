@@ -36,28 +36,28 @@ public class BlogApiController {
 
     @PostMapping("article/look")
     public ResponseVo articleLook(HttpServletRequest request, @RequestParam Integer articleId){
-        synchronized (IpUtil.getIpAddr(request)) {
+        synchronized (IpUtil.getIpAddr(request).intern()) {
             return articleService.articleLook(articleId, IpUtil.getIpAddr(request));
         }
     }
 
     @PostMapping("article/love")
     public ResponseVo articleLove(HttpServletRequest request, @RequestParam Integer articleId){
-        synchronized (IpUtil.getIpAddr(request)) {
+        synchronized (IpUtil.getIpAddr(request).intern()) {
             return articleService.articleLove(articleId, IpUtil.getIpAddr(request));
         }
     }
 
     @PostMapping("comment/love")
     public ResponseVo commentLove(HttpServletRequest request, @RequestParam Integer commentId){
-        synchronized (IpUtil.getIpAddr(request)) {
+        synchronized (IpUtil.getIpAddr(request).intern()) {
             return commentService.commentLove(commentId, IpUtil.getIpAddr(request));
         }
     }
 
     @PostMapping("comment/save")
     public ResponseVo commentSave(HttpServletRequest request, BlogComment comment){
-        synchronized (IpUtil.getIpAddr(request)){
+        synchronized (IpUtil.getIpAddr(request).intern()){
             if (StringUtils.isEmpty(comment.getNickname())) {
                 return ResponseUtil.error("请输入昵称");
             }
@@ -79,7 +79,7 @@ public class BlogApiController {
         try{
             return ResponseUtil.success(QQUtil.getQqInfo(id));
         }catch (Exception e){
-            return ResponseUtil.error("获取QQ号失败");
+            return ResponseUtil.error("获取QQ信息失败");
         }
     }
 

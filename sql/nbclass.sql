@@ -92,12 +92,12 @@ CREATE TABLE `blog_category` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of blog_category
 -- ----------------------------
-
+INSERT INTO `blog_category` VALUES ('1', null, '首页', '/', '2', '1', '', 'index', null, null, null, null, '1', '2019-12-27 11:43:02', '2019-12-27 11:45:07');
 -- ----------------------------
 -- Table structure for blog_comment
 -- ----------------------------
@@ -158,7 +158,7 @@ INSERT INTO `blog_config` VALUES ('7', 'EDITOR_TYPE', '2', '编辑器类型', '1
 INSERT INTO `blog_config` VALUES ('8', 'SITE_ICON', '/static/img/logo-color.png', '网站ico', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:04');
 INSERT INTO `blog_config` VALUES ('9', 'SITE_LOGO', '/static/img/logo-color.png', '网站logo', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:06');
 INSERT INTO `blog_config` VALUES ('10', 'ADMIN_SITE_LOGO', '/static/img/logo-white.png', '后台logo', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('11', 'ADMIN_SITE_NAME', 'Just', '后台标题', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('11', 'ADMIN_SITE_NAME', 'Just Center', '后台标题', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('13', 'SYSTEM_CREATE_TIME', '', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('14', 'SYSTEM_IS_SET', '0', '系统是否设置', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
@@ -260,7 +260,7 @@ CREATE TABLE `blog_user` (
   `salt` varchar(128) DEFAULT NULL COMMENT '加密盐值',
   `nickname` varchar(50) DEFAULT NULL COMMENT '昵称',
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
-  `phone` varchar(20) DEFAULT NULL COMMENT '联系方式',
+  `phone` varchar(20) DEFAULT NULL COMMENT '电话',
   `qq` varchar(20) DEFAULT NULL,
   `avatar` varchar(255) DEFAULT NULL COMMENT '头像地址',
   `last_login_time` timestamp NULL DEFAULT NULL COMMENT '最后登录时间',
@@ -268,10 +268,9 @@ CREATE TABLE `blog_user` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of blog_user
 -- ----------------------------
-INSERT INTO `blog_user` VALUES ('1', '1000000862441215', '123456', '47b816ee4434cff22b070602299fbc7f', '8bdac39c0c1a46dd9f8c4a1d7cc9eecf', '123456', 'zqf@nbclass.com', null, null, '/static/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
-INSERT INTO `blog_user` VALUES ('2', '1000000862441216', 'admin', '8fd06f8c1572f52ac9df72398d8fe9ca', '097cf4b9a18844b08b452d4ebefc1de0', 'admin', 'admin@nbclass.com', null, null, '/static/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
+INSERT INTO `blog_user` VALUES ('1', '1000000862441216', 'admin', '8fd06f8c1572f52ac9df72398d8fe9ca', '097cf4b9a18844b08b452d4ebefc1de0', 'admin', '523179414@qq.com', null, '523179414', '/static/img/person.jpg', null, '1', '2019-10-16 11:50:10', '2019-10-16 11:54:42');
