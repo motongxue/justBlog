@@ -7,7 +7,8 @@ import com.nbclass.framework.util.CoreConst;
 import com.nbclass.framework.util.ResponseUtil;
 import com.nbclass.service.ConfigService;
 import com.nbclass.service.ThymeleafService;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.vo.ConfigEmailVo;
+import com.nbclass.vo.ConfigStorageVo;
 import com.nbclass.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,14 +44,27 @@ public class ConfigController {
 
     @PostMapping(value = "/save/storage")
     @AccessToken
-    public ResponseVo saveConfig(CloudStorageConfigVo cloudStorageConfig){
+    public ResponseVo saveConfig(ConfigStorageVo cloudStorageConfig){
         Gson gson = new Gson();
         String value = gson.toJson(cloudStorageConfig);
-        int a = configService.updateByKey(ConfigKey.CLOUD_STORAGE_CONFIG.getValue(),value);
+        int a = configService.updateByKey(ConfigKey.CONFIG_STORAGE.getValue(),value);
         if (a > 0) {
             return ResponseUtil.success("存储设置成功！");
         } else {
             return ResponseUtil.error("存储设置失败！");
+        }
+    }
+
+    @PostMapping(value = "/save/email")
+    @AccessToken
+    public ResponseVo saveConfig(ConfigEmailVo configEmailVo){
+        Gson gson = new Gson();
+        String value = gson.toJson(configEmailVo);
+        int a = configService.updateByKey(ConfigKey.CONFIG_EMAIL.getValue(),value);
+        if (a > 0) {
+            return ResponseUtil.success("邮件设置成功！");
+        } else {
+            return ResponseUtil.error("邮件设置失败！");
         }
     }
 

@@ -3,7 +3,7 @@ package com.nbclass.framework.oss;
 import com.nbclass.framework.exception.OssException;
 import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.model.BlogFile;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.vo.ConfigStorageVo;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Region;
 import com.qiniu.http.Response;
@@ -25,7 +25,7 @@ public class QiniuOssService extends OssService {
     private BucketManager bucketManager;
     private String token;
 
-    QiniuOssService(CloudStorageConfigVo config){
+    QiniuOssService(ConfigStorageVo config){
         this.config = config;
 
         //初始化

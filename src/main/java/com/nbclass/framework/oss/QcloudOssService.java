@@ -3,7 +3,7 @@ package com.nbclass.framework.oss;
 
 import com.nbclass.framework.exception.OssException;
 import com.nbclass.model.BlogFile;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.vo.ConfigStorageVo;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
@@ -22,7 +22,7 @@ import java.io.InputStream;
 public class QcloudOssService extends OssService {
     private COSClient client;
 
-    QcloudOssService(CloudStorageConfigVo config){
+    QcloudOssService(ConfigStorageVo config){
         this.config = config;
         init();
     }

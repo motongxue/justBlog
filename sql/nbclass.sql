@@ -143,25 +143,27 @@ CREATE TABLE `blog_config` (
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`sys_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='系统配置信息表';
 
 -- ----------------------------
 -- Records of blog_config
 -- ----------------------------
-INSERT INTO `blog_config` VALUES ('1', 'CLOUD_STORAGE_CONFIG', '{\"type\":0,\"localDomain\":\"http://localhost:8080\",\"localPrefix\":\"\",\"qiniuDomain\":\"http://cdn.nbclass.com\",\"qiniuPrefix\":\"img/blog\",\"qiniuAccessKey\":\"dGKQzLej_0__Xd9kElc7IK-BXFTs\",\"qiniuSecretKey\":\"8sZZbdmEDS4yVx0DCF_-Das\",\"qiniuBucketName\":\"xxx\",\"aliyunDomain\":\"https://xxx.oss-cn-hangzhou.aliyuncs.com\",\"aliyunPrefix\":\"blog/\",\"aliyunEndPoint\":\"oss-cn-hangzhou.aliyuncs.com\",\"aliyunAccessKeyId\":\"LTAI4FgN4uWUatpHLxxjXmv1\",\"aliyunAccessKeySecret\":\"OJTXOBiLxxpKCAMURVlonFGdHb1n1\",\"aliyunBucketName\":\"xxx-img\",\"qcloudDomain\":\"https://xxx.cos.ap-shanghai.myqcloud.com\",\"qcloudPrefix\":\"blog/\",\"qcloudSecretId\":\"AKIDrxxxgT2fMDNHud5HDtOTJlACx\",\"qcloudSecretKey\":\"iBSZP6WifMn3A1cxxxwULwH\",\"qcloudBucketName\":\"sttbaxxx\",\"qcloudRegion\":\"ap-shanghai\"}', '云存储配置信息', '1', '2019-12-25 18:21:53', '2019-12-25 18:21:54');
+INSERT INTO `blog_config` VALUES ('1', 'CONFIG_STORAGE', '{\"setFlag\":0,\"type\":0,\"localDomain\":\"http://localhost:8080\",\"localPrefix\":\"\",\"qiniuDomain\":\"http://cdn.nbclass.com\",\"qiniuPrefix\":\"img/blog\",\"qiniuAccessKey\":\"dGKQzLej_0__Xd9kElc7IK-BXFTs\",\"qiniuSecretKey\":\"8sZZbdmEDS4yVx0DCF_-Das\",\"qiniuBucketName\":\"xxx\",\"aliyunDomain\":\"https://xxx.oss-cn-hangzhou.aliyuncs.com\",\"aliyunPrefix\":\"blog/\",\"aliyunEndPoint\":\"oss-cn-hangzhou.aliyuncs.com\",\"aliyunAccessKeyId\":\"LTAI4FgN4uWUatpHLxxjXmv1\",\"aliyunAccessKeySecret\":\"OJTXOBiLxxpKCAMURVlonFGdHb1n1\",\"aliyunBucketName\":\"xxx-img\",\"qcloudDomain\":\"https://xxx.cos.ap-shanghai.myqcloud.com\",\"qcloudPrefix\":\"blog/\",\"qcloudSecretId\":\"AKIDrxxxgT2fMDNHud5HDtOTJlACx\",\"qcloudSecretKey\":\"iBSZP6WifMn3A1cxxxwULwH\",\"qcloudBucketName\":\"sttbaxxx\",\"qcloudRegion\":\"ap-shanghai\"}', '云存储配置信息', '1', '2019-12-25 18:21:53', '2019-12-25 18:21:54');
 INSERT INTO `blog_config` VALUES ('2', 'SITE_HOST', 'http://localhost:8080', '网站域名', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:00');
 INSERT INTO `blog_config` VALUES ('3', 'SITE_CDN', '', 'CDN域名', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:01');
 INSERT INTO `blog_config` VALUES ('4', 'SITE_NAME', 'JustBlog', '网站名称', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:02');
 INSERT INTO `blog_config` VALUES ('5', 'SITE_KWD', 'JustBlog,博客模板,nbclass,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站关键字', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:03');
 INSERT INTO `blog_config` VALUES ('6', 'SITE_DESC', 'JustBlog,博客模板,nbclass,zb-blog,个人博客，开源博客，shiro,zb-shiro,权限管理项目', '网站描述', '1', '2019-12-25 18:21:53', '2019-12-25 18:22:03');
-INSERT INTO `blog_config` VALUES ('7', 'EDITOR_TYPE', '2', '编辑器类型', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('8', 'SITE_ICON', '/static/img/logo-color.png', '网站ico', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:04');
-INSERT INTO `blog_config` VALUES ('9', 'SITE_LOGO', '/static/img/logo-color.png', '网站logo', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:06');
-INSERT INTO `blog_config` VALUES ('10', 'ADMIN_SITE_LOGO', '/static/img/logo-white.png', '后台logo', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('11', 'ADMIN_SITE_NAME', 'Just Center', '后台标题', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('13', 'SYSTEM_CREATE_TIME', '', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('14', 'SYSTEM_IS_SET', '0', '系统是否设置', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('7', 'SITE_ICON', '/static/img/logo-color.png', '网站ico', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:04');
+INSERT INTO `blog_config` VALUES ('8', 'SITE_LOGO', '/static/img/logo-color.png', '网站logo', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:06');
+INSERT INTO `blog_config` VALUES ('9', 'EDITOR_TYPE', '2', '编辑器类型', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('10', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('11', 'SYSTEM_CREATE_TIME', '', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_IS_SET', '0', '系统是否设置', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('13', 'CONFIG_EMAIL', '{\"setFlag\":0,\"host\":\"\",\"port\":null,\"username\":\"\",\"password\":\"\",\"from\":\"\"}', '邮件配置', '1', '2019-12-25 18:21:53', '2019-12-25 18:21:53');
+INSERT INTO `blog_config` VALUES ('14', 'RESET_PWD_TYPE', '1', '重置密码方式', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('15', 'SECURITY_CODE', '666666', '安全码', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+
 
 -- ----------------------------
 -- Table structure for blog_file

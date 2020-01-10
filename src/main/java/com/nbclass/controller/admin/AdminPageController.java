@@ -13,7 +13,8 @@ import com.nbclass.model.BlogArticle;
 import com.nbclass.service.ArticleService;
 import com.nbclass.service.ConfigService;
 import com.nbclass.service.ThemeService;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.vo.ConfigEmailVo;
+import com.nbclass.vo.ConfigStorageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Map;
 
 /**
@@ -161,12 +161,15 @@ public class AdminPageController{
     @AccessToken
     public String config(Model model){
         Map<String, String> configMap = configService.selectAll();
-        String json = configMap.get(ConfigKey.CLOUD_STORAGE_CONFIG.getValue());
-        CloudStorageConfigVo cloudStorageConfig = GsonUtil.fromJson(json, CloudStorageConfigVo.class);
+        String json = configMap.get(ConfigKey.CONFIG_STORAGE.getValue());
+        ConfigStorageVo configStorageVo = GsonUtil.fromJson(json, ConfigStorageVo.class);
+        String configJson = configMap.get(ConfigKey.CONFIG_EMAIL.getValue());
+        ConfigEmailVo configEmailVo = GsonUtil.fromJson(configJson, ConfigEmailVo.class);
         String workDir = CoreConst.USER_HOME + File.separator + PropertiesUtil.getString(CoreConst.WORK_DIR_KEY);
         model.addAttribute("workDir", workDir.endsWith(File.separator)?workDir:workDir+File.separator);
         model.addAttribute("config",configMap);
-        model.addAttribute("cloudStorageConfig",cloudStorageConfig);
+        model.addAttribute("storageConfig",configStorageVo);
+        model.addAttribute("emailConfig",configEmailVo);
         return pathSuffix + "config";
     }
 

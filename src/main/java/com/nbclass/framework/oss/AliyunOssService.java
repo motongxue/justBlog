@@ -5,7 +5,7 @@ import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.nbclass.framework.exception.OssException;
 import com.nbclass.model.BlogFile;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.vo.ConfigStorageVo;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import java.io.InputStream;
 public class AliyunOssService extends OssService {
     private OSSClient client;
 
-    AliyunOssService(CloudStorageConfigVo config){
+    AliyunOssService(ConfigStorageVo config){
         this.config = config;
         //初始化
         init();

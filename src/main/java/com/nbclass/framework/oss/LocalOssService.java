@@ -3,9 +3,8 @@ package com.nbclass.framework.oss;
 import com.nbclass.framework.exception.OssException;
 import com.nbclass.framework.util.*;
 import com.nbclass.model.BlogFile;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.vo.ConfigStorageVo;
 import com.qiniu.util.IOUtils;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
@@ -17,7 +16,7 @@ import java.util.Date;
  */
 public class LocalOssService extends OssService {
 
-    LocalOssService(CloudStorageConfigVo config){
+    LocalOssService(ConfigStorageVo config){
         this.config = config;
     }
     @Override

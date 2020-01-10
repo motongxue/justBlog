@@ -7,10 +7,11 @@ import lombok.Data;
  * 云存储配置信息
  */
 @Data
-public class CloudStorageConfigVo {
+public class ConfigStorageVo {
     //类型 0-本地，1：七牛  2：阿里云  3：腾讯云
     private Integer type;
-
+    //是否设置
+    private Integer setFlag;
     //本地文件服务器
     private String localDomain="";
     //本地前綴

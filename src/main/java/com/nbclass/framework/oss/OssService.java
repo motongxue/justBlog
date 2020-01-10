@@ -2,10 +2,9 @@ package com.nbclass.framework.oss;
 
 import com.aliyun.oss.OSSException;
 import com.nbclass.framework.util.DateUtil;
-import com.nbclass.framework.util.MD5;
 import com.nbclass.framework.util.UUIDUtil;
 import com.nbclass.model.BlogFile;
-import com.nbclass.vo.CloudStorageConfigVo;
+import com.nbclass.vo.ConfigStorageVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,7 @@ import java.util.Date;
  */
 public abstract class OssService {
     /** 云存储配置信息 */
-    CloudStorageConfigVo config;
+    ConfigStorageVo config;
 
     /**
      * 文件路径
