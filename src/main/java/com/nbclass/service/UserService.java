@@ -12,4 +12,8 @@ public interface UserService {
     BlogUser selectByUserId(String userId);
 
     ResponseVo changePassword(BlogUser user, String newPassword);
+
+    ResponseVo forget(String username);
+
+    ResponseVo reset(String username, String password, String code);
 }

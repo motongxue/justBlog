@@ -158,6 +158,39 @@ var Auth = {
         App.msgE("注册暂未开放");
     },
     submitForgot(e){
-        App.msgE("忘记密码暂未开放");
+        App.mask(".login-btn");
+        App.postAjax(Auth.vars.option.forgot_url, $("#login-form").serialize(),function (data) {
+            App.unmask(".login-btn");
+            if(data.status===200){
+                if(data.data.resetType==="2"){
+                    App.msgS(data.msg);
+                }
+                var resetPopId = App.popup({
+                    title: "重置密码",
+                    content: $("#reset-password-modal"),
+                    onShow:function(){
+                        $("#resetUsername").val($("#loginUsername").val());
+                    },
+                    onCancel: App.resetForm("#resetPwdForm")
+                },function () {
+                    if(App.validate("#resetPwdForm")){
+                        App.postAjax("/reset",$("#resetPwdForm").serialize(),function (data) {
+                            if(data.status===200){
+                                App.msgS(data.msg);
+                                App.closePopup(resetPopId);
+                                App.resetForm("#resetPwdForm");
+                            }else{
+                                App.msgE(data.msg);
+                            }
+                        })
+                    }
+                },function () {
+                    App.closePopup(resetPopId);
+                    App.resetForm("#resetPwdForm");
+                });
+            }else{
+                App.msgE(data.msg);
+            }
+        });
     }
 }

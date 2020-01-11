@@ -1,18 +1,28 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.enums.ConfigKey;
+import com.nbclass.enums.TemplateType;
+import com.nbclass.framework.exception.MailException;
+import com.nbclass.framework.exception.ZbException;
 import com.nbclass.framework.jwt.JwtUtil;
 import com.nbclass.framework.jwt.UserInfo;
 import com.nbclass.framework.util.*;
 import com.nbclass.mapper.UserMapper;
 import com.nbclass.model.BlogUser;
+import com.nbclass.service.ConfigService;
+import com.nbclass.service.MailService;
 import com.nbclass.service.RedisService;
 import com.nbclass.service.UserService;
 import com.nbclass.vo.ResponseVo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,6 +32,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private RedisService redisService;
+
+    @Resource
+    private ConfigService configService;
+
+    @Resource
+    private MailService mailService;
 
     @Resource
     private JwtUtil jwtUtil;
@@ -80,4 +96,64 @@ public class UserServiceImpl implements UserService {
         return ResponseUtil.success("修改密码成功");
     }
 
+    @Override
+    public ResponseVo forget(String username) {
+
+        BlogUser user = userMapper.selectByUsername(username);
+        if(user==null){
+            return ResponseUtil.error("用户不存在");
+        }
+        Map<String, String> configMap = configService.selectAll();
+        String resetType = configMap.get(ConfigKey.RESET_PWD_TYPE.getValue());
+        Map<String,String> map = new HashMap<>();
+        map.put("resetType",resetType);
+        if(resetType.equals("2")){
+            if(StringUtils.isBlank(user.getEmail())){
+                return ResponseUtil.error("用户邮箱不存在");
+            }
+            if(ValidatorUtil.isEmail(user.getEmail())){
+                String subject = String.format("【%s】 %s", configMap.get(ConfigKey.SITE_NAME.getValue()),"找回密码");
+                Map<String,Object> templateMap = new HashMap<>();
+                templateMap.put("username",user.getUsername());
+                String code = UUIDUtil.generateIntCode(6);
+                redisService.set(CacheKeyPrefix.RESET_.getPrefix()+username, code, 15, TimeUnit.MINUTES);
+                templateMap.put("code",code);
+                try{
+                    mailService.sendTemplateMail(TemplateType.ResetPassword,user.getEmail(),subject,templateMap);
+                }catch (MailException e){
+                    return ResponseUtil.error(e.getMessage());
+                }
+                return ResponseUtil.success("验证码已发至邮箱",map);
+            }else{
+                return ResponseUtil.error("该用户邮箱格式不正确");
+            }
+        }
+        return ResponseUtil.success(map);
+    }
+
+    @Override
+    public ResponseVo reset(String username, String password, String code) {
+        Map<String, String> configMap = configService.selectAll();
+        String resetType = configMap.get(ConfigKey.RESET_PWD_TYPE.getValue());
+        if (resetType.equals("1")) {
+            if (!code.equals(configMap.get(ConfigKey.SECURITY_CODE.getValue()))) {
+                return ResponseUtil.error("安全码不正确");
+            }
+        } else {
+            String cacheCode = redisService.get(CacheKeyPrefix.RESET_.getPrefix() + username);
+            if (StringUtils.isBlank(cacheCode)) {
+                return ResponseUtil.error("验证码已失效");
+            }
+            if (!code.equals(cacheCode)) {
+                return ResponseUtil.error("验证码不正确");
+            }
+            redisService.del(CacheKeyPrefix.RESET_.getPrefix() + username);
+        }
+        BlogUser user = userMapper.selectByUsername(username);
+        user.setPassword(password);
+        PasswordHelper.encryptPassword(user);
+        userMapper.updateByPrimaryKeySelective(user);
+        return ResponseUtil.success("重置密码成功");
+
+    }
 }

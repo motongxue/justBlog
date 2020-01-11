@@ -1,6 +1,7 @@
 package com.nbclass.service.impl;
 
 import com.nbclass.enums.TemplateType;
+import com.nbclass.framework.exception.MailException;
 import com.nbclass.framework.exception.ZbException;
 import com.nbclass.service.ConfigService;
 import com.nbclass.service.MailService;
@@ -50,6 +51,8 @@ public class MailServiceImpl implements MailService {
             message.setSubject(subject);
             message.setText(content);
             mailSender.send(message);
+        } catch (MailException e) {
+            throw new MailException(e.getMessage(),e);
         } catch (Exception e) {
             log.error("发送邮件失败:{}",e);
             throw new ZbException("发送邮件失败",e);
@@ -73,6 +76,8 @@ public class MailServiceImpl implements MailService {
             helper.setSubject(subject);
             helper.setText(content, true);
             mailSender.send(message);
+        } catch (MailException e) {
+            throw new MailException(e.getMessage(),e);
         } catch (Exception e) {
             log.error("发送邮件失败:{}",e);
             throw new ZbException("发送邮件失败",e);
@@ -100,6 +105,8 @@ public class MailServiceImpl implements MailService {
             String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
             helper.addAttachment(fileName, file);
             mailSender.send(message);
+        } catch (MailException e) {
+            throw new MailException(e.getMessage(),e);
         } catch (MessagingException e) {
             log.error("发送邮件失败:{}",e);
             throw new ZbException("发送邮件失败",e);
@@ -120,6 +127,8 @@ public class MailServiceImpl implements MailService {
             String emailContent = templateEngine.process(templatePrefix+templateType.getName(), context); //指定模板路径
             messageHelper.setText(emailContent,true);
             mailSender.send(mimeMessage);
+        }catch (MailException e) {
+            throw new MailException(e.getMessage(),e);
         }catch (Exception e) {
             log.error("发送邮件失败:{}",e);
             throw new ZbException("发送邮件失败",e);
@@ -128,6 +137,9 @@ public class MailServiceImpl implements MailService {
 
     private JavaMailSenderImpl getMailSender(){
         ConfigEmailVo emailConfig = configService.selectEmailConfig();
+        if(emailConfig.getSetFlag()==0){
+            throw new MailException("邮件服务未设置");
+        }
         from = emailConfig.getFrom();
         JavaMailSenderImpl jms = new JavaMailSenderImpl();
         jms.setHost(emailConfig.getHost());
