@@ -164,6 +164,9 @@ var Auth = {
             if(data.status===200){
                 if(data.data.resetType==="2"){
                     App.msgS(data.msg);
+                    $("#codeText").text("验证码");
+                }else{
+                    $("#codeText").text("安全码");
                 }
                 var resetPopId = App.popup({
                     title: "重置密码",
