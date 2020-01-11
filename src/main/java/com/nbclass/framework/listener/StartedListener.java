@@ -171,8 +171,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
             redisService.set(CacheKeyPrefix.SYS_CREATE_TIME.getPrefix(),createTime);
         }
         //系统浏览数
-        Integer pageViewCache = redisService.get( CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix());
-        if(null != pageViewCache){
+        String pageViewCache = redisService.get( CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix());
+        if(StringUtils.isEmpty(pageViewCache)){
             redisService.set( CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix(), map.get(ConfigKey.SYSTEM_PAGE_VIEW.getValue()));
         }
     }

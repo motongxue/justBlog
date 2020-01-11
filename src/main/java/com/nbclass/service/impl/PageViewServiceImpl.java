@@ -27,9 +27,9 @@ public class PageViewServiceImpl implements PageViewService {
     public int updateSystemPageViewNum() {
         String pageViewKey = ConfigKey.SYSTEM_PAGE_VIEW.getValue();
         String sysValue = configMapper.getByKey(pageViewKey);
-        Integer saveValue = StringUtils.isBlank(sysValue)?1:(Integer.valueOf(sysValue)+1);
+        String saveValue = StringUtils.isBlank(sysValue)?"1":String.valueOf(Integer.valueOf(sysValue)+1);
         redisService.set(CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix(),saveValue);
-        return configMapper.updateByKey(pageViewKey, saveValue.toString());
+        return configMapper.updateByKey(pageViewKey, saveValue);
     }
 
     @Override
