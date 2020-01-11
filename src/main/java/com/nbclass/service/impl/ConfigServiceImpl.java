@@ -67,7 +67,7 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     @RedisCache(key = "CONFIG_EMAIL")
     public ConfigEmailVo selectEmailConfig() {
-        return GsonUtil.fromJson(configMapper.getByKey(ConfigKey.CONFIG_EMAIL.getValue()),ConfigStorageVo.class);
+        return GsonUtil.fromJson(configMapper.getByKey(ConfigKey.CONFIG_EMAIL.getValue()),ConfigEmailVo.class);
     }
 
     @Override

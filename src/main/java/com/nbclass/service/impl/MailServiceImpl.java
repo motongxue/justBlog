@@ -2,14 +2,14 @@ package com.nbclass.service.impl;
 
 import com.nbclass.enums.TemplateType;
 import com.nbclass.framework.exception.ZbException;
+import com.nbclass.service.ConfigService;
 import com.nbclass.service.MailService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nbclass.vo.ConfigEmailVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -19,23 +19,20 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.Map;
+import java.util.Properties;
 
 @Service
+@Slf4j
 public class MailServiceImpl implements MailService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String templatePrefix="email/";
+    private static final String templatePrefix = "email/";
 
+    private static String from = "";
 
     @Autowired
-    private JavaMailSender mailSender;
-
+    private ConfigService configService;
     @Autowired
     private TemplateEngine templateEngine;
-
-
-    @Value("${spring.mail.username}")
-    private String from;
 
     /**
      * 简单文本邮件
@@ -46,6 +43,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendSimpleMail(String to, String subject, String content) {
         try {
+            JavaMailSenderImpl mailSender = getMailSender();
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(from);
             message.setTo(to);
@@ -53,7 +51,8 @@ public class MailServiceImpl implements MailService {
             message.setText(content);
             mailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("发送邮件失败:{}",e);
+            throw new ZbException("发送邮件失败",e);
         }
     }
 
@@ -66,6 +65,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendHtmlMail(String to, String subject, String content) {
         try {
+            JavaMailSenderImpl mailSender = getMailSender();
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(from);
@@ -74,7 +74,8 @@ public class MailServiceImpl implements MailService {
             helper.setText(content, true);
             mailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("发送邮件失败:{}",e);
+            throw new ZbException("发送邮件失败",e);
         }
     }
 
@@ -87,8 +88,9 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendAttachmentsMail(String to, String subject, String content, String filePath) {
-        MimeMessage message = mailSender.createMimeMessage();
         try {
+            JavaMailSenderImpl mailSender = getMailSender();
+            MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(from);
             helper.setTo(to);
@@ -99,13 +101,15 @@ public class MailServiceImpl implements MailService {
             helper.addAttachment(fileName, file);
             mailSender.send(message);
         } catch (MessagingException e) {
-            logger.error("邮件发送失败！", e);
+            log.error("发送邮件失败:{}",e);
+            throw new ZbException("发送邮件失败",e);
         }
     }
 
     @Override
     public void sendTemplateMail(TemplateType templateType, String to, String subject, Map<String,Object> map) {
         try {
+            JavaMailSenderImpl mailSender = getMailSender();
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true);
             messageHelper.setFrom(from);
@@ -117,8 +121,25 @@ public class MailServiceImpl implements MailService {
             messageHelper.setText(emailContent,true);
             mailSender.send(mimeMessage);
         }catch (Exception e) {
-            throw new ZbException("邮件发送失败！",e);
+            log.error("发送邮件失败:{}",e);
+            throw new ZbException("发送邮件失败",e);
         }
+    }
+
+    private JavaMailSenderImpl getMailSender(){
+        ConfigEmailVo emailConfig = configService.selectEmailConfig();
+        from = emailConfig.getFrom();
+        JavaMailSenderImpl jms = new JavaMailSenderImpl();
+        jms.setHost(emailConfig.getHost());
+        jms.setUsername(emailConfig.getUsername());
+        jms.setPassword(emailConfig.getPassword());
+        jms.setDefaultEncoding("Utf-8");
+        Properties p = new Properties();
+        p.setProperty("mail.smtp.auth", "true");
+        p.setProperty("mail.smtp.port", emailConfig.getPort());
+        p.setProperty("mail.smtp.ssl.enable", "true");
+        jms.setJavaMailProperties(p);
+        return jms;
     }
 
 }

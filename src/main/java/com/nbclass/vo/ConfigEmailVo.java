@@ -14,7 +14,7 @@ public class ConfigEmailVo {
     //是否设置
     private Integer setFlag;
     private String host;
-    private Integer port;
+    private String port;
     private String username;
     private String password;
     private String from;

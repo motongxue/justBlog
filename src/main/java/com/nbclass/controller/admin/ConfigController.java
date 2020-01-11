@@ -43,15 +43,17 @@ public class ConfigController {
 
     @PostMapping(value = "/save/storage")
     @AccessToken
-    public ResponseVo saveConfig(ConfigStorageVo configStorageVo){
-        configService.saveStorageConfig(configStorageVo);
+    public ResponseVo saveConfig(ConfigStorageVo config){
+        config.setSetFlag(CoreConst.STATUS_VALID);
+        configService.saveStorageConfig(config);
         return ResponseUtil.success("存储设置成功！");
     }
 
     @PostMapping(value = "/save/email")
     @AccessToken
-    public ResponseVo saveConfig(ConfigEmailVo configEmailVo){
-        configService.saveEmailConfig(configEmailVo);
+    public ResponseVo saveConfig(ConfigEmailVo config){
+        config.setSetFlag(CoreConst.STATUS_VALID);
+        configService.saveEmailConfig(config);
         return ResponseUtil.success("邮件设置成功！");
     }
 

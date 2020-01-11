@@ -251,7 +251,11 @@
                         <div id="emailConfig" class="tab-pane">
                             <form id="emailForm" class="form-horizontal">
                                 <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">服务器  <span class="text-danger">*</span>:</label>
+                                    <label class="col-lg-2 col-sm-3 control-label">服务器 : <span class="z-tooltip">
+                                                <i class="z-tooltip-i fa fa-info-circle"></i>
+                                                <span class="z-tooltip-text z-tooltip-right">只支持配置SMTP服务</span>
+                                            </span>
+                                    </label>
                                     <div class="col-md-5 col-sm-8">
                                         <input th:value="${emailConfig.host}" type="text" class="form-control" name="host" placeholder="邮件服务器host" require="">
                                     </div>
@@ -333,6 +337,30 @@
             </div>
         </div>
     </div>
+    <div id="send-email-modal" class="display-none">
+        <form class="form-horizontal" id="sendEmailForm">
+            <div class="z-card-body">
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">接收邮箱 <span class="text-danger">*</span>:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="to" class="form-control" require="" email="" placeholder="接收测试邮件的邮箱地址"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">邮件标题 <span class="text-danger">*</span>:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="subject" class="form-control" require="" placeholder="测试邮件标题"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">邮件内容 :</label>
+                    <div class="col-sm-8">
+                        <textarea type="text" rows="3" class="form-control" name="content" require="" placeholder="测试邮件内容"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
     <script th:src="${config.SITE_CDN+'/static/js/jquery.min.js'}"></script>
     <script th:src="${config.SITE_CDN+'/static/js/bootstrap.min.js'}"></script>
     <script th:src="${config.SITE_CDN+'/static/js/app.js'}"></script>
@@ -383,7 +411,26 @@
                     App.postAjax("/admin/config/save/email", $("#emailForm").serialize(), function (data) {
                         App.unmask("#saveEmail");
                         if (data.status === 200) {
-                            App.msgS(data.msg);
+                            App.confirm({content:"保存成功，是否进行邮件测试？"},function () {
+                                var emailPopId = App.popup({
+                                    title: "邮件测试",
+                                    btn:["发送"],
+                                    content: $("#send-email-modal"),
+                                    onCancel: App.resetForm("#sendEmailForm")
+                                },function () {
+                                    if(App.validate("#sendEmailForm")){
+                                        App.postAjax("/admin/email/send",$("#sendEmailForm").serialize(),function (data) {
+                                            if(data.status===200){
+                                                App.msgS(data.msg);
+                                                App.closePopup(emailPopId);
+                                                App.resetForm("#sendEmailForm");
+                                            }else{
+                                                App.msgE(data.msg);
+                                            }
+                                        })
+                                    }
+                                })
+                            });
                         } else {
                             App.msgE(data.msg);
                         }

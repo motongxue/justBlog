@@ -160,7 +160,7 @@ INSERT INTO `blog_config` VALUES ('9', 'EDITOR_TYPE', '2', '编辑器类型', '1
 INSERT INTO `blog_config` VALUES ('10', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('11', 'SYSTEM_CREATE_TIME', '', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_IS_SET', '0', '系统是否设置', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('13', 'CONFIG_EMAIL', '{\"setFlag\":0,\"host\":\"\",\"port\":null,\"username\":\"\",\"password\":\"\",\"from\":\"\"}', '邮件配置', '1', '2019-12-25 18:21:53', '2019-12-25 18:21:53');
+INSERT INTO `blog_config` VALUES ('13', 'CONFIG_EMAIL', '{\"setFlag\":0,\"host\":\"\",\"port\":\"\",\"username\":\"\",\"password\":\"\",\"from\":\"\"}', '邮件配置', '1', '2019-12-25 18:21:53', '2019-12-25 18:21:53');
 INSERT INTO `blog_config` VALUES ('14', 'RESET_PWD_TYPE', '1', '重置密码方式', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('15', 'SECURITY_CODE', '666666', '安全码', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 
