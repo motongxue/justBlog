@@ -28,7 +28,7 @@ public class RedisCacheAspect {
 
     private static Logger logger = LoggerFactory.getLogger(RedisCacheAspect.class);
 
-    private static final String CACHE_PREFIX = "BLOG_";
+    private static final String CACHE_PREFIX = "JUST_";
 
     @Autowired
     private RedisService redisService;
@@ -48,7 +48,6 @@ public class RedisCacheAspect {
         boolean flush = cache.flush();
         if (flush) {
             String classPrefix = StringUtils.isNotBlank(cache.key()) ? (CACHE_PREFIX+cache.key()) : AspectUtil.getKeyOfClassPrefix(point, CACHE_PREFIX);
-            logger.info("清空缓存：{}*", classPrefix);
             redisService.delBatch(classPrefix);
             return point.proceed();
         }

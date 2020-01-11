@@ -1,5 +1,6 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.mapper.ConfigMapper;
 import com.nbclass.service.PageViewService;
@@ -24,15 +25,16 @@ public class PageViewServiceImpl implements PageViewService {
 
     @Override
     public int updateSystemPageViewNum() {
-        String sysValue = configMapper.getByKey(ConfigKey.SYSTEM_PAGE_VIEW.getValue());
-        String saveValue = StringUtils.isBlank(sysValue)?"1":String.valueOf(Integer.valueOf(sysValue)+1);
-        redisService.set(ConfigKey.SYSTEM_PAGE_VIEW.getValue(),saveValue);
-        return configMapper.updateByKey(ConfigKey.SYSTEM_PAGE_VIEW.getValue(), saveValue);
+        String pageViewKey = ConfigKey.SYSTEM_PAGE_VIEW.getValue();
+        String sysValue = configMapper.getByKey(pageViewKey);
+        Integer saveValue = StringUtils.isBlank(sysValue)?1:(Integer.valueOf(sysValue)+1);
+        redisService.set(CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix(),saveValue);
+        return configMapper.updateByKey(pageViewKey, saveValue.toString());
     }
 
     @Override
     public int getSystemPageViewNum() {
-        return redisService.get(ConfigKey.SYSTEM_PAGE_VIEW.getValue());
+        return redisService.get(CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix());
     }
 
 }

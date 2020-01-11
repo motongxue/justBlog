@@ -1,9 +1,15 @@
 package com.nbclass.service.impl;
 
+import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.RedisCache;
+import com.nbclass.framework.util.GsonUtil;
 import com.nbclass.mapper.ConfigMapper;
 import com.nbclass.model.BlogConfig;
 import com.nbclass.service.ConfigService;
+import com.nbclass.service.RedisService;
+import com.nbclass.vo.ConfigEmailVo;
+import com.nbclass.vo.ConfigStorageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +27,58 @@ import java.util.Map;
 @Service
 public class ConfigServiceImpl implements ConfigService {
     @Autowired
+    private RedisService redisService;
+    @Autowired
     private ConfigMapper configMapper;
 
     @Override
-    @RedisCache(key = "CONFIG")
     public Map<String, String> selectAll() {
-        List<BlogConfig> sysConfigs = configMapper.selectAll();
-        Map<String,String>  map= new HashMap<>(sysConfigs.size());
-        for (BlogConfig config : sysConfigs){
-            map.put(config.getSysKey(),config.getSysValue());
+        Map<String, String> map = redisService.get(CacheKeyPrefix.SYS_CONFIG.getPrefix());
+        if(map==null){
+            List<BlogConfig> sysConfigs = configMapper.selectAll();
+            map= new HashMap<>(sysConfigs.size());
+            for (BlogConfig config : sysConfigs){
+                map.put(config.getSysKey(),config.getSysValue());
+            }
+            redisService.set(CacheKeyPrefix.SYS_CONFIG.getPrefix(), map);
         }
         return map;
     }
 
     @Override
-    @RedisCache(key = "CONFIG", flush = true)
     public int updateByKey(String key,String value) {
+        clearConfigCache();
         return configMapper.updateByKey(key, value);
     }
 
+    @Override
+    @RedisCache(key = "CONFIG_STORAGE")
+    public ConfigStorageVo selectStorageConfig() {
+        return GsonUtil.fromJson(configMapper.getByKey(ConfigKey.CONFIG_STORAGE.getValue()),ConfigStorageVo.class);
+    }
+
+    @Override
+    @RedisCache(key = "CONFIG_STORAGE", flush = true)
+    public void saveStorageConfig(ConfigStorageVo vo) {
+        clearConfigCache();
+        configMapper.updateByKey(ConfigKey.CONFIG_STORAGE.getValue(),GsonUtil.toJson(vo));
+    }
+
+    @Override
+    @RedisCache(key = "CONFIG_EMAIL")
+    public ConfigEmailVo selectEmailConfig() {
+        return GsonUtil.fromJson(configMapper.getByKey(ConfigKey.CONFIG_EMAIL.getValue()),ConfigStorageVo.class);
+    }
+
+    @Override
+    @RedisCache(key = "CONFIG_EMAIL", flush = true)
+    public void saveEmailConfig(ConfigEmailVo vo) {
+        clearConfigCache();
+        configMapper.updateByKey(ConfigKey.CONFIG_EMAIL.getValue(), GsonUtil.toJson(vo));
+    }
+
+
+    private void clearConfigCache(){
+        redisService.del(CacheKeyPrefix.SYS_CONFIG.getPrefix());
+    }
 }

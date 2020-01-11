@@ -17,6 +17,7 @@ import com.nbclass.model.BlogTag;
 import com.nbclass.service.ArticleService;
 import com.nbclass.service.ConfigService;
 import com.nbclass.service.RedisService;
+import com.nbclass.service.TagService;
 import com.nbclass.vo.ArticleVo;
 import com.nbclass.vo.ResponseVo;
 import org.apache.commons.lang3.StringUtils;
@@ -39,11 +40,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private RedisService redisService;
     @Autowired
-    private ConfigService configService;
+    private TagService tagService;
     @Autowired
     private ArticleMapper articleMapper;
-    @Autowired
-    private TagMapper tagMapper;
     @Autowired
     private ArticleTagMapper articleTagMapper;
     @Autowired
@@ -142,8 +141,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Map<String, Object> siteInfoStatistics() {
         Map<String, Object> map = articleMapper.siteInfoStatistics();
-        map.put(ConfigKey.SYSTEM_PAGE_VIEW.getValue(),redisService.get(ConfigKey.SYSTEM_PAGE_VIEW.getValue()));
-        String createTime = redisService.get(ConfigKey.SYSTEM_CREATE_TIME.getValue());
+        map.put(ConfigKey.SYSTEM_PAGE_VIEW.getValue(),redisService.get(CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix()));
+        String createTime = redisService.get(CacheKeyPrefix.SYS_CREATE_TIME.getPrefix());
         map.put(ConfigKey.SYSTEM_CREATE_TIME.getValue(), DateUtil.getDiffDays(new Date(),DateUtil.parseDateNewFormat(createTime))+1);
         return map;
     }
@@ -199,14 +198,10 @@ public class ArticleServiceImpl implements ArticleService {
         if(!CollectionUtils.isEmpty(article.getTags())){
             List<BlogArticleTag> articleTags = new ArrayList<>();
             for(String tagName : article.getTags()){
-                BlogTag tag = tagMapper.selectByName(tagName,null);
-                if(tag==null){
-                    tag = new BlogTag();
-                    tag.setName(tagName);
-                    tag.setStatus(CoreConst.STATUS_VALID);
-                    tag.setCreateTime(new Date());
-                    tagMapper.insertSelective(tag);
-                }
+                BlogTag tag =  new BlogTag();
+                tag.setName(tagName);
+                tag.setStatus(CoreConst.STATUS_VALID);
+                tagService.save(tag);
                 BlogArticleTag articleTag = new BlogArticleTag();
                 articleTag.setArticleId(article.getId());
                 articleTag.setTagId(tag.getId());

@@ -1,6 +1,5 @@
 package com.nbclass.controller.admin;
 
-import com.google.gson.Gson;
 import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.annotation.AccessToken;
 import com.nbclass.framework.util.CoreConst;
@@ -44,28 +43,16 @@ public class ConfigController {
 
     @PostMapping(value = "/save/storage")
     @AccessToken
-    public ResponseVo saveConfig(ConfigStorageVo cloudStorageConfig){
-        Gson gson = new Gson();
-        String value = gson.toJson(cloudStorageConfig);
-        int a = configService.updateByKey(ConfigKey.CONFIG_STORAGE.getValue(),value);
-        if (a > 0) {
-            return ResponseUtil.success("存储设置成功！");
-        } else {
-            return ResponseUtil.error("存储设置失败！");
-        }
+    public ResponseVo saveConfig(ConfigStorageVo configStorageVo){
+        configService.saveStorageConfig(configStorageVo);
+        return ResponseUtil.success("存储设置成功！");
     }
 
     @PostMapping(value = "/save/email")
     @AccessToken
     public ResponseVo saveConfig(ConfigEmailVo configEmailVo){
-        Gson gson = new Gson();
-        String value = gson.toJson(configEmailVo);
-        int a = configService.updateByKey(ConfigKey.CONFIG_EMAIL.getValue(),value);
-        if (a > 0) {
-            return ResponseUtil.success("邮件设置成功！");
-        } else {
-            return ResponseUtil.error("邮件设置失败！");
-        }
+        configService.saveEmailConfig(configEmailVo);
+        return ResponseUtil.success("邮件设置成功！");
     }
 
 }

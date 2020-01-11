@@ -39,7 +39,7 @@ public class UploadController {
 
     @PostMapping(value = "/upload")
     @AccessToken
-    public ResponseVo upload(@RequestParam MultipartFile file) throws Exception{
+    public ResponseVo upload(@RequestParam MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new ZbException("文件不能为空");
         }

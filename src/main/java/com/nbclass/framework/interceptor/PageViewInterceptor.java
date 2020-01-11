@@ -1,6 +1,6 @@
 package com.nbclass.framework.interceptor;
 
-import com.nbclass.enums.ConfigKey;
+import com.nbclass.enums.CacheKeyPrefix;
 import com.nbclass.framework.util.IpUtil;
 import com.nbclass.service.PageViewService;
 import com.nbclass.service.RedisService;
@@ -25,7 +25,7 @@ public class PageViewInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String ip = IpUtil.getIpAddr(request);
-        String ipKey= ConfigKey.SYSTEM_PAGE_VIEW.getValue()+"_"+ip.replace(".","_");
+        String ipKey= CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix()+"_"+ip.replace(".","_");
         Object object = redisService.get(ipKey);
         if(object==null){
             pageViewService.updateSystemPageViewNum();
@@ -35,8 +35,7 @@ public class PageViewInterceptor extends HandlerInterceptorAdapter {
     }
     @Override
     public void afterCompletion(
-            HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
-            throws Exception {
+            HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
     }
 
 }
