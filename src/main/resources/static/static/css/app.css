@@ -89,6 +89,9 @@ a:hover, a:focus{
 .pl-0{
     padding-left: 0;
 }
+.pt-0{
+    padding-bottom: 0;
+}
 .pr-0{
     padding-right: 0;
 }
