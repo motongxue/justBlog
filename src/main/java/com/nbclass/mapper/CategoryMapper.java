@@ -36,4 +36,11 @@ public interface CategoryMapper extends MyMapper<BlogCategory> {
      * @return list
      */
     List<BlogCategory> selectByIds(List<Integer> ids);
+
+    /**
+     * 根据id查询栏目
+     * @param id id
+     * @return BlogCategory
+     */
+    BlogCategory selectById(Integer id);
 }

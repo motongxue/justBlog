@@ -20,7 +20,7 @@ public interface MailService {
      * @param subject 主题
      * @param content 内容
      */
-    public void sendHtmlMail(String to, String subject, String content);
+    void sendHtmlMail(String to, String subject, String content);
 
     /**
      * 发送带附件的邮件
@@ -29,7 +29,7 @@ public interface MailService {
      * @param content 内容
      * @param filePath 附件
      */
-    public void sendAttachmentsMail(String to, String subject, String content, String filePath);
+    void sendAttachmentsMail(String to, String subject, String content, String filePath);
 
     /**
      * 发送模板邮件
@@ -38,5 +38,5 @@ public interface MailService {
      * @param subject 主题
      * @param map 模板参数
      */
-    public void sendTemplateMail(TemplateType templateType, String to, String subject, Map<String,Object> map);
+    void sendTemplateMail(TemplateType templateType, String to, String subject, Map<String,Object> map);
 }

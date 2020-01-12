@@ -100,7 +100,8 @@ public class AdminPageController{
 
     @GetMapping("/comments")
     @AccessToken
-    public String comments(){
+    public String comments(Model model){
+        model.addAttribute("emailServiceEnable",configService.selectEmailConfig().getSetFlag());
         return  pathSuffix + "comments";
     }
 

@@ -34,9 +34,9 @@ public class CommentController {
 
     @PostMapping("/audit")
     @AccessToken
-    public ResponseVo audit(Integer id, String replyContent){
+    public ResponseVo audit(Integer id, String replyContent,Integer emailFlag){
         commentService.audit(new Integer[]{id});
-        commentService.adminReply(id,replyContent);
+        commentService.adminReply(id,replyContent,emailFlag);
         return ResponseUtil.success("审核成功");
     }
 
@@ -49,8 +49,8 @@ public class CommentController {
 
     @PostMapping("/reply")
     @AccessToken
-    public ResponseVo reply(Integer id, String replyContent){
-        commentService.adminReply(id,replyContent);
+    public ResponseVo reply(Integer id, String replyContent,Integer emailFlag){
+        commentService.adminReply(id,replyContent,emailFlag);
         return ResponseUtil.success("回复成功");
     }
 

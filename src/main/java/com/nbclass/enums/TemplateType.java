@@ -1,8 +1,8 @@
 package com.nbclass.enums;
 
 public enum TemplateType {
-    ResetPassword("resetPassword", "重置密码"),
-    CommentAuditReply("commentAuditReply", "评论审核回复"),
+    VerificationCode("verificationCode", "重置密码"),
+    CommentReply("CommentReply", "评论回复"),
     ;
     private String templateName;
     private String desc;

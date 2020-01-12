@@ -48,7 +48,7 @@ public interface CommentService {
     /**
      * 回复comment
      */
-    void adminReply(Integer id, String replyContent);
+    void adminReply(Integer id, String replyContent, Integer emailFlag);
     /**
      * 删除
      */

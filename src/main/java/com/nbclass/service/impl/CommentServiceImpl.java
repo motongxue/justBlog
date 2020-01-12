@@ -3,18 +3,21 @@ package com.nbclass.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nbclass.enums.CacheKeyPrefix;
+import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.jwt.JwtUtil;
 import com.nbclass.framework.jwt.UserInfo;
-import com.nbclass.framework.util.CopyUtil;
-import com.nbclass.framework.util.CoreConst;
-import com.nbclass.framework.util.IpUtil;
-import com.nbclass.framework.util.ResponseUtil;
+import com.nbclass.framework.util.*;
+import com.nbclass.mapper.ArticleMapper;
 import com.nbclass.mapper.CategoryMapper;
 import com.nbclass.mapper.CommentMapper;
+import com.nbclass.mapper.UserMapper;
 import com.nbclass.model.BlogArticle;
 import com.nbclass.model.BlogCategory;
 import com.nbclass.model.BlogComment;
+import com.nbclass.model.BlogUser;
 import com.nbclass.service.CommentService;
+import com.nbclass.service.ConfigService;
+import com.nbclass.service.EmailService;
 import com.nbclass.service.RedisService;
 import com.nbclass.vo.CommentVo;
 import com.nbclass.vo.ResponseVo;
@@ -49,9 +52,17 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private RedisService redisService;
     @Autowired
+    private EmailService emailService;
+    @Autowired
+    private ConfigService configService;
+    @Autowired
     private CategoryMapper categoryMapper;
     @Autowired
+    private ArticleMapper articleMapper;
+    @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public List<BlogComment> selectList(Integer status) {
@@ -161,7 +172,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void adminReply(Integer id, String replyContent) {
+    public void adminReply(Integer id, String replyContent, Integer emailFlag) {
         if(StringUtils.isNotBlank(replyContent)){
             BlogComment comment = new BlogComment();
             comment.setId(id);
@@ -186,6 +197,26 @@ public class CommentServiceImpl implements CommentService {
                 reply.setCreateTime(new Date());
                 reply.setId(null);
                 commentMapper.insertSelective(reply);
+                if(emailFlag!=null && emailFlag==1){
+                    if(userInfo!=null){
+                        BlogUser user = userMapper.selectByUserId(userInfo.getUserId());
+                        if(user!=null && StringUtils.isNotBlank(user.getEmail()) && ValidatorUtil.isEmail(user.getEmail())){
+                            String sName;
+                            String url = configService.selectAll().get(ConfigKey.SITE_HOST.getValue());
+                            url = url.endsWith("/")?url.substring(0,url.length()-1):url;
+                            if(comment.getSid()>0){
+                                BlogArticle article = articleMapper.selectById(comment.getSid());
+                                sName = article.getTitle();
+                                url = url+"/a/"+article.getAliasName();
+                            }else{
+                                BlogCategory category = categoryMapper.selectById(-comment.getSid());
+                                sName = category.getName();
+                                url = url+"/"+category.getAliasName();
+                            }
+                            emailService.sendCommentReply(user.getEmail(),user.getUsername(),url,sName,replyContent);
+                        }
+                    }
+                }
             }
         }
     }

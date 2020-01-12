@@ -10,10 +10,7 @@ import com.nbclass.framework.jwt.UserInfo;
 import com.nbclass.framework.util.*;
 import com.nbclass.mapper.UserMapper;
 import com.nbclass.model.BlogUser;
-import com.nbclass.service.ConfigService;
-import com.nbclass.service.MailService;
-import com.nbclass.service.RedisService;
-import com.nbclass.service.UserService;
+import com.nbclass.service.*;
 import com.nbclass.vo.ResponseVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -37,7 +34,7 @@ public class UserServiceImpl implements UserService {
     private ConfigService configService;
 
     @Resource
-    private MailService mailService;
+    private EmailService emailService;
 
     @Resource
     private JwtUtil jwtUtil;
@@ -112,14 +109,10 @@ public class UserServiceImpl implements UserService {
                 return ResponseUtil.error("用户邮箱不存在");
             }
             if(ValidatorUtil.isEmail(user.getEmail())){
-                String subject = String.format("【%s】 %s", configMap.get(ConfigKey.SITE_NAME.getValue()),"找回密码");
-                Map<String,Object> templateMap = new HashMap<>();
-                templateMap.put("username",user.getUsername());
                 String code = UUIDUtil.generateIntCode(6);
                 redisService.set(CacheKeyPrefix.RESET_.getPrefix()+username, code, 15, TimeUnit.MINUTES);
-                templateMap.put("code",code);
                 try{
-                    mailService.sendTemplateMail(TemplateType.ResetPassword,user.getEmail(),subject,templateMap);
+                    emailService.sendVerificationCode(user.getEmail(),user.getUsername(),code,"找回密码");
                 }catch (MailException e){
                     return ResponseUtil.error(e.getMessage());
                 }

@@ -78,5 +78,12 @@
         </foreach>
     </select>
 
+    <select id="selectById" resultMap="BaseResultMap">
+        select *
+        from blog_category
+        where
+        id = #{id}
+    </select>
+
 
 </mapper>
