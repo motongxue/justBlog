@@ -40,6 +40,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private RedisService redisService;
     @Autowired
+    private ConfigService configService;
+    @Autowired
     private TagService tagService;
     @Autowired
     private ArticleMapper articleMapper;
@@ -142,8 +144,8 @@ public class ArticleServiceImpl implements ArticleService {
     public Map<String, Object> siteInfoStatistics() {
         Map<String, Object> map = articleMapper.siteInfoStatistics();
         map.put(ConfigKey.SYSTEM_PAGE_VIEW.getValue(),redisService.get(CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix()));
-        String createTime = redisService.get(CacheKeyPrefix.SYS_CREATE_TIME.getPrefix());
-        map.put(ConfigKey.SYSTEM_CREATE_TIME.getValue(), DateUtil.getDiffDays(new Date(),DateUtil.parseDateNewFormat(createTime))+1);
+        String createTime = configService.selectAll().get(ConfigKey.SYSTEM_CREATE_TIME.getValue());
+        map.put(ConfigKey.SYSTEM_CREATE_TIME.getValue(), DateUtil.getDiffDays(new Date(),DateUtil.parseDateWebFormat(createTime))+1);
         return map;
     }
 

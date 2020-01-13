@@ -5,6 +5,7 @@ import com.nbclass.enums.ConfigKey;
 import com.nbclass.framework.config.properties.ZbProperties;
 import com.nbclass.framework.theme.ZbTheme;
 import com.nbclass.framework.util.*;
+import com.nbclass.model.BlogConfig;
 import com.nbclass.service.ConfigService;
 import com.nbclass.service.RedisService;
 import com.nbclass.service.ThemeService;
@@ -155,21 +156,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
         }
     }
 
-
-
     private void initSystem(){
         Map<String, String> map = configService.selectAll();
-        //系统创建时间
-        String createTimeKey = ConfigKey.SYSTEM_CREATE_TIME.getValue();
-        String createTimeCache = redisService.get(CacheKeyPrefix.SYS_CREATE_TIME.getPrefix());
-        if(StringUtils.isEmpty(createTimeCache)){
-            String createTime = map.get(createTimeKey);
-            if(StringUtils.isEmpty(createTime)){
-                createTime = DateUtil.getNewFormatDateString(new Date());
-                configService.updateByKey(createTimeKey,createTime);
-            }
-            redisService.set(CacheKeyPrefix.SYS_CREATE_TIME.getPrefix(),createTime);
-        }
         //系统浏览数
         String pageViewCache = redisService.get( CacheKeyPrefix.SYS_PAGE_VIEW.getPrefix());
         if(StringUtils.isEmpty(pageViewCache)){
