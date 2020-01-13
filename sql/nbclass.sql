@@ -92,12 +92,13 @@ CREATE TABLE `blog_category` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of blog_category
 -- ----------------------------
 INSERT INTO `blog_category` VALUES ('1', null, '首页', '/', '2', '1', '', 'index', null, null, null, null, '1', '2019-12-27 11:43:02', '2019-12-27 11:45:07');
+INSERT INTO `blog_category` VALUES ('2', null, '留言板', 'comment', '2', '99', '', 'comment', null, null, null, null, '1', '2019-12-27 11:43:02', '2019-12-27 11:45:07');
 -- ----------------------------
 -- Table structure for blog_comment
 -- ----------------------------

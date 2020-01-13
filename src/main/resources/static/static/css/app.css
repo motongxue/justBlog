@@ -587,13 +587,17 @@ input,textarea {
 .loading-message {
     display: inline-block;
     min-width: 125px;
-    padding: 10px;
+    padding: 8px 10px;
     margin: 0 auto;
     color: #000 !important;
     font-size: 13px;
     font-weight: 400;
     text-align: center;
     vertical-align: middle
+}
+.loading-message>i{
+    vertical-align: middle;
+    font-size: 15px;
 }
 
 .loading-message>span {
@@ -1808,9 +1812,6 @@ select.form-control{
     width: 100px;
     float: left;
 }
-#article-editor .w-e-text-container{
-    height: 812px !important;
-}
 #article-editor .CodeMirror-scroll{
     height: 788px;
 }
@@ -1833,8 +1834,13 @@ select.form-control{
 .article-tags-names{
     margin-top: 5px;
 }
+.article-tags-names .article-tag-name{
+    vertical-align: middle;
+}
 .article-tags-names .remove-tag{
     cursor: pointer;
+    vertical-align: middle;
+    margin-left: 2px;
 }
 .article-tags-content{
     position: relative;
@@ -1946,9 +1952,9 @@ select.form-control{
 .theme-footer a{
     cursor: pointer;
     color: #555;
+    display: flex!important;
 }
 .theme-footer>li>a{
-    padding: 12px 0;
     height: 100%;
     color: #555;
 }
@@ -1957,7 +1963,6 @@ select.form-control{
     cursor: default;
 }
 .theme-footer i{
-    vertical-align: bottom;
     margin-right: 3px;
 }
 .theme-footer .dropdown-menu{

@@ -46,6 +46,7 @@ public class ConfigController {
     public ResponseVo saveConfig(ConfigStorageVo config){
         config.setSetFlag(CoreConst.STATUS_VALID);
         configService.saveStorageConfig(config);
+        configService.updateByKey(ConfigKey.SYSTEM_IS_SET.getValue(), CoreConst.STATUS_VALID_STRING);
         return ResponseUtil.success("存储设置成功！");
     }
 
@@ -54,6 +55,7 @@ public class ConfigController {
     public ResponseVo saveConfig(ConfigEmailVo config){
         config.setSetFlag(CoreConst.STATUS_VALID);
         configService.saveEmailConfig(config);
+        configService.updateByKey(ConfigKey.SYSTEM_IS_SET.getValue(), CoreConst.STATUS_VALID_STRING);
         return ResponseUtil.success("邮件设置成功！");
     }
 
