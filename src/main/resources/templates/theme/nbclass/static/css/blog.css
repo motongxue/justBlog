@@ -1601,7 +1601,7 @@ body {
     overflow: auto;
 }
 .emoji-editor:focus{
-    border: 1px solid #0080FF;
+    border: 1px solid #0bb8ca;
     box-shadow: none;
     outline: none;
 }

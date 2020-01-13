@@ -47,6 +47,7 @@ public class TagServiceImpl implements TagService {
         tag.setUpdateTime(date);
         BlogTag blogTag = tagMapper.selectByName(tag.getName(),tag.getId());
         if(blogTag!=null){
+            tag.setId(blogTag.getId());
             return ResponseUtil.error(String.format("标签名【%s】已存在！",tag.getName()));
         }
         if(tag.getId()==null){
