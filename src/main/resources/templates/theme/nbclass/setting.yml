@@ -1,7 +1,7 @@
 id: nbclass
 name: nbclass
 description: 系统默认主题
-img: /theme/nbclass/static/img/theme-preview.png
+img: /theme/nbclass/static/img/theme-preview.jpg
 setFlag: 1
 settings:
 - label: 站长信息
