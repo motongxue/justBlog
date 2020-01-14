@@ -2,10 +2,10 @@ server:
   port: 8088
 logging:
   level:
-    com.nbclass: ERROR
+    com.nbclass: INFO
     tk.mybatis: ERROR
     org.springframework: ERROR
-  file: log/zblog-admin.log
+  file: log/just-blog.log
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/zb-blog?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&useSSL=false
