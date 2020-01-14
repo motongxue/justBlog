@@ -165,7 +165,7 @@ public class ThemeServiceImpl implements ThemeService {
                 String themeDir = zbProperties.getWorkThemeDir(themeId);
                 Path targetThemePath = Paths.get(themeDir);
                 FileUtil.copyFolder(filterTempPath, targetThemePath);
-                zbTheme.setTemplates(FileUtil.getTemplates(themeTempPath));
+                zbTheme.setTemplates(FileUtil.getTemplates(filterTempPath));
                 //存入缓存
                 handleThemeSetting(zbTheme);
                 Map<String, ZbTheme> themeMap = selectThemesMap();
