@@ -165,6 +165,7 @@ public class ThemeServiceImpl implements ThemeService {
                 String themeDir = zbProperties.getWorkThemeDir(themeId);
                 Path targetThemePath = Paths.get(themeDir);
                 FileUtil.copyFolder(filterTempPath, targetThemePath);
+                zbTheme.setTemplates(FileUtil.getTemplates(themeTempPath));
                 //存入缓存
                 handleThemeSetting(zbTheme);
                 Map<String, ZbTheme> themeMap = selectThemesMap();
@@ -255,11 +256,15 @@ public class ThemeServiceImpl implements ThemeService {
     private boolean compareTemplate(ZbTheme theme1, ZbTheme theme2){
         StringBuilder theme1Str = new StringBuilder();
         StringBuilder theme2Str= new StringBuilder();
-        for(String template: theme1.getTemplates()){
-            theme1Str.append(template);
+        if(theme1.getTemplates()!=null){
+            for(String template: theme1.getTemplates()){
+                theme1Str.append(template);
+            }
         }
-        for(String template: theme2.getTemplates()){
-            theme2Str.append(template);
+        if(theme2.getTemplates()!=null){
+            for(String template: theme2.getTemplates()){
+                theme2Str.append(template);
+            }
         }
         return theme1Str.toString().equals(theme2Str.toString());
     }
