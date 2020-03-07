@@ -318,19 +318,7 @@ public class FileUtil {
                         Yaml yaml = new Yaml();
                         ZbTheme zbTheme = yaml.loadAs(s, ZbTheme.class);
                         resMap.put(zbTheme.getId(),zbTheme);
-                        List<String> themeTemplate = new ArrayList<>();
-                        try (Stream<Path> templateStream = Files.list(path)) {
-                            templateStream.forEach(templatePath -> {
-                                String templatePathStr = templatePath.toString();
-                                if (!Files.isDirectory(templatePath)&&templatePathStr.endsWith("html")) {
-                                    String templateName = templatePathStr.substring(templatePathStr.lastIndexOf(File.separator)+1).split("\\.")[0];
-                                    themeTemplate.add(templateName);
-                                }
-                            });
-                            zbTheme.setTemplates(themeTemplate);
-                        } catch (IOException e) {
-                            throw new ZbException("Get theme html template error");
-                        }
+                        zbTheme.setTemplates(getTemplates(path));
                     }
                 }
             });
@@ -339,6 +327,22 @@ public class FileUtil {
             throw new ZbException("Failed to scan theme folder");
         }
     }
+
+    public static List<String> getTemplates(Path path){
+        List<String> themeTemplate = new ArrayList<>();
+        try (Stream<Path> templateStream = Files.list(path)) {
+            templateStream.forEach(templatePath -> {
+                String templatePathStr = templatePath.toString();
+                if (!Files.isDirectory(templatePath)&&templatePathStr.endsWith("html")) {
+                    String templateName = templatePathStr.substring(templatePathStr.lastIndexOf(File.separator)+1).split("\\.")[0];
+                    themeTemplate.add(templateName);
+                }
+            });
+            return themeTemplate;
+        } catch (IOException e) {
+            throw new ZbException("Get theme html template error");
+        }
+    };
 
     private static List<ZbFile> listFiles(List<ZbFile> list, Path topPath, boolean recursion){
         if (!Files.isDirectory(topPath)) {

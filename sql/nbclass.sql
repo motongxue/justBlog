@@ -92,12 +92,13 @@ CREATE TABLE `blog_category` (
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of blog_category
 -- ----------------------------
 INSERT INTO `blog_category` VALUES ('1', null, '首页', '/', '2', '1', '', 'index', null, null, null, null, '1', '2019-12-27 11:43:02', '2019-12-27 11:45:07');
+INSERT INTO `blog_category` VALUES ('2', null, '留言板', 'comment', '2', '99', '', 'comment', null, null, null, null, '1', '2019-12-27 11:43:02', '2019-12-27 11:45:07');
 -- ----------------------------
 -- Table structure for blog_comment
 -- ----------------------------
@@ -158,7 +159,7 @@ INSERT INTO `blog_config` VALUES ('7', 'SITE_ICON', '/static/img/logo-color.png'
 INSERT INTO `blog_config` VALUES ('8', 'SITE_LOGO', '/static/img/logo-color.png', '网站logo', '1', '2019-12-25 18:21:53', '2019-12-25 18:23:06');
 INSERT INTO `blog_config` VALUES ('9', 'EDITOR_TYPE', '2', '编辑器类型', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('10', 'SYSTEM_PAGE_VIEW', '0', '系统访问数', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
-INSERT INTO `blog_config` VALUES ('11', 'SYSTEM_CREATE_TIME', '', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
+INSERT INTO `blog_config` VALUES ('11', 'SYSTEM_CREATE_TIME', '2019-10-10', '系统创建时间', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('12', 'SYSTEM_IS_SET', '0', '系统是否设置', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');
 INSERT INTO `blog_config` VALUES ('13', 'CONFIG_EMAIL', '{\"setFlag\":0,\"host\":\"\",\"port\":\"\",\"username\":\"\",\"password\":\"\",\"from\":\"\"}', '邮件配置', '1', '2019-12-25 18:21:53', '2019-12-25 18:21:53');
 INSERT INTO `blog_config` VALUES ('14', 'RESET_PWD_TYPE', '1', '重置密码方式', '1', '2019-12-25 18:21:53', '2019-12-26 17:03:07');

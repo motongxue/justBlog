@@ -356,7 +356,7 @@
             $("#tags").val("");
             $("#tags-popup").html("").hide();
         }
-
+        
     });
     var articleEditor;
 	if(editorType==="1"){
@@ -384,6 +384,14 @@
             tabSize: 4,
             status: [ "lines", "words"]
         });
+	}
+
+    if(editorType==="1"){
+        var edtiorHeight = $(".article-extra").outerHeight()-$(".w-e-text-container").offset().top+70;
+        $(".w-e-text-container").css("height",edtiorHeight+"px");
+    }else{
+        var edtiorHeight = $(".article-extra").outerHeight()-$(".CodeMirror-scroll").offset().top+59;
+        $(".CodeMirror-scroll").css("height",edtiorHeight+"px");
 	}
 
     function  saveArticle(status) {

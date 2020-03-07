@@ -10,11 +10,12 @@
 }
 
 [class^="ri-"], [class*=" ri-"] {
+  display: inline-block;
   font-family: 'remixicon' !important;
   font-style: normal;
+  text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  vertical-align: bottom;
 }
 
 .ri-lg { font-size: 1.3333em; line-height: 0.75em; vertical-align: -.0667em; }

@@ -62,8 +62,7 @@
 						App.blockUI({
 							target: 'body',
 							boxed: true,
-							message: '上传中...',
-							img:'[[${config.SITE_CDN}]]'+'/img/loading/loading-spinner-grey.gif'
+							message: '上传中...'
 						});
                         App.mask('#uploadTheme');
                     },
@@ -98,6 +97,8 @@
 								$this.addClass("theme-checked");
 								$this.find("i").attr("class","ri-check-line");
 								$this.find("span").text("已启用");
+                                $(".theme-delete.disabled").removeClass("disabled");
+                                $this.parent().parent().find(".theme-delete").addClass("disabled");
 							}else{
 								App.msgE(data.msg);
 							}

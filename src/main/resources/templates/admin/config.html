@@ -23,7 +23,7 @@
                     <div class="tab-content">
                         <div id="basicConfig" class="tab-pane active">
                             <form id="siteForm" class="form-horizontal">
-                                <div class="box-body">
+                                <div class="z-card-body box-body">
                                     <div class="form-group">
                                         <label class="col-lg-2 col-sm-3 control-label">网站域名  <span class="text-danger">*</span>:</label>
                                         <div class="col-md-5 col-sm-8">
@@ -98,236 +98,248 @@
                         </div>
                         <div id="storageConfig" class="tab-pane">
                             <form id="storageForm" class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">存储类型:</label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <div class="z-radio">
-                                            <input type="radio" th:field="*{storageConfig.type}" name="type" value="0" require=""/>
-                                            <label><i></i>本地</label>
-                                        </div>
-                                        <div class="z-radio">
-                                            <input type="radio" th:field="*{storageConfig.type}" name="type" value="1" require=""/>
-                                            <label><i></i>七牛云</label>
-                                        </div>
-                                        <div class="z-radio">
-                                            <input type="radio" th:field="*{storageConfig.type}" name="type" value="2" require=""/>
-                                            <label><i></i>阿里云</label>
-                                        </div>
-                                        <div class="z-radio">
-                                            <input type="radio" th:field="*{storageConfig.type}" name="type" value="3" require=""/>
-                                            <label><i></i>腾讯云</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="local-form" th:class="${storageConfig.type==0?'':'display-none'}">
+                                <div class="z-card-body box-body">
                                     <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">文件服务器域名: *</div>
+                                        <label class="col-lg-2 col-sm-3 control-label">存储类型:</label>
                                         <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.localDomain}" name="localDomain" placeholder="本地文件服务器域名"/>
+                                            <div class="z-radio">
+                                                <input type="radio" th:field="*{storageConfig.type}" name="type" value="0" require=""/>
+                                                <label><i></i>本地</label>
+                                            </div>
+                                            <div class="z-radio">
+                                                <input type="radio" th:field="*{storageConfig.type}" name="type" value="1" require=""/>
+                                                <label><i></i>七牛云</label>
+                                            </div>
+                                            <div class="z-radio">
+                                                <input type="radio" th:field="*{storageConfig.type}" name="type" value="2" require=""/>
+                                                <label><i></i>阿里云</label>
+                                            </div>
+                                            <div class="z-radio">
+                                                <input type="radio" th:field="*{storageConfig.type}" name="type" value="3" require=""/>
+                                                <label><i></i>腾讯云</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="local-form" th:class="${storageConfig.type==0?'':'display-none'}">
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">文件服务器域名: *</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.localDomain}" name="localDomain" placeholder="本地文件服务器域名"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">本地文件存储路径:</div>
+                                            <div class="col-md-5 col-sm-8  control-label">
+                                                文件将保存在用户目录workDir的file下, <span class="text-danger">[[${workDir}]]file</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="qiniu-form" th:class="${storageConfig.type==1?'':'display-none'}">
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-sm-3  control-label">域名 : </label>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qiniuDomain}" name="qiniuDomain" require="必填项"  placeholder="七牛云绑定的域名">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-sm-3  control-label">路径前缀 :</label>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qiniuPrefix}" name="qiniuPrefix" require="必填项"  placeholder="不设置默认为空">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-sm-3  control-label">AccessKey :</label>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qiniuAccessKey}" name="qiniuAccessKey" require="必填项"  placeholder="七牛云AccessKey">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-sm-3  control-label">SecretKey :</label>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qiniuSecretKey}" name="qiniuSecretKey" require="必填项"  placeholder="七牛云SecretKey">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-2 col-sm-3  control-label">BucketName :</label>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qiniuBucketName}" name="qiniuBucketName" require="必填项"  placeholder="七牛云BucketName">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="ali-form" th:class="${storageConfig.type==2?'':'display-none'}">
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">域名</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.aliyunDomain}" name="aliyunDomain" placeholder="阿里云绑定的域名"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">路径前缀</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.aliyunPrefix}" name="aliyunPrefix" placeholder="不设置默认为空"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">EndPoint</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.aliyunEndPoint}" name="aliyunEndPoint" placeholder="阿里云EndPoint"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">AccessKeyId</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.aliyunAccessKeyId}" name="aliyunAccessKeyId" placeholder="阿里云AccessKeyId"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">AccessKeySecret</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.aliyunAccessKeySecret}" name="aliyunAccessKeySecret" placeholder="阿里云AccessKeySecret"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">BucketName</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.aliyunBucketName}" name="aliyunBucketName" placeholder="阿里云BucketName"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="qcloud-form" th:class="${storageConfig.type==3?'':'display-none'}">
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">域名</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qcloudDomain}" name="qcloudDomain" placeholder="腾讯云绑定的域名"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">路径前缀</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qcloudPrefix}" name="qcloudPrefix" placeholder="不设置默认为空"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">SecretId</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qcloudSecretId}" name="qcloudSecretId" placeholder="腾讯云SecretId"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">SecretKey</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qcloudSecretKey}" name="qcloudSecretKey" placeholder="腾讯云SecretKey"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">BucketName</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qcloudBucketName}" name="qcloudBucketName" placeholder="腾讯云BucketName"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-2 col-sm-3  control-label">Bucket所属地区</div>
+                                            <div class="col-md-5 col-sm-8">
+                                                <input type="text" class="form-control" th:value="${storageConfig.qcloudRegion}" name="qcloudRegion" placeholder="如：sh（可选值 ，华南：gz 华北：tj 华东：sh）"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">本地文件存储路径:</div>
-                                        <div class="col-md-5 col-sm-8  control-label">
-                                            文件将保存在用户目录workDir的file下, <span class="text-danger">[[${workDir}]]file</span>
+                                        <div class="col-sm-8">
+                                            <button id="saveStorage" type="button" class="btn btn-primary">启用</button>
                                         </div>
-                                    </div>
-                                </div>
-                                <div id="qiniu-form" th:class="${storageConfig.type==1?'':'display-none'}">
-                                    <div class="form-group">
-                                        <label class="col-lg-2 col-sm-3  control-label">域名 : </label>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qiniuDomain}" name="qiniuDomain" require="必填项"  placeholder="七牛云绑定的域名">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-2 col-sm-3  control-label">路径前缀 :</label>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qiniuPrefix}" name="qiniuPrefix" require="必填项"  placeholder="不设置默认为空">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-2 col-sm-3  control-label">AccessKey :</label>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qiniuAccessKey}" name="qiniuAccessKey" require="必填项"  placeholder="七牛云AccessKey">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-2 col-sm-3  control-label">SecretKey :</label>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qiniuSecretKey}" name="qiniuSecretKey" require="必填项"  placeholder="七牛云SecretKey">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-2 col-sm-3  control-label">BucketName :</label>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qiniuBucketName}" name="qiniuBucketName" require="必填项"  placeholder="七牛云BucketName">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="ali-form" th:class="${storageConfig.type==2?'':'display-none'}">
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">域名</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.aliyunDomain}" name="aliyunDomain" placeholder="阿里云绑定的域名"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">路径前缀</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.aliyunPrefix}" name="aliyunPrefix" placeholder="不设置默认为空"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">EndPoint</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.aliyunEndPoint}" name="aliyunEndPoint" placeholder="阿里云EndPoint"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">AccessKeyId</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.aliyunAccessKeyId}" name="aliyunAccessKeyId" placeholder="阿里云AccessKeyId"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">AccessKeySecret</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.aliyunAccessKeySecret}" name="aliyunAccessKeySecret" placeholder="阿里云AccessKeySecret"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">BucketName</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.aliyunBucketName}" name="aliyunBucketName" placeholder="阿里云BucketName"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="qcloud-form" th:class="${storageConfig.type==3?'':'display-none'}">
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">域名</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qcloudDomain}" name="qcloudDomain" placeholder="腾讯云绑定的域名"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">路径前缀</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qcloudPrefix}" name="qcloudPrefix" placeholder="不设置默认为空"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">SecretId</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qcloudSecretId}" name="qcloudSecretId" placeholder="腾讯云SecretId"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">SecretKey</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qcloudSecretKey}" name="qcloudSecretKey" placeholder="腾讯云SecretKey"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">BucketName</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qcloudBucketName}" name="qcloudBucketName" placeholder="腾讯云BucketName"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-2 col-sm-3  control-label">Bucket所属地区</div>
-                                        <div class="col-md-5 col-sm-8">
-                                            <input type="text" class="form-control" th:value="${storageConfig.qcloudRegion}" name="qcloudRegion" placeholder="如：sh（可选值 ，华南：gz 华北：tj 华东：sh）"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-8">
-                                        <button id="saveStorage" type="button" class="btn btn-primary">启用</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div id="emailConfig" class="tab-pane">
                             <form id="emailForm" class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">服务器 : <span class="z-tooltip">
-                                                <i class="z-tooltip-i fa fa-info-circle"></i>
-                                                <span class="z-tooltip-text z-tooltip-right">只支持配置SMTP服务</span>
-                                            </span>
-                                    </label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <input th:value="${emailConfig.host}" type="text" class="form-control" name="host" placeholder="邮件服务器host" require="">
+                                <div class="z-card-body box-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">服务器 <span class="text-danger">*</span>: <span class="z-tooltip">
+                                                    <i class="z-tooltip-i fa fa-info-circle"></i>
+                                                    <span class="z-tooltip-text z-tooltip-right">只支持配置SMTP服务</span>
+                                                </span>
+                                        </label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input th:value="${emailConfig.host}" type="text" class="form-control" name="host" placeholder="邮件服务器host" require="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">端口  <span class="text-danger">*</span>:</label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <input th:value="${emailConfig.port}" type="text" class="form-control" name="port" placeholder="邮件服务器端口" require="">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">端口  <span class="text-danger">*</span>:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input th:value="${emailConfig.port}" type="text" class="form-control" name="port" placeholder="邮件服务器端口" require="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">用户名  <span class="text-danger">*</span>:</label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <input th:value="${emailConfig.username}" type="text" class="form-control" name="username" placeholder="用户名" require="">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">用户名  <span class="text-danger">*</span>:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input th:value="${emailConfig.username}" type="text" class="form-control" name="username" placeholder="用户名" require="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">密码  <span class="text-danger">*</span>:</label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <input th:value="${emailConfig.password}" type="text" class="form-control" name="password" placeholder="授权码" require="">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">密码  <span class="text-danger">*</span>:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input th:value="${emailConfig.password}" type="text" class="form-control" name="password" placeholder="授权码" require="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">发件人  <span class="text-danger">*</span>:</label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <input th:value="${emailConfig.from}" type="text" class="form-control" name="from" placeholder="发件人" require="">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">发件人  <span class="text-danger">*</span>:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input th:value="${emailConfig.from}" type="text" class="form-control" name="from" placeholder="发件人" require="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-8">
-                                        <button id="saveEmail" type="button" class="btn btn-primary">保存</button>
+                                    <div class="form-group">
+                                        <div class="col-sm-8">
+                                            <button id="saveEmail" type="button" class="btn btn-primary">保存</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div id="otherConfig" class="tab-pane">
                             <form id="otherForm" class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">编辑器类型 : <span class="z-tooltip">
+                                <div class="z-card-body box-body">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">编辑器类型 <span class="text-danger">*</span>: <span class="z-tooltip">
+                                                    <i class="z-tooltip-i fa fa-info-circle"></i>
+                                                    <span class="z-tooltip-text z-tooltip-right" style="width:180px;">切换后对新建文章生效</span>
+                                                </span>
+                                        </label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <select name="EDITOR_TYPE"  class="form-control">
+                                                <option value="1" th:selected="${config.EDITOR_TYPE=='1'}">wangEditor</option>
+                                                <option value="2" th:selected="${config.EDITOR_TYPE=='2'}">markdown</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">重置密码方式 <span class="text-danger">*</span>: <span class="z-tooltip">
                                                 <i class="z-tooltip-i fa fa-info-circle"></i>
-                                                <span class="z-tooltip-text z-tooltip-right" style="width:180px;">切换后对新建文章生效</span>
+                                                <span class="z-tooltip-text z-tooltip-right" style="top: -15px">如设置邮件,请确保您的账号信息已完善邮箱</span>
                                             </span>
-                                    </label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <select name="EDITOR_TYPE"  class="form-control">
-                                            <option value="1" th:selected="${config.EDITOR_TYPE=='1'}">wangEditor</option>
-                                            <option value="2" th:selected="${config.EDITOR_TYPE=='2'}">markdown</option>
-                                        </select>
+                                        </label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <select name="RESET_PWD_TYPE"  class="form-control">
+                                                <option value="1" th:selected="${config.RESET_PWD_TYPE=='1'}">安全码</option>
+                                                <option value="2" th:selected="${config.RESET_PWD_TYPE=='2'}">邮件</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">重置密码方式 : <span class="z-tooltip">
-                                            <i class="z-tooltip-i fa fa-info-circle"></i>
-                                            <span class="z-tooltip-text z-tooltip-right" style="top: -15px">如设置邮件,请确保您的账号信息已完善邮箱</span>
-                                        </span>
-                                    </label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <select name="RESET_PWD_TYPE"  class="form-control">
-                                            <option value="1" th:selected="${config.RESET_PWD_TYPE=='1'}">安全码</option>
-                                            <option value="2" th:selected="${config.RESET_PWD_TYPE=='2'}">邮件</option>
-                                        </select>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">安全码  <span class="text-danger">*</span>:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input th:value="${config.SECURITY_CODE}" type="text" class="form-control" name="SECURITY_CODE" placeholder="安全码" require="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 col-sm-3 control-label">安全码  <span class="text-danger">*</span>:</label>
-                                    <div class="col-md-5 col-sm-8">
-                                        <input th:value="${config.SECURITY_CODE}" type="text" class="form-control" name="SECURITY_CODE" placeholder="安全码" require="">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 col-sm-3 control-label">网站创建时间  <span class="text-danger">*</span>:</label>
+                                        <div class="col-md-5 col-sm-8">
+                                            <input id="systemCreateTime" th:value="${config.SYSTEM_CREATE_TIME}" type="text" class="form-control" name="SYSTEM_CREATE_TIME" placeholder="网站创建时间" require="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-8">
-                                        <button id="saveOther" type="button" class="btn btn-primary">保存</button>
+                                    <div class="form-group">
+                                        <div class="col-sm-8">
+                                            <button id="saveOther" type="button" class="btn btn-primary">保存</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -363,6 +375,7 @@
     </div>
     <script th:src="${config.SITE_CDN+'/static/js/jquery.min.js'}"></script>
     <script th:src="${config.SITE_CDN+'/static/js/bootstrap.min.js'}"></script>
+    <script th:src="${config.SITE_CDN+'/static/laydate/laydate.js'}"></script>
     <script th:src="${config.SITE_CDN+'/static/js/app.js'}"></script>
     <script type="text/javascript">
         $(function () {
@@ -380,6 +393,9 @@
                         $(picker).parent().prev().val(res.data.fileFullPath);
                     }
                 }
+            });
+            laydate.render({
+                elem: '#systemCreateTime'
             });
             $("#saveBasic").on('click',function () {
                 if(App.validate("#siteForm")){

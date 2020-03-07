@@ -168,7 +168,6 @@ public class AdminPageController{
         ConfigEmailVo configEmailVo = GsonUtil.fromJson(configJson, ConfigEmailVo.class);
         String workDir = CoreConst.USER_HOME + File.separator + PropertiesUtil.getString(CoreConst.WORK_DIR_KEY);
         model.addAttribute("workDir", workDir.endsWith(File.separator)?workDir:workDir+File.separator);
-        model.addAttribute("config",configMap);
         model.addAttribute("storageConfig",configStorageVo);
         model.addAttribute("emailConfig",configEmailVo);
         return pathSuffix + "config";

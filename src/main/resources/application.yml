@@ -4,7 +4,7 @@ server:
     uri-encoding: utf-8
 logging:
   level:
-    com.nbclass: ERROR
+    com.nbclass: INFO
     tk.mybatis: ERROR
     org.springframework: ERROR
 spring:

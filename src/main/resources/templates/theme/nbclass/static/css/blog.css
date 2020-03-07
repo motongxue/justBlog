@@ -158,6 +158,9 @@ img {
 
 
 @media(min-width: 768px) {
+    .nav i[class^="ri-"], .nav i[class*=" ri-"]{
+        vertical-align: bottom;
+    }
     .nav li.dropdown:hover > .dropdown-menu {
         display: block
     }
@@ -1601,7 +1604,7 @@ body {
     overflow: auto;
 }
 .emoji-editor:focus{
-    border: 1px solid #0080FF;
+    border: 1px solid #0bb8ca;
     box-shadow: none;
     outline: none;
 }
