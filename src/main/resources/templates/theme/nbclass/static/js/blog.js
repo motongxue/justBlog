@@ -631,7 +631,7 @@ var Core = (function () {
                             '				<span class="comment-nickname">'+
                             '					<a href="javascript:void(0)">'+value.nickname+'</a>'+
                             '				</span>'+
-                            '				<span class="comment-time">'+Core.getDateDiff(new Date(value.createTime))+
+                            '				<span class="comment-time">'+Core.getDateDiff(new Date(value.createTime.replace(/-/g,"/")))+
                             '				</span>'+
                             '				<span class="comment-floor">#'+value.floor+'楼'+
                             '				</span>'+
@@ -658,7 +658,7 @@ var Core = (function () {
                                     '				<span class="comment-nickname">'+
                                     '					<a href="javascript:void(0)">'+nValue.nickname+'</a><a class="comment-link" data-link="comment-'+nValue.parentId+'">@'+nValue.parentNickname+'</a>'+
                                     '				</span>'+
-                                    '				<span class="comment-time">'+Core.getDateDiff(new Date(nValue.createTime))+
+                                    '				<span class="comment-time">'+Core.getDateDiff(new Date(nValue.createTime.replace(/-/g,"/")))+
                                     '				</span>'+
                                     '			</div>'+
                                     '           <div class="comment-content">'+
@@ -741,7 +741,7 @@ var Core = (function () {
                 '<div class="comment-info">'+
                 '<div class="comment-top">'+
                 '<span class="comment-nickname"> <a href="javascript:void(0)">'+data.nickname+'</a> </span>'+
-                '<span class="comment-time">'+Core.getDateDiff(new Date(data.createTime))+'</span>'+
+                '<span class="comment-time">'+Core.getDateDiff(new Date(data.createTime.replace(/-/g,"/")))+'</span>'+
                 ' </div>'+
                 ' <div class="comment-content">';
             if(isReply){
