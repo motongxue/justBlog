@@ -1,5 +1,6 @@
 package com.nbclass.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.nbclass.enums.SliderType;
 import com.nbclass.framework.annotation.RedisCache;
 import com.nbclass.mapper.CategoryMapper;
@@ -31,6 +32,7 @@ public class SliderServiceImpl implements SliderService {
     @Override
     @RedisCache(key = "SLIDERS")
     public List<BlogSlider> selectAll() {
+        PageHelper.orderBy("id desc");
         return sliderMapper.selectAll();
     }
 
