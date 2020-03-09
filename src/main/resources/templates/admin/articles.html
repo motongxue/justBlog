@@ -102,6 +102,8 @@
 								<th data-field="supportNum" data-align="center">喜欢</th>
 								<th data-field="aliasName" data-align="center">路径别名</th>
 								<th data-field="template" data-align="center">模板名称</th>
+								<th data-field="isTop" data-align="center" data-formatter="formatIsTop">is top</th>
+								<th data-field="isRec" data-align="center" data-formatter="formatIsRec">is top</th>
 								<th data-field="status" data-align="center" data-formatter="formatStatus">状态</th>
 								<th data-field="createTime" data-align="center">创建时间</th>
                                 <th data-field="id" data-align="center" data-formatter="formatOpt" data-width="100">操作</th>
@@ -156,6 +158,28 @@
                         App.msgE("请选择至少一条记录");
                     }
                 });
+
+				$("#table").on("click","input[name='isTop']",function () {
+					var $this = $(this);
+					var isTop = $this.is(":checked")?1:0;
+					App.postAjax("/admin/article/top",{id:$this.attr("data-id"),isTop:isTop},function (data) {
+						if(data.status===200){
+							App.msgS(data.msg);
+						}else{
+							App.msgE(data.msg);
+						}
+					});
+				}).on("click","input[name='isRec']",function () {
+					var $this = $(this);
+					var isRec = $this.is(":checked")?1:0;
+					App.postAjax("/admin/article/rec",{id:$this.attr("data-id"),isRec:isRec},function (data) {
+						if(data.status===200){
+							App.msgS(data.msg);
+						}else{
+							App.msgE(data.msg);
+						}
+					});
+				})
             });
 
 			function  queryParams() {
@@ -188,6 +212,14 @@
 ;					tags+='<span class="badge badge-tag">'+tagValue.name+'</span>';
 				})
 				return tags;
+			}
+
+			function formatIsTop(index,value,row){
+				return '<div class="control-label"><label class="z-switch"><input data-id="'+row.id+'" type="checkbox" name="isTop" '+(value===1?'checked':'')+' value="1"><i></i></label></div>';
+			}
+
+			function formatIsRec(index,value,row){
+				return '<div class="control-label"><label class="z-switch"><input data-id="'+row.id+'" type="checkbox" name="isRec" '+(value===1?'checked':'')+' value="1"><i></i></label></div>';
 			}
 
 			function formatStatus(index,value) {

@@ -92,6 +92,8 @@ public interface ArticleService {
      */
     ResponseVo save(BlogArticle article);
 
+    void update(BlogArticle article);
+
     /**
      * 删除文章
      */

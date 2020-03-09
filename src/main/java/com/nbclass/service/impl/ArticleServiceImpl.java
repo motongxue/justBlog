@@ -189,6 +189,7 @@ public class ArticleServiceImpl implements ArticleService {
         if(StringUtils.isEmpty(article.getAliasName())){
             article.setAliasName(UUIDUtil.generateShortUuid());
         }
+
         if(article.getId()==null){
             article.setCreateTime(date);
             articleMapper.insertSelective(article);
@@ -216,6 +217,11 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return ResponseUtil.success("保存文章成功");
+    }
+
+    @Override
+    public void update(BlogArticle article) {
+        articleMapper.updateByPrimaryKeySelective(article);
     }
 
     @Override

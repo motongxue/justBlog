@@ -37,6 +37,26 @@ public class ArticleController {
         return articleService.save(article);
     }
 
+    @PostMapping("/top")
+    @AccessToken
+    public ResponseVo top(@RequestParam("id") Integer id, @RequestParam("isTop") Integer isTop){
+        BlogArticle article = new BlogArticle();
+        article.setId(id);
+        article.setIsTop(isTop);
+        articleService.update(article);
+        return ResponseUtil.success(isTop==1?"置顶成功":"取消置顶成功");
+    }
+
+    @PostMapping("/rec")
+    @AccessToken
+    public ResponseVo rec(@RequestParam("id") Integer id, @RequestParam("isRec") Integer isRec){
+        BlogArticle article = new BlogArticle();
+        article.setId(id);
+        article.setIsRec(isRec);
+        articleService.update(article);
+        return ResponseUtil.success(isRec==1?"推荐成功":"取消推荐成功");
+    }
+
     @PostMapping("/delete")
     @AccessToken
     public ResponseVo delete(@RequestParam("ids[]") Integer[]ids){
